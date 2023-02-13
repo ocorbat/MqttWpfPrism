@@ -151,6 +151,7 @@ namespace MqttClientSubscriber.ViewModels
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
             SubscribeCommand.RaiseCanExecuteChanged();
+            UnsubscribeCommand.RaiseCanExecuteChanged();
             return Task.CompletedTask;
         }
 
@@ -160,6 +161,7 @@ namespace MqttClientSubscriber.ViewModels
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
             SubscribeCommand.RaiseCanExecuteChanged();
+            UnsubscribeCommand.RaiseCanExecuteChanged();
             return Task.CompletedTask;
         }
 
@@ -169,6 +171,7 @@ namespace MqttClientSubscriber.ViewModels
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
             SubscribeCommand.RaiseCanExecuteChanged();
+            UnsubscribeCommand.RaiseCanExecuteChanged();
             return Task.CompletedTask;
         }
 
