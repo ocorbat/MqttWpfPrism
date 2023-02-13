@@ -5,9 +5,8 @@ using MqttServer.Core.Mvvm;
 using MqttServer.Services.Interfaces;
 using Prism.Commands;
 using Prism.Regions;
-using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -23,6 +22,33 @@ namespace MqttServer.Modules.ModuleName.ViewModels
         {
             StartServerCommand = new DelegateCommand(StartServerCommandExecute, StartServerCommandCanExecute);
             StopServerCommand = new DelegateCommand(StopServerCommandExecute, StopServerCommandCanExecute);
+            GetConnectedClientsCommand = new DelegateCommand(GetConnectedClientsCommandExecute, GetConnectedClientsCommandCanExecute);
+        }
+
+        private ICollectionView connectedClientsView;
+        public ICollectionView ConnectedClientsView
+        {
+            get { return connectedClientsView; }
+            set { SetProperty(ref connectedClientsView, value); }
+        }
+
+        private bool GetConnectedClientsCommandCanExecute()
+        {
+            return mqttServer == null ? false : mqttServer.IsStarted;
+        }
+
+        private async void GetConnectedClientsCommandExecute()
+        {
+            Clients = await mqttServer.GetClientsAsync();
+            //ConnectedClients = new ObservableCollection<string>(toto.Select(item => item.Id));
+
+        }
+
+        private IEnumerable<MqttClientStatus> clients;
+        public IEnumerable<MqttClientStatus> Clients
+        {
+            get { return clients; }
+            set { SetProperty(ref clients, value); }
         }
 
         private bool StopServerCommandCanExecute()
@@ -36,6 +62,7 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             Status = "Server stopped";
             StartServerCommand.RaiseCanExecuteChanged();
             StopServerCommand.RaiseCanExecuteChanged();
+            GetConnectedClientsCommand.RaiseCanExecuteChanged(); 
         }
 
         private bool StartServerCommandCanExecute()
@@ -52,7 +79,9 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             //var mqttServerOptions = mqttFactory.CreateServerOptionsBuilder().WithDefaultEndpoint().Build()
             var mqttServerOptions = mqttFactory.CreateServerOptionsBuilder()
                 .WithDefaultEndpoint()
-            .Build();
+                .WithDefaultEndpointPort(5004)
+                .Build();
+            
             mqttServer = mqttFactory.CreateMqttServer(mqttServerOptions);
 
             mqttServer.ClientConnectedAsync += MqttServer_ClientConnectedAsync;
@@ -79,14 +108,13 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             await mqttServer.StartAsync();
 
             Status = "Server started";
-
-            var toto = await mqttServer.GetClientsAsync();
-            ConnectedClients = new ObservableCollection<string>(toto.Select(item => item.Id));
+            ConnectedClients = await mqttServer.GetClientsAsync();
 
 
 
             StartServerCommand.RaiseCanExecuteChanged();
             StopServerCommand.RaiseCanExecuteChanged();
+            GetConnectedClientsCommand.RaiseCanExecuteChanged();
         }
 
         private static Task MqttServer_ClientSubscribedTopicAsync(ClientSubscribedTopicEventArgs arg)
@@ -97,8 +125,7 @@ namespace MqttServer.Modules.ModuleName.ViewModels
 
         private async Task MqttServer_ClientDisconnectedAsync(ClientDisconnectedEventArgs arg)
         {
-            var toto = await mqttServer.GetClientsAsync();
-            ConnectedClients = new ObservableCollection<string>(toto.Select(item => item.Id));
+            ConnectedClients = await mqttServer.GetClientsAsync();
 
             await Application.Current.Dispatcher.BeginInvoke(() =>
             {
@@ -109,8 +136,7 @@ namespace MqttServer.Modules.ModuleName.ViewModels
 
         private async Task MqttServer_ClientConnectedAsync(ClientConnectedEventArgs arg)
         {
-            var toto = await mqttServer.GetClientsAsync();
-            ConnectedClients = new ObservableCollection<string>(toto.Select(item => item.Id));
+            ConnectedClients = await mqttServer.GetClientsAsync();
 
             await Application.Current.Dispatcher.BeginInvoke(() =>
             {
@@ -128,6 +154,11 @@ namespace MqttServer.Modules.ModuleName.ViewModels
 
         public DelegateCommand StopServerCommand { get; set; }
 
+        public DelegateCommand GetConnectedClientsCommand { get; set; }
+
+
+        
+
         private string status;
         public string Status
         {
@@ -135,15 +166,8 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             set { SetProperty(ref status, value); }
         }
 
-        //private ObservableCollection<MqttClientStatus> connectedClients;
-        //public ObservableCollection<MqttClientStatus> ConnectedClients
-        //{
-        //    get { return connectedClients; }
-        //    set { SetProperty(ref connectedClients, value); }
-        //}
-
-        private ObservableCollection<string> connectedClients;
-        public ObservableCollection<string> ConnectedClients
+        private IEnumerable<MqttClientStatus> connectedClients;
+        public IEnumerable<MqttClientStatus> ConnectedClients
         {
             get { return connectedClients; }
             set { SetProperty(ref connectedClients, value); }

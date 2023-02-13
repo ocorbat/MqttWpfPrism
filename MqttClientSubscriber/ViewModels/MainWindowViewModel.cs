@@ -108,7 +108,7 @@ namespace MqttClientSubscriber.ViewModels
 
             var mqttClientOptions = mqttFactory.CreateClientOptionsBuilder()
                 .WithClientId(clientId.ToString())
-                .WithTcpServer(Constants.Localhost, Constants.PortNumber)
+                .WithTcpServer(Constants.Localhost, Constants.Port5004)
                 .WithCleanSession(true)
                 .WithKeepAlivePeriod(new TimeSpan(0, 1, 0))
                 .Build();
