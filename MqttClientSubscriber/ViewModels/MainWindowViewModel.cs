@@ -96,18 +96,6 @@ namespace MqttClientSubscriber.ViewModels
         private async void DisonnectCommandExecute()
         {
             await mqttClient.DisconnectAsync();
-            if (mqttClient.IsConnected)
-            {
-                Status = $"Client {clientId} is connected";
-            }
-            else
-            {
-                Status = $"Client {clientId} is disconnected";
-            }
-            ConnectCommand.RaiseCanExecuteChanged();
-            DisconnectCommand.RaiseCanExecuteChanged();
-            SubscribeCommand.RaiseCanExecuteChanged();
-            UnsubscribeCommand.RaiseCanExecuteChanged();
         }
 
         private bool ConnectCommandCanExecute()
@@ -143,6 +131,7 @@ namespace MqttClientSubscriber.ViewModels
             };
 
             mqttClient.ConnectedAsync += MqttClient_ConnectedAsync;
+            mqttClient.ConnectingAsync += MqttClient_ConnectingAsync;
             mqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
 
             try
@@ -154,29 +143,32 @@ namespace MqttClientSubscriber.ViewModels
                 ExceptionText = $"({e})";
                 Debug.WriteLine($"Timeout while publishing. {e}");
             }
+        }
 
-            if (mqttClient.IsConnected)
-            {
-                Status = $"Client {clientId} is connected";
-            }
-            else
-            {
-                Status = $"Client {clientId} is disconnected";
-            }
-
+        private Task MqttClient_ConnectingAsync(MqttClientConnectingEventArgs arg)
+        {
+            Status = $"Client {clientId} is connecting";
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
             SubscribeCommand.RaiseCanExecuteChanged();
-            UnsubscribeCommand.RaiseCanExecuteChanged();
+            return Task.CompletedTask;
         }
 
         private Task MqttClient_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
         {
+            Status = $"Client {clientId} is disconnected";
+            ConnectCommand.RaiseCanExecuteChanged();
+            DisconnectCommand.RaiseCanExecuteChanged();
+            SubscribeCommand.RaiseCanExecuteChanged();
             return Task.CompletedTask;
         }
 
         private Task MqttClient_ConnectedAsync(MqttClientConnectedEventArgs arg)
         {
+            Status = $"Client {clientId} is connected";
+            ConnectCommand.RaiseCanExecuteChanged();
+            DisconnectCommand.RaiseCanExecuteChanged();
+            SubscribeCommand.RaiseCanExecuteChanged();
             return Task.CompletedTask;
         }
 

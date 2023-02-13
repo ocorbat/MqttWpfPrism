@@ -10,11 +10,11 @@
     SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -34,47 +34,46 @@
             Command="{Binding DisconnectCommand}"
             Content="Disconnect from server" />
 
-        <Button
+        <Label
             Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Content="{Binding Status}" />
+
+        <Button
+            Grid.Row="2"
             Grid.Column="0"
             Command="{Binding SubscribeCommand}"
             Content="Subscribe" />
 
         <Button
-            Grid.Row="2"
+            Grid.Row="3"
             Grid.Column="0"
             Command="{Binding UnsubscribeCommand}"
             Content="UnSubscribe" />
 
-        <Label
-            Grid.Row="3"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            Content="{Binding Status}" />
-
-        <StackPanel
+        <DockPanel
             Grid.Row="4"
             Grid.Column="0"
-            Grid.ColumnSpan="3"
-            Orientation="Horizontal">
+            Grid.ColumnSpan="3">
             <Label
                 VerticalAlignment="Center"
                 Content="Received Message:"
+                DockPanel.Dock="Left"
                 FontWeight="Bold" />
-            <TextBlock VerticalAlignment="Center" Text="{Binding ReceivedMessage}" />
-        </StackPanel>
+            <TextBlock
+                VerticalAlignment="Center"
+                Background="AliceBlue"
+                DockPanel.Dock="Right"
+                Text="{Binding ReceivedMessage}" />
+        </DockPanel>
 
         <TextBlock
             Grid.Row="5"
             Grid.Column="0"
             Grid.ColumnSpan="3"
+            Background="#33FF4500"
             Text="{Binding ExceptionText}"
             TextWrapping="Wrap" />
-
-        <!--<ItemsControl
-            Grid.Row="4"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            ItemsSource="{Binding ConnectedClients}" />-->
     </Grid>
 </Window>

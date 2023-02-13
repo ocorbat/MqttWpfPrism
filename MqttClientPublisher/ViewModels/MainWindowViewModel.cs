@@ -16,19 +16,44 @@ namespace MqttClientPublisher.ViewModels
         private MqttFactory mqttFactory = new MqttFactory();
         private IMqttClient? mqttClient;
         private Guid clientId = Guid.NewGuid();
-
         private string _title = "MQTT Client Publisher";
-        public string Title
-        {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
-        }
+        private string status;
+        private string sendMessageText = "Enter Message";
+        private string exceptionText;
 
         public MainWindowViewModel()
         {
             ConnectCommand = new DelegateCommand(ConnectCommandExecute, ConnectCommandCanExecute);
             DisconnectCommand = new DelegateCommand(DisonnectCommandExecute, DisonnectCommandCanExecute);
             PublishCommand = new DelegateCommand(PublishCommandExecute, PublishCommandCanExecute);
+        }
+
+        public DelegateCommand ConnectCommand { get; set; }
+        public DelegateCommand DisconnectCommand { get; set; }
+        public DelegateCommand PublishCommand { get; set; }
+
+        public string Status
+        {
+            get { return status; }
+            set { SetProperty(ref status, value); }
+        }
+
+        public string ExceptionText
+        {
+            get { return exceptionText; }
+            set { SetProperty(ref exceptionText, value); }
+        }
+
+        public string SendMessageText
+        {
+            get { return sendMessageText; }
+            set { SetProperty(ref sendMessageText, value); }
+        }
+
+        public string Title
+        {
+            get { return _title; }
+            set { SetProperty(ref _title, value); }
         }
 
         private bool PublishCommandCanExecute()
@@ -79,17 +104,6 @@ namespace MqttClientPublisher.ViewModels
         private async void DisonnectCommandExecute()
         {
             await mqttClient.DisconnectAsync();
-            if (mqttClient.IsConnected)
-            {
-                Status = $"Client {clientId} is connected";
-            }
-            else
-            {
-                Status = $"Client {clientId} is disconnected";
-            }
-            ConnectCommand.RaiseCanExecuteChanged();
-            DisconnectCommand.RaiseCanExecuteChanged();
-            PublishCommand.RaiseCanExecuteChanged();
         }
 
         private bool ConnectCommandCanExecute()
@@ -100,8 +114,6 @@ namespace MqttClientPublisher.ViewModels
         private async void ConnectCommandExecute()
         {
             mqttClient = mqttFactory.CreateMqttClient();
-
-            // var mqttClientOptions = new MqttClientOptionsBuilder().WithTcpServer(Constants.Localhost, Constants.PortNumber).Build();
 
             var mqttClientOptions = mqttFactory.CreateClientOptionsBuilder()
                 .WithClientId(clientId.ToString())
@@ -128,6 +140,7 @@ namespace MqttClientPublisher.ViewModels
 
             mqttClient.ConnectedAsync += MqttClient_ConnectedAsync;
             mqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
+            mqttClient.ConnectingAsync += MqttClient_ConnectingAsync;
 
             try
             {
@@ -138,56 +151,38 @@ namespace MqttClientPublisher.ViewModels
                 ExceptionText = $"({e})";
                 Debug.WriteLine($"Timeout while publishing. {e}");
             }
+        }
 
-            if (mqttClient.IsConnected)
-            {
-                Status = $"Client {clientId} is connected";
-            }
-            else
-            {
-                Status = $"Client {clientId} is disconnected";
-            }
-
+        private Task MqttClient_ConnectingAsync(MqttClientConnectingEventArgs arg)
+        {
+            Status = $"Client {clientId} is connecting";
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
             PublishCommand.RaiseCanExecuteChanged();
-        }
-
-        private Task MqttClient_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
-        {
             return Task.CompletedTask;
         }
 
         private Task MqttClient_ConnectedAsync(MqttClientConnectedEventArgs arg)
         {
+            Status = $"Client {clientId} is connected";
+            ConnectCommand.RaiseCanExecuteChanged();
+            DisconnectCommand.RaiseCanExecuteChanged();
+            PublishCommand.RaiseCanExecuteChanged();
             return Task.CompletedTask;
         }
 
-        public DelegateCommand ConnectCommand { get; set; }
-
-        public DelegateCommand DisconnectCommand { get; set; }
-
-        public DelegateCommand PublishCommand { get; set; }
-
-        private string status;
-        public string Status
+        private Task MqttClient_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
         {
-            get { return status; }
-            set { SetProperty(ref status, value); }
+            Status = $"Client {clientId} is disconnected";
+            ConnectCommand.RaiseCanExecuteChanged();
+            DisconnectCommand.RaiseCanExecuteChanged();
+            PublishCommand.RaiseCanExecuteChanged();
+            return Task.CompletedTask;
         }
 
-        private string exceptionText;
-        public string ExceptionText
-        {
-            get { return exceptionText; }
-            set { SetProperty(ref exceptionText, value); }
-        }
 
-        private string sendMessageText = "Enter Message";
-        public string SendMessageText
-        {
-            get { return sendMessageText; }
-            set { SetProperty(ref sendMessageText, value); }
-        }
+
+
+
     }
 }

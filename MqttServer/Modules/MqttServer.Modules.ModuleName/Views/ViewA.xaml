@@ -4,12 +4,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:local="clr-namespace:MqttServer.Modules.ModuleName.Views"
     xmlns:prism="http://prismlibrary.com/"
+    MaxWidth="1200"
     prism:ViewModelLocator.AutoWireViewModel="True">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -18,29 +19,51 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Button
+        <Grid
             Grid.Row="0"
             Grid.Column="0"
-            Command="{Binding StartServerCommand}"
-            Content="START Server" />
-
-        <Button
-            Grid.Row="0"
-            Grid.Column="1"
-            Command="{Binding StopServerCommand}"
-            Content="STOP Server" />
-
+            Grid.ColumnSpan="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button
+                Grid.Column="0"
+                Command="{Binding StartServerCommand}"
+                Content="START Server" />
+            <Button
+                Grid.Column="1"
+                Command="{Binding StopServerCommand}"
+                Content="STOP Server"
+                DockPanel.Dock="Right" />
+        </Grid>
         <Label
+            Grid.Row="1"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Background="#33FFFF00"
+            Content="{Binding Status}"
+            FontWeight="Bold" />
+        <Button
+            Grid.Row="2"
+            Grid.Column="0"
+            Command="{Binding GetConnectedClientsCommand}"
+            Content="Refresh connected clients" />
+        <DataGrid
             Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="3"
-            Content="{Binding Status}" />
-
+            AutoGenerateColumns="true"
+            FrozenColumnCount="1"
+            ItemsSource="{Binding ConnectedClients}" />
         <DataGrid
             Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="3"
             AutoGenerateColumns="true"
-            ItemsSource="{Binding ConnectedClients}" />
+            FrozenColumnCount="1"
+            HorizontalScrollBarVisibility="Auto"
+            ItemsSource="{Binding SubscribedClientsView}"
+            VerticalScrollBarVisibility="Auto" />
     </Grid>
 </UserControl>

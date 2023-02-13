@@ -10,11 +10,10 @@
     SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -34,37 +33,33 @@
             Command="{Binding DisconnectCommand}"
             Content="Disconnect from server" />
 
-        <Button
-            Grid.Row="1"
-            Grid.Column="0"
-            Command="{Binding PublishCommand}"
-            Content="Publish" />
-
-        <StackPanel
-            Grid.Row="2"
-            Grid.Column="0"
-            Grid.ColumnSpan="3"
-            Orientation="Horizontal">
-            <TextBox
-                MinWidth="150"
-                VerticalAlignment="Center"
-                Text="{Binding SendMessageText, Mode=TwoWay}" />
-            <Button
-                VerticalAlignment="Center"
-                Command="{Binding PublishCommand}"
-                Content="Publish" />
-        </StackPanel>
-
         <Label
-            Grid.Row="3"
+            Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="3"
             Content="{Binding Status}" />
 
+        <DockPanel
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="3">
+            <Button
+                VerticalAlignment="Center"
+                Command="{Binding PublishCommand}"
+                Content="Publish"
+                DockPanel.Dock="Right" />
+            <TextBox
+                MinWidth="150"
+                VerticalAlignment="Center"
+                DockPanel.Dock="Left"
+                Text="{Binding SendMessageText, Mode=TwoWay}" />
+        </DockPanel>
+
         <TextBlock
-            Grid.Row="5"
+            Grid.Row="4"
             Grid.Column="0"
             Grid.ColumnSpan="3"
+            Background="#33FF4500"
             Text="{Binding ExceptionText}"
             TextWrapping="Wrap" />
     </Grid>

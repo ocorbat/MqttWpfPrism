@@ -7,9 +7,12 @@ using MqttServer.Services.Interfaces;
 using Prism.Commands;
 using Prism.Regions;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Data;
 
 namespace MqttServer.Modules.ModuleName.ViewModels
 {
@@ -17,6 +20,10 @@ namespace MqttServer.Modules.ModuleName.ViewModels
     {
         private MqttFactory mqttFactory = new MqttFactory();
         private MQTTnet.Server.MqttServer mqttServer;
+        private string status;
+        private IEnumerable<MqttClientStatus> connectedClients;
+        private ObservableCollection<MqttClientStatus> subscribedClients = new ObservableCollection<MqttClientStatus>();
+        private ICollectionView subscribedClientsView;
 
         public ViewAViewModel(IRegionManager regionManager, IMessageService messageService) :
             base(regionManager)
@@ -24,51 +31,65 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             StartServerCommand = new DelegateCommand(StartServerCommandExecute, StartServerCommandCanExecute);
             StopServerCommand = new DelegateCommand(StopServerCommandExecute, StopServerCommandCanExecute);
             GetConnectedClientsCommand = new DelegateCommand(GetConnectedClientsCommandExecute, GetConnectedClientsCommandCanExecute);
+
+            SubscribedClientsView = CollectionViewSource.GetDefaultView(subscribedClients);
         }
 
-        private ICollectionView connectedClientsView;
-        public ICollectionView ConnectedClientsView
+        public DelegateCommand StartServerCommand { get; set; }
+        public DelegateCommand StopServerCommand { get; set; }
+        public DelegateCommand GetConnectedClientsCommand { get; set; }
+
+        public string Status
         {
-            get { return connectedClientsView; }
-            set { SetProperty(ref connectedClientsView, value); }
+            get { return status; }
+            set { SetProperty(ref status, value); }
+        }
+
+        public IEnumerable<MqttClientStatus> ConnectedClients
+        {
+            get { return connectedClients; }
+            set { SetProperty(ref connectedClients, value); }
+        }
+
+        public ICollectionView SubscribedClientsView
+        {
+            get { return subscribedClientsView; }
+            set { SetProperty(ref subscribedClientsView, value); }
         }
 
         private bool GetConnectedClientsCommandCanExecute()
         {
-            return mqttServer == null ? false : mqttServer.IsStarted;
+            return mqttServer != null && mqttServer.IsStarted;
         }
 
         private async void GetConnectedClientsCommandExecute()
         {
-            Clients = await mqttServer.GetClientsAsync();
-            //ConnectedClients = new ObservableCollection<string>(toto.Select(item => item.Id));
-
+            if (mqttServer != null)
+            {
+                ConnectedClients = await mqttServer.GetClientsAsync();
+            }
+            else
+            {
+                ConnectedClients = null;
+            }
         }
 
-        private IEnumerable<MqttClientStatus> clients;
-        public IEnumerable<MqttClientStatus> Clients
-        {
-            get { return clients; }
-            set { SetProperty(ref clients, value); }
-        }
+
 
         private bool StopServerCommandCanExecute()
         {
-            return mqttServer == null ? false : mqttServer.IsStarted;
+            return mqttServer != null && mqttServer.IsStarted;
         }
 
         private async void StopServerCommandExecute()
         {
             await mqttServer.StopAsync();
-            Status = "Server stopped";
-            StartServerCommand.RaiseCanExecuteChanged();
-            StopServerCommand.RaiseCanExecuteChanged();
-            GetConnectedClientsCommand.RaiseCanExecuteChanged();
+
         }
 
         private bool StartServerCommandCanExecute()
         {
-            return mqttServer == null ? true : !mqttServer.IsStarted;
+            return mqttServer == null || !mqttServer.IsStarted;
         }
 
         private async void StartServerCommandExecute()
@@ -89,46 +110,85 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             mqttServer.ClientDisconnectedAsync += MqttServer_ClientDisconnectedAsync;
             mqttServer.ClientSubscribedTopicAsync += MqttServer_ClientSubscribedTopicAsync;
             mqttServer.ClientUnsubscribedTopicAsync += MqttServer_ClientUnsubscribedTopicAsync;
-            mqttServer.ValidatingConnectionAsync += e =>
-            {
-                var toto = e.ClientId;
-
-                return Task.CompletedTask;
-            };
-
+            mqttServer.ValidatingConnectionAsync += MqttServer_ValidatingConnectionAsync;
             mqttServer.InterceptingSubscriptionAsync += MqttServer_InterceptingSubscriptionAsync;
-
-            // Processing the incoming application message
-            mqttServer.InterceptingPublishAsync += args =>
-            {
-                // Here we only change the topic of the received application message.
-                // but also changing the payload etc. is required. Changing the QoS after
-                // transmitting is not supported and makes no sense at all.
-                //args.ApplicationMessage.Topic += "/manipulated";
-
-                return CompletedTask.Instance;
-            };
+            mqttServer.StartedAsync += MqttServer_StartedAsync;
+            mqttServer.StoppedAsync += MqttServer_StoppedAsync;
+            mqttServer.InterceptingPublishAsync += MqttServer_InterceptingPublishAsync;
 
             await mqttServer.StartAsync();
+        }
 
-            Status = "Server started";
-            ConnectedClients = await mqttServer.GetClientsAsync();
+        private Task MqttServer_InterceptingPublishAsync(InterceptingPublishEventArgs arg)
+        {
+            // Here we only change the topic of the received application message.
+            // but also changing the payload etc. is required. Changing the QoS after
+            // transmitting is not supported and makes no sense at all.
+            //args.ApplicationMessage.Topic += "/manipulated";
 
+            return CompletedTask.Instance;
+        }
 
-
+        private Task MqttServer_StoppedAsync(System.EventArgs arg)
+        {
+            Status = "Server stopped";
+            ConnectedClients = null;
             StartServerCommand.RaiseCanExecuteChanged();
             StopServerCommand.RaiseCanExecuteChanged();
             GetConnectedClientsCommand.RaiseCanExecuteChanged();
+            return CompletedTask.Instance;
         }
 
-        private Task MqttServer_ClientUnsubscribedTopicAsync(ClientUnsubscribedTopicEventArgs arg)
+        private async Task<Task> MqttServer_StartedAsync(System.EventArgs arg)
         {
+            Status = "Server started";
+            ConnectedClients = await mqttServer.GetClientsAsync();
+            StartServerCommand.RaiseCanExecuteChanged();
+            StopServerCommand.RaiseCanExecuteChanged();
+            GetConnectedClientsCommand.RaiseCanExecuteChanged();
             return CompletedTask.Instance;
+        }
+
+        private Task MqttServer_ValidatingConnectionAsync(ValidatingConnectionEventArgs arg)
+        {
+            var toto = arg.ClientId;
+
+            return Task.CompletedTask;
         }
 
         private Task MqttServer_InterceptingSubscriptionAsync(InterceptingSubscriptionEventArgs arg)
         {
             arg.CloseConnection = false;
+            return CompletedTask.Instance;
+        }
+
+        private async Task<Task> MqttServer_ClientSubscribedTopicAsync(ClientSubscribedTopicEventArgs arg)
+        {
+            var id = arg.ClientId;
+            var connectedClients = await mqttServer.GetClientsAsync();
+            var toto = connectedClients.SingleOrDefault(c => c.Id == id);
+
+            await Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                if (!subscribedClients.Any(c => c.Id == id))
+                {
+                    subscribedClients.Add(toto);
+                }
+            });
+
+            return CompletedTask.Instance;
+        }
+
+        private Task MqttServer_ClientUnsubscribedTopicAsync(ClientUnsubscribedTopicEventArgs arg)
+        {
+            var id = arg.ClientId;
+            var toto = subscribedClients.SingleOrDefault(c => c.Id == id);
+
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                subscribedClients.Remove(toto);
+            });
+
             return CompletedTask.Instance;
         }
 
@@ -139,6 +199,8 @@ namespace MqttServer.Modules.ModuleName.ViewModels
         //    //if (context.TopicFilter.Topic.StartsWith("admin/foo/bar") && context.ClientId != "theAdmin")
         //    //{
         //    //    context.AcceptSubscription = false;
+
+
         //    //}
 
         //    //if (context.TopicFilter.Topic.StartsWith("the/secret/stuff") && context.ClientId != "Imperator")
@@ -148,12 +210,6 @@ namespace MqttServer.Modules.ModuleName.ViewModels
         //    //}
 
         //}
-
-        private Task MqttServer_ClientSubscribedTopicAsync(ClientSubscribedTopicEventArgs arg)
-        {
-
-            return CompletedTask.Instance;
-        }
 
         private async Task<Task> MqttServer_ClientDisconnectedAsync(ClientDisconnectedEventArgs arg)
         {
@@ -180,29 +236,6 @@ namespace MqttServer.Modules.ModuleName.ViewModels
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
             //do something
-        }
-
-        public DelegateCommand StartServerCommand { get; set; }
-
-        public DelegateCommand StopServerCommand { get; set; }
-
-        public DelegateCommand GetConnectedClientsCommand { get; set; }
-
-
-
-
-        private string status;
-        public string Status
-        {
-            get { return status; }
-            set { SetProperty(ref status, value); }
-        }
-
-        private IEnumerable<MqttClientStatus> connectedClients;
-        public IEnumerable<MqttClientStatus> ConnectedClients
-        {
-            get { return connectedClients; }
-            set { SetProperty(ref connectedClients, value); }
         }
     }
 }
