@@ -1,0 +1,85 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DD98F096-6431-408E-93FF-E5A504BFFDA7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Modules.ModuleName.Tests", "MqttServer\Tests\MqttServer.Modules.ModuleName.Tests\MqttServer.Modules.ModuleName.Tests.csproj", "{D3C9B24A-E8A5-468B-933F-E4EE927CB398}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{F78C45A0-E044-4890-B8DD-F943BB8CDAAA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Modules.ModuleName", "MqttServer\Modules\MqttServer.Modules.ModuleName\MqttServer.Modules.ModuleName.csproj", "{86460411-BC6E-4204-87EF-F2891D39C714}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{EE87DA7C-2593-42A8-B734-43292576133A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Services", "MqttServer\Services\MqttServer.Services\MqttServer.Services.csproj", "{A76B9823-109C-4A20-9D6D-B08767860DB0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Services.Interfaces", "MqttServer\Services\MqttServer.Services.Interfaces\MqttServer.Services.Interfaces.csproj", "{8D11E518-1181-4944-B313-24E84BE24552}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer", "MqttServer\MqttServer\MqttServer.csproj", "{7B59BDD1-7D72-4758-B5EE-6382648B5CAF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Core", "MqttServer\MqttServer.Core\MqttServer.Core.csproj", "{92AB8997-84D3-4885-9768-853C478FCE39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttClientSubscriber", "MqttClientSubscriber\MqttClientSubscriber.csproj", "{8114924C-AC86-4B5B-A118-91AD76A1B152}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttClientPublisher", "MqttClientPublisher\MqttClientPublisher.csproj", "{E1A87EE0-E5B4-42BB-A6CA-FAC5DCE4E54C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttCommon", "MqttCommon\MqttCommon.csproj", "{094B51B6-FE56-4A8C-B864-23904407B322}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D3C9B24A-E8A5-468B-933F-E4EE927CB398}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3C9B24A-E8A5-468B-933F-E4EE927CB398}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3C9B24A-E8A5-468B-933F-E4EE927CB398}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3C9B24A-E8A5-468B-933F-E4EE927CB398}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86460411-BC6E-4204-87EF-F2891D39C714}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86460411-BC6E-4204-87EF-F2891D39C714}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86460411-BC6E-4204-87EF-F2891D39C714}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86460411-BC6E-4204-87EF-F2891D39C714}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A76B9823-109C-4A20-9D6D-B08767860DB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A76B9823-109C-4A20-9D6D-B08767860DB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A76B9823-109C-4A20-9D6D-B08767860DB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A76B9823-109C-4A20-9D6D-B08767860DB0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D11E518-1181-4944-B313-24E84BE24552}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D11E518-1181-4944-B313-24E84BE24552}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D11E518-1181-4944-B313-24E84BE24552}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D11E518-1181-4944-B313-24E84BE24552}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B59BDD1-7D72-4758-B5EE-6382648B5CAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B59BDD1-7D72-4758-B5EE-6382648B5CAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B59BDD1-7D72-4758-B5EE-6382648B5CAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B59BDD1-7D72-4758-B5EE-6382648B5CAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92AB8997-84D3-4885-9768-853C478FCE39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92AB8997-84D3-4885-9768-853C478FCE39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92AB8997-84D3-4885-9768-853C478FCE39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92AB8997-84D3-4885-9768-853C478FCE39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8114924C-AC86-4B5B-A118-91AD76A1B152}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8114924C-AC86-4B5B-A118-91AD76A1B152}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8114924C-AC86-4B5B-A118-91AD76A1B152}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8114924C-AC86-4B5B-A118-91AD76A1B152}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1A87EE0-E5B4-42BB-A6CA-FAC5DCE4E54C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1A87EE0-E5B4-42BB-A6CA-FAC5DCE4E54C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1A87EE0-E5B4-42BB-A6CA-FAC5DCE4E54C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1A87EE0-E5B4-42BB-A6CA-FAC5DCE4E54C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{094B51B6-FE56-4A8C-B864-23904407B322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{094B51B6-FE56-4A8C-B864-23904407B322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{094B51B6-FE56-4A8C-B864-23904407B322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{094B51B6-FE56-4A8C-B864-23904407B322}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D3C9B24A-E8A5-468B-933F-E4EE927CB398} = {DD98F096-6431-408E-93FF-E5A504BFFDA7}
+		{86460411-BC6E-4204-87EF-F2891D39C714} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
+		{A76B9823-109C-4A20-9D6D-B08767860DB0} = {EE87DA7C-2593-42A8-B734-43292576133A}
+		{8D11E518-1181-4944-B313-24E84BE24552} = {EE87DA7C-2593-42A8-B734-43292576133A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {815F87A5-1F23-4A6F-BCC1-8C98C8EE135E}
+	EndGlobalSection
+EndGlobal
