@@ -2,7 +2,6 @@
 using MqttCommon.Extensions;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Server;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -31,6 +30,21 @@ namespace MqttClientSubscriber.ViewModels
             ConnectCommand = new DelegateCommand(ConnectCommandExecute, ConnectCommandCanExecute);
             DisconnectCommand = new DelegateCommand(DisonnectCommandExecute, DisonnectCommandCanExecute);
             SubscribeCommand = new DelegateCommand(SubscribeCommandExecute, SubscribeCommandCanExecute);
+            UnsubscribeCommand = new DelegateCommand(UnsubscribeCommandExecute, UnsubscribeCommandCanExecute);
+        }
+
+        private bool UnsubscribeCommandCanExecute()
+        {
+            return mqttClient == null ? false : mqttClient.IsConnected;
+        }
+
+        private async void UnsubscribeCommandExecute()
+        {
+            var mqttUnsubscribeOptions = mqttFactory.CreateUnsubscribeOptionsBuilder()
+                .WithTopicFilter("topic1")
+                .Build();
+
+            await mqttClient.UnsubscribeAsync(mqttUnsubscribeOptions);
         }
 
         private bool SubscribeCommandCanExecute()
@@ -93,6 +107,7 @@ namespace MqttClientSubscriber.ViewModels
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
             SubscribeCommand.RaiseCanExecuteChanged();
+            UnsubscribeCommand.RaiseCanExecuteChanged();
         }
 
         private bool ConnectCommandCanExecute()
@@ -103,8 +118,6 @@ namespace MqttClientSubscriber.ViewModels
         private async void ConnectCommandExecute()
         {
             mqttClient = mqttFactory.CreateMqttClient();
-
-            // var mqttClientOptions = new MqttClientOptionsBuilder().WithTcpServer(Constants.Localhost, Constants.PortNumber).Build();
 
             var mqttClientOptions = mqttFactory.CreateClientOptionsBuilder()
                 .WithClientId(clientId.ToString())
@@ -123,8 +136,8 @@ namespace MqttClientSubscriber.ViewModels
                 // Convert Payload to string
                 var payload = e.ApplicationMessage?.Payload == null ? null : System.Text.Encoding.UTF8.GetString(e.ApplicationMessage?.Payload);
 
-
-                Console.WriteLine(payload);
+                ReceivedMessage = payload;
+                Debug.WriteLine(payload);
 
                 return Task.CompletedTask;
             };
@@ -132,9 +145,15 @@ namespace MqttClientSubscriber.ViewModels
             mqttClient.ConnectedAsync += MqttClient_ConnectedAsync;
             mqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
 
-
-            await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
-            
+            try
+            {
+                await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+            }
+            catch (Exception e)
+            {
+                ExceptionText = $"({e})";
+                Debug.WriteLine($"Timeout while publishing. {e}");
+            }
 
             if (mqttClient.IsConnected)
             {
@@ -148,6 +167,7 @@ namespace MqttClientSubscriber.ViewModels
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
             SubscribeCommand.RaiseCanExecuteChanged();
+            UnsubscribeCommand.RaiseCanExecuteChanged();
         }
 
         private Task MqttClient_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
@@ -173,6 +193,16 @@ namespace MqttClientSubscriber.ViewModels
 
         public DelegateCommand SubscribeCommand { get; set; }
 
+        public DelegateCommand UnsubscribeCommand { get; set; }
+
+
+
+        private string receivedMessage;
+        public string ReceivedMessage
+        {
+            get { return receivedMessage; }
+            set { SetProperty(ref receivedMessage, value); }
+        }
 
         private string exceptionText;
         public string ExceptionText

@@ -1,4 +1,5 @@
-﻿using MQTTnet;
+﻿using MqttCommon;
+using MQTTnet;
 using MQTTnet.Internal;
 using MQTTnet.Server;
 using MqttServer.Core.Mvvm;
@@ -62,7 +63,7 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             Status = "Server stopped";
             StartServerCommand.RaiseCanExecuteChanged();
             StopServerCommand.RaiseCanExecuteChanged();
-            GetConnectedClientsCommand.RaiseCanExecuteChanged(); 
+            GetConnectedClientsCommand.RaiseCanExecuteChanged();
         }
 
         private bool StartServerCommandCanExecute()
@@ -79,20 +80,23 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             //var mqttServerOptions = mqttFactory.CreateServerOptionsBuilder().WithDefaultEndpoint().Build()
             var mqttServerOptions = mqttFactory.CreateServerOptionsBuilder()
                 .WithDefaultEndpoint()
-                .WithDefaultEndpointPort(5004)
+                .WithDefaultEndpointPort(Constants.Port5004)
                 .Build();
-            
+
             mqttServer = mqttFactory.CreateMqttServer(mqttServerOptions);
 
             mqttServer.ClientConnectedAsync += MqttServer_ClientConnectedAsync;
             mqttServer.ClientDisconnectedAsync += MqttServer_ClientDisconnectedAsync;
             mqttServer.ClientSubscribedTopicAsync += MqttServer_ClientSubscribedTopicAsync;
+            mqttServer.ClientUnsubscribedTopicAsync += MqttServer_ClientUnsubscribedTopicAsync;
             mqttServer.ValidatingConnectionAsync += e =>
             {
                 var toto = e.ClientId;
 
                 return Task.CompletedTask;
             };
+
+            mqttServer.InterceptingSubscriptionAsync += MqttServer_InterceptingSubscriptionAsync;
 
             // Processing the incoming application message
             mqttServer.InterceptingPublishAsync += args =>
@@ -117,13 +121,41 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             GetConnectedClientsCommand.RaiseCanExecuteChanged();
         }
 
-        private static Task MqttServer_ClientSubscribedTopicAsync(ClientSubscribedTopicEventArgs arg)
+        private Task MqttServer_ClientUnsubscribedTopicAsync(ClientUnsubscribedTopicEventArgs arg)
         {
-            // will never be called, problem when client subscribes to topic
-            return new Task(() => { });
+            return CompletedTask.Instance;
         }
 
-        private async Task MqttServer_ClientDisconnectedAsync(ClientDisconnectedEventArgs arg)
+        private Task MqttServer_InterceptingSubscriptionAsync(InterceptingSubscriptionEventArgs arg)
+        {
+            arg.CloseConnection = false;
+            return CompletedTask.Instance;
+        }
+
+        //private async Task MqttServer_InterceptingSubscriptionAsync(InterceptingSubscriptionEventArgs arg)
+        //{
+
+
+        //    //if (context.TopicFilter.Topic.StartsWith("admin/foo/bar") && context.ClientId != "theAdmin")
+        //    //{
+        //    //    context.AcceptSubscription = false;
+        //    //}
+
+        //    //if (context.TopicFilter.Topic.StartsWith("the/secret/stuff") && context.ClientId != "Imperator")
+        //    //{
+        //    //    context.AcceptSubscription = false;
+        //    //    context.CloseConnection = true;
+        //    //}
+
+        //}
+
+        private Task MqttServer_ClientSubscribedTopicAsync(ClientSubscribedTopicEventArgs arg)
+        {
+
+            return CompletedTask.Instance;
+        }
+
+        private async Task<Task> MqttServer_ClientDisconnectedAsync(ClientDisconnectedEventArgs arg)
         {
             ConnectedClients = await mqttServer.GetClientsAsync();
 
@@ -131,10 +163,10 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             {
                 //textBlock_ServerConnected.Text = arg.ClientId.ToString();
             });
-            return;
+            return CompletedTask.Instance;
         }
 
-        private async Task MqttServer_ClientConnectedAsync(ClientConnectedEventArgs arg)
+        private async Task<Task> MqttServer_ClientConnectedAsync(ClientConnectedEventArgs arg)
         {
             ConnectedClients = await mqttServer.GetClientsAsync();
 
@@ -142,7 +174,7 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             {
                 //textBlock_ServerConnected.Text = arg.ClientId.ToString();
             });
-            return;
+            return CompletedTask.Instance;
         }
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
@@ -157,7 +189,7 @@ namespace MqttServer.Modules.ModuleName.ViewModels
         public DelegateCommand GetConnectedClientsCommand { get; set; }
 
 
-        
+
 
         private string status;
         public string Status

@@ -6,8 +6,8 @@
     Title="{Binding Title}"
     MinWidth="525"
     MinHeight="350"
-    SizeToContent="WidthAndHeight"
-    prism:ViewModelLocator.AutoWireViewModel="True">
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -40,11 +40,29 @@
             Command="{Binding SubscribeCommand}"
             Content="Subscribe" />
 
+        <Button
+            Grid.Row="2"
+            Grid.Column="0"
+            Command="{Binding UnsubscribeCommand}"
+            Content="UnSubscribe" />
+
         <Label
             Grid.Row="3"
             Grid.Column="0"
             Grid.ColumnSpan="3"
             Content="{Binding Status}" />
+
+        <StackPanel
+            Grid.Row="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Orientation="Horizontal">
+            <Label
+                VerticalAlignment="Center"
+                Content="Received Message:"
+                FontWeight="Bold" />
+            <TextBlock VerticalAlignment="Center" Text="{Binding ReceivedMessage}" />
+        </StackPanel>
 
         <TextBlock
             Grid.Row="5"

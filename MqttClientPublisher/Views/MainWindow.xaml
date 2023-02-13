@@ -6,8 +6,8 @@
     Title="{Binding Title}"
     MinWidth="525"
     MinHeight="350"
-    SizeToContent="WidthAndHeight"
-    prism:ViewModelLocator.AutoWireViewModel="True">
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    SizeToContent="WidthAndHeight">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -39,6 +39,21 @@
             Grid.Column="0"
             Command="{Binding PublishCommand}"
             Content="Publish" />
+
+        <StackPanel
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Orientation="Horizontal">
+            <TextBox
+                MinWidth="150"
+                VerticalAlignment="Center"
+                Text="{Binding SendMessageText, Mode=TwoWay}" />
+            <Button
+                VerticalAlignment="Center"
+                Command="{Binding PublishCommand}"
+                Content="Publish" />
+        </StackPanel>
 
         <Label
             Grid.Row="3"

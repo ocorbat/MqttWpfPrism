@@ -1,13 +1,13 @@
-﻿using MQTTnet.Client;
+﻿using MqttCommon;
+using MqttCommon.Extensions;
 using MQTTnet;
+using MQTTnet.Client;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
-using MqttCommon;
-using MqttCommon.Extensions;
 
 namespace MqttClientPublisher.ViewModels
 {
@@ -40,7 +40,7 @@ namespace MqttClientPublisher.ViewModels
         {
             var applicationMessage = new MqttApplicationMessageBuilder()
                .WithTopic("topic1")
-               .WithPayload("myMessage")
+               .WithPayload(SendMessageText)
                .Build();
 
             try
@@ -50,12 +50,12 @@ namespace MqttClientPublisher.ViewModels
                 using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(1)))
                 {
                     response1 = await mqttClient.PublishAsync(applicationMessage, timeoutToken.Token);
-                    
+
                     if (response1.IsSuccess)
                     {
                         ExceptionText = response1.DumpToString();
                     }
-                    
+
                     Debug.WriteLine($"Message published {applicationMessage.Payload}");
                 }
             }
@@ -129,9 +129,15 @@ namespace MqttClientPublisher.ViewModels
             mqttClient.ConnectedAsync += MqttClient_ConnectedAsync;
             mqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
 
-
-            await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
-
+            try
+            {
+                await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+            }
+            catch (Exception e)
+            {
+                ExceptionText = $"({e})";
+                Debug.WriteLine($"Timeout while publishing. {e}");
+            }
 
             if (mqttClient.IsConnected)
             {
@@ -175,6 +181,13 @@ namespace MqttClientPublisher.ViewModels
         {
             get { return exceptionText; }
             set { SetProperty(ref exceptionText, value); }
+        }
+
+        private string sendMessageText = "Enter Message";
+        public string SendMessageText
+        {
+            get { return sendMessageText; }
+            set { SetProperty(ref sendMessageText, value); }
         }
     }
 }
