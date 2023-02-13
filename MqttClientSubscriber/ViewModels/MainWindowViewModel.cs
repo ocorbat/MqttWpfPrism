@@ -18,6 +18,22 @@ namespace MqttClientSubscriber.ViewModels
         private Guid clientId = Guid.NewGuid();
 
         private string _title = "MQTT Client Subscriber";
+        private string status;
+
+        private string receivedMessage;
+        private string exceptionText;
+        public MainWindowViewModel()
+        {
+            ConnectCommand = new DelegateCommand(ConnectCommandExecute, ConnectCommandCanExecute);
+            DisconnectCommand = new DelegateCommand(DisonnectCommandExecute, DisonnectCommandCanExecute);
+            SubscribeCommand = new DelegateCommand(SubscribeCommandExecute, SubscribeCommandCanExecute);
+            UnsubscribeCommand = new DelegateCommand(UnsubscribeCommandExecute, UnsubscribeCommandCanExecute);
+        }
+
+        public DelegateCommand ConnectCommand { get; set; }
+        public DelegateCommand DisconnectCommand { get; set; }
+        public DelegateCommand SubscribeCommand { get; set; }
+        public DelegateCommand UnsubscribeCommand { get; set; }
 
         public string Title
         {
@@ -25,12 +41,22 @@ namespace MqttClientSubscriber.ViewModels
             set { SetProperty(ref _title, value); }
         }
 
-        public MainWindowViewModel()
+        public string Status
         {
-            ConnectCommand = new DelegateCommand(ConnectCommandExecute, ConnectCommandCanExecute);
-            DisconnectCommand = new DelegateCommand(DisonnectCommandExecute, DisonnectCommandCanExecute);
-            SubscribeCommand = new DelegateCommand(SubscribeCommandExecute, SubscribeCommandCanExecute);
-            UnsubscribeCommand = new DelegateCommand(UnsubscribeCommandExecute, UnsubscribeCommandCanExecute);
+            get { return status; }
+            set { SetProperty(ref status, value); }
+        }
+
+        public string ReceivedMessage
+        {
+            get { return receivedMessage; }
+            set { SetProperty(ref receivedMessage, value); }
+        }
+
+        public string ExceptionText
+        {
+            get { return exceptionText; }
+            set { SetProperty(ref exceptionText, value); }
         }
 
         private bool UnsubscribeCommandCanExecute()
@@ -173,37 +199,6 @@ namespace MqttClientSubscriber.ViewModels
             SubscribeCommand.RaiseCanExecuteChanged();
             UnsubscribeCommand.RaiseCanExecuteChanged();
             return Task.CompletedTask;
-        }
-
-        private string status;
-        public string Status
-        {
-            get { return status; }
-            set { SetProperty(ref status, value); }
-        }
-
-        public DelegateCommand ConnectCommand { get; set; }
-
-        public DelegateCommand DisconnectCommand { get; set; }
-
-        public DelegateCommand SubscribeCommand { get; set; }
-
-        public DelegateCommand UnsubscribeCommand { get; set; }
-
-
-
-        private string receivedMessage;
-        public string ReceivedMessage
-        {
-            get { return receivedMessage; }
-            set { SetProperty(ref receivedMessage, value); }
-        }
-
-        private string exceptionText;
-        public string ExceptionText
-        {
-            get { return exceptionText; }
-            set { SetProperty(ref exceptionText, value); }
         }
     }
 }
