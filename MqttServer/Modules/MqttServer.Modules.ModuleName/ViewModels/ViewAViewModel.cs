@@ -18,20 +18,24 @@ namespace MqttServer.Modules.ModuleName.ViewModels
 {
     public class ViewAViewModel : RegionViewModelBase
     {
-        private MqttFactory mqttFactory = new MqttFactory();
+        private MqttFactory mqttFactory;
         private MQTTnet.Server.MqttServer mqttServer;
-        private string status = string.Empty;
+        private string status;
         private IEnumerable<MqttClientStatus> connectedClients;
-        private ObservableCollection<MqttClientStatus> subscribedClients = new ObservableCollection<MqttClientStatus>();
+        private ObservableCollection<MqttClientStatus> subscribedClients;
         private ICollectionView subscribedClientsView;
 
         public ViewAViewModel(IRegionManager regionManager, IMessageService messageService) :
             base(regionManager)
         {
+            mqttFactory = new MqttFactory();
+            status = string.Empty;
+
             StartServerCommand = new DelegateCommand(StartServerCommandExecute, StartServerCommandCanExecute);
             StopServerCommand = new DelegateCommand(StopServerCommandExecute, StopServerCommandCanExecute);
             GetConnectedClientsCommand = new DelegateCommand(GetConnectedClientsCommandExecute, GetConnectedClientsCommandCanExecute);
 
+            subscribedClients = new ObservableCollection<MqttClientStatus>();
             SubscribedClientsView = CollectionViewSource.GetDefaultView(subscribedClients);
         }
 
@@ -99,6 +103,8 @@ namespace MqttServer.Modules.ModuleName.ViewModels
                 .WithDefaultEndpoint()
                 .WithDefaultEndpointPort(Constants.Port5004)
                 .Build();
+
+
 
             mqttServer = mqttFactory.CreateMqttServer(mqttServerOptions);
 
@@ -236,7 +242,20 @@ namespace MqttServer.Modules.ModuleName.ViewModels
 
         public override void OnNavigatedTo(NavigationContext navigationContext)
         {
-            //do something
+            //Initialize();
+        }
+
+        private void Initialize()
+        {
+            mqttFactory = new MqttFactory();
+            status = string.Empty;
+
+            StartServerCommand = new DelegateCommand(StartServerCommandExecute, StartServerCommandCanExecute);
+            StopServerCommand = new DelegateCommand(StopServerCommandExecute, StopServerCommandCanExecute);
+            GetConnectedClientsCommand = new DelegateCommand(GetConnectedClientsCommandExecute, GetConnectedClientsCommandCanExecute);
+
+            subscribedClients = new ObservableCollection<MqttClientStatus>();
+            SubscribedClientsView = CollectionViewSource.GetDefaultView(subscribedClients);
         }
     }
 }

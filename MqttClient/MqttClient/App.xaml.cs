@@ -1,4 +1,5 @@
-﻿using MqttClient.Modules.ModuleName;
+﻿using MqttClient.Modules.ModuleConnect;
+using MqttClient.Modules.ModuleName;
 using MqttClient.Services;
 using MqttClient.Services.Interfaces;
 using MqttClient.Views;
@@ -26,6 +27,7 @@ namespace MqttClient
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             moduleCatalog.AddModule<ModuleNameModule>();
+            moduleCatalog.AddModule<ModuleConnectModule>();
         }
     }
 }
