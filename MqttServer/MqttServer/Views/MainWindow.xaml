@@ -5,8 +5,8 @@
     xmlns:core="clr-namespace:MqttServer.Core;assembly=MqttServer.Core"
     xmlns:prism="http://prismlibrary.com/"
     Title="{Binding Title}"
-    MinWidth="525"
-    MinHeight="350"
+    MinWidth="600"
+    MinHeight="400"
     prism:ViewModelLocator.AutoWireViewModel="True"
     SizeToContent="WidthAndHeight">
     <Grid>

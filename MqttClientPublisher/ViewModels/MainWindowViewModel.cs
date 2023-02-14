@@ -2,10 +2,13 @@
 using MqttCommon.Extensions;
 using MQTTnet;
 using MQTTnet.Client;
+using MQTTnet.Formatter;
+using MQTTnet.Protocol;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.Diagnostics;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,7 +20,7 @@ namespace MqttClientPublisher.ViewModels
         private IMqttClient? mqttClient;
         private Guid clientId = Guid.NewGuid();
         private string _title = "MQTT Client Publisher";
-        private string status;
+        private string status = string.Empty;
         private string sendMessageText = "Enter Message";
         private string exceptionText;
 
@@ -34,26 +37,26 @@ namespace MqttClientPublisher.ViewModels
 
         public string Status
         {
-            get { return status; }
-            set { SetProperty(ref status, value); }
+            get => status;
+            set => SetProperty(ref status, value);
         }
 
         public string ExceptionText
         {
-            get { return exceptionText; }
-            set { SetProperty(ref exceptionText, value); }
+            get => exceptionText;
+            set => SetProperty(ref exceptionText, value);
         }
 
         public string SendMessageText
         {
-            get { return sendMessageText; }
-            set { SetProperty(ref sendMessageText, value); }
+            get => sendMessageText;
+            set => SetProperty(ref sendMessageText, value);
         }
 
         public string Title
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get => _title;
+            set => SetProperty(ref _title, value);
         }
 
         private bool PublishCommandCanExecute()
@@ -64,24 +67,24 @@ namespace MqttClientPublisher.ViewModels
         private async void PublishCommandExecute()
         {
             var applicationMessage = new MqttApplicationMessageBuilder()
-               .WithTopic("topic1")
+               .WithTopic(CurrentTopic)
                .WithPayload(SendMessageText)
+               .WithRetainFlag(IsRetainModeOn)
+               .WithQualityOfServiceLevel(QualityOfServiceLevel)
                .Build();
 
             try
             {
-                MqttClientPublishResult response1;
+                MqttClientPublishResult response;
 
                 using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(1)))
                 {
-                    response1 = await mqttClient.PublishAsync(applicationMessage, timeoutToken.Token);
+                    response = await mqttClient.PublishAsync(applicationMessage, timeoutToken.Token);
 
-                    if (response1.IsSuccess)
+                    if (response.IsSuccess)
                     {
-                        ExceptionText = response1.DumpToString();
+                        Output = response.DumpToString();
                     }
-
-                    Debug.WriteLine($"Message published {applicationMessage.Payload}");
                 }
             }
             catch (OperationCanceledException e)
@@ -120,20 +123,23 @@ namespace MqttClientPublisher.ViewModels
                 .WithTcpServer(Constants.Localhost, Constants.Port5004)
                 .WithCleanSession(true)
                 .WithKeepAlivePeriod(new TimeSpan(0, 1, 0))
+                .WithProtocolVersion(ProtocolVersion)
+                .WithCredentials(Username, Password)
                 .Build();
 
             mqttClient.ApplicationMessageReceivedAsync += e =>
             {
+                StringBuilder stringBuilder = new StringBuilder();
                 Debug.WriteLine("Received application message.");
-                e.DumpToConsole();
+                stringBuilder.AppendLine(e.DumpToString());
 
                 var payloadString = Convert.ToString(e.ApplicationMessage.Payload);
 
                 // Convert Payload to string
                 var payload = e.ApplicationMessage?.Payload == null ? null : System.Text.Encoding.UTF8.GetString(e.ApplicationMessage?.Payload);
 
-
-                Console.WriteLine(payload);
+                stringBuilder.AppendLine(payload);
+                Output = stringBuilder.ToString();
 
                 return Task.CompletedTask;
             };
@@ -142,9 +148,11 @@ namespace MqttClientPublisher.ViewModels
             mqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
             mqttClient.ConnectingAsync += MqttClient_ConnectingAsync;
 
+            MqttClientConnectResult result;
             try
             {
-                await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+                result = await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+                Output = result.DumpToString();
             }
             catch (Exception e)
             {
@@ -168,6 +176,8 @@ namespace MqttClientPublisher.ViewModels
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
             PublishCommand.RaiseCanExecuteChanged();
+            Output = string.Empty;
+            ExceptionText = string.Empty;
             return Task.CompletedTask;
         }
 
@@ -177,12 +187,66 @@ namespace MqttClientPublisher.ViewModels
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
             PublishCommand.RaiseCanExecuteChanged();
+            Output = string.Empty;
+            ExceptionText = string.Empty;
             return Task.CompletedTask;
         }
 
+        private bool isRetainModeOn = false;
+        public bool IsRetainModeOn
+        {
+            get => isRetainModeOn;
+            set => SetProperty(ref isRetainModeOn, value);
+        }
 
+        private string currentTopic = "Topic1";
+        public string CurrentTopic
+        {
+            get => currentTopic;
+            set => SetProperty(ref currentTopic, value);
+        }
 
+        private MqttQualityOfServiceLevel qualityOfServiceLevel = MqttQualityOfServiceLevel.AtMostOnce;
+        public MqttQualityOfServiceLevel QualityOfServiceLevel
+        {
+            get => qualityOfServiceLevel;
+            set => SetProperty(ref qualityOfServiceLevel, value);
+        }
 
+        private bool isCleanSessionOn = true;
+        public bool IsCleanSessionOn
+        {
+            get => isCleanSessionOn;
+            set => SetProperty(ref isCleanSessionOn, value);
+        }
+
+        private string output;
+        public string Output
+        {
+            get => output;
+            set => SetProperty(ref output, value);
+        }
+
+        private string password = "1234";
+        public string Password
+        {
+            get => password;
+            set => SetProperty(ref password, value);
+        }
+
+        private string username = "admin";
+        public string Username
+        {
+            get => username;
+            set => SetProperty(ref username, value);
+        }
+
+        private MqttProtocolVersion protocolVersion = MqttProtocolVersion.V500;
+        public MqttProtocolVersion ProtocolVersion
+        {
+            get => protocolVersion;
+            set => SetProperty(ref protocolVersion, value);
+        }
 
     }
 }

@@ -41,7 +41,8 @@
             Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="3"
-            Background="#33FFFF00"
+            HorizontalContentAlignment="Center"
+            Background="#55FFFF00"
             Content="{Binding Status}"
             FontWeight="Bold" />
         <Button

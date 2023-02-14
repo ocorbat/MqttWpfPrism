@@ -20,7 +20,7 @@ namespace MqttServer.Modules.ModuleName.ViewModels
     {
         private MqttFactory mqttFactory = new MqttFactory();
         private MQTTnet.Server.MqttServer mqttServer;
-        private string status;
+        private string status = string.Empty;
         private IEnumerable<MqttClientStatus> connectedClients;
         private ObservableCollection<MqttClientStatus> subscribedClients = new ObservableCollection<MqttClientStatus>();
         private ICollectionView subscribedClientsView;
@@ -41,20 +41,20 @@ namespace MqttServer.Modules.ModuleName.ViewModels
 
         public string Status
         {
-            get { return status; }
-            set { SetProperty(ref status, value); }
+            get => status;
+            set => SetProperty(ref status, value);
         }
 
         public IEnumerable<MqttClientStatus> ConnectedClients
         {
-            get { return connectedClients; }
-            set { SetProperty(ref connectedClients, value); }
+            get => connectedClients;
+            set => SetProperty(ref connectedClients, value);
         }
 
         public ICollectionView SubscribedClientsView
         {
-            get { return subscribedClientsView; }
-            set { SetProperty(ref subscribedClientsView, value); }
+            get => subscribedClientsView;
+            set => SetProperty(ref subscribedClientsView, value);
         }
 
         private bool GetConnectedClientsCommandCanExecute()
@@ -74,8 +74,6 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             }
         }
 
-
-
         private bool StopServerCommandCanExecute()
         {
             return mqttServer != null && mqttServer.IsStarted;
@@ -84,7 +82,6 @@ namespace MqttServer.Modules.ModuleName.ViewModels
         private async void StopServerCommandExecute()
         {
             await mqttServer.StopAsync();
-
         }
 
         private bool StartServerCommandCanExecute()
@@ -98,7 +95,6 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             // The port for the default endpoint is 1883.
             // The default endpoint is NOT encrypted!
             // Use the builder classes where possible.
-            //var mqttServerOptions = mqttFactory.CreateServerOptionsBuilder().WithDefaultEndpoint().Build()
             var mqttServerOptions = mqttFactory.CreateServerOptionsBuilder()
                 .WithDefaultEndpoint()
                 .WithDefaultEndpointPort(Constants.Port5004)
@@ -151,8 +147,13 @@ namespace MqttServer.Modules.ModuleName.ViewModels
 
         private Task MqttServer_ValidatingConnectionAsync(ValidatingConnectionEventArgs arg)
         {
-            var toto = arg.ClientId;
+            if (arg.UserName != "admin" || arg.Password != "1234")
+            {
+                arg.ReasonCode = MQTTnet.Protocol.MqttConnectReasonCode.BadUserNameOrPassword;
+                return CompletedTask.Instance;
+            }
 
+            arg.ReasonCode = MQTTnet.Protocol.MqttConnectReasonCode.Success;
             return Task.CompletedTask;
         }
 

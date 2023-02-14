@@ -2,6 +2,8 @@
 using MqttCommon.Extensions;
 using MQTTnet;
 using MQTTnet.Client;
+using MQTTnet.Formatter;
+using MQTTnet.Protocol;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -18,7 +20,7 @@ namespace MqttClientSubscriber.ViewModels
         private Guid clientId = Guid.NewGuid();
 
         private string _title = "MQTT Client Subscriber";
-        private string status;
+        private string status = string.Empty;
 
         private string receivedMessage;
         private string exceptionText;
@@ -37,26 +39,33 @@ namespace MqttClientSubscriber.ViewModels
 
         public string Title
         {
-            get { return _title; }
-            set { SetProperty(ref _title, value); }
+            get => _title;
+            set => SetProperty(ref _title, value);
         }
 
         public string Status
         {
-            get { return status; }
-            set { SetProperty(ref status, value); }
+            get => status;
+            set => SetProperty(ref status, value);
         }
 
         public string ReceivedMessage
         {
-            get { return receivedMessage; }
-            set { SetProperty(ref receivedMessage, value); }
+            get => receivedMessage;
+            set => SetProperty(ref receivedMessage, value);
         }
 
         public string ExceptionText
         {
-            get { return exceptionText; }
-            set { SetProperty(ref exceptionText, value); }
+            get => exceptionText;
+            set => SetProperty(ref exceptionText, value);
+        }
+
+        private string output;
+        public string Output
+        {
+            get => output;
+            set => SetProperty(ref output, value);
         }
 
         private bool UnsubscribeCommandCanExecute()
@@ -66,11 +75,13 @@ namespace MqttClientSubscriber.ViewModels
 
         private async void UnsubscribeCommandExecute()
         {
+            MqttClientUnsubscribeResult result;
             var mqttUnsubscribeOptions = mqttFactory.CreateUnsubscribeOptionsBuilder()
-                .WithTopicFilter("topic1")
+                .WithTopicFilter(CurrentTopic)
                 .Build();
 
-            await mqttClient.UnsubscribeAsync(mqttUnsubscribeOptions);
+            result = await mqttClient.UnsubscribeAsync(mqttUnsubscribeOptions);
+            Output = result.DumpToString();
         }
 
         private bool SubscribeCommandCanExecute()
@@ -80,13 +91,40 @@ namespace MqttClientSubscriber.ViewModels
 
         private async void SubscribeCommandExecute()
         {
-            var mqttSubscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder()
+            MqttClientSubscribeOptions mqttSubscribeOptions;
+
+            switch (QualityOfServiceLevel)
+            {
+                case MqttQualityOfServiceLevel.AtMostOnce:
+                default:
+                    mqttSubscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder()
                .WithTopicFilter(
                    f =>
                    {
-                       f.WithTopic("topic1");
+                       f.WithTopic(CurrentTopic).WithAtMostOnceQoS();
                    })
                .Build();
+                    break;
+                case MqttQualityOfServiceLevel.AtLeastOnce:
+                    mqttSubscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder()
+               .WithTopicFilter(
+                   f =>
+                   {
+                       f.WithTopic(CurrentTopic).WithAtLeastOnceQoS();
+                   })
+               .Build();
+
+                    break;
+                case MqttQualityOfServiceLevel.ExactlyOnce:
+                    mqttSubscribeOptions = mqttFactory.CreateSubscribeOptionsBuilder()
+               .WithTopicFilter(
+                   f =>
+                   {
+                       f.WithTopic(CurrentTopic).WithExactlyOnceQoS();
+                   })
+               .Build();
+                    break;
+            }
 
             try
             {
@@ -97,10 +135,9 @@ namespace MqttClientSubscriber.ViewModels
                     response = await mqttClient.SubscribeAsync(mqttSubscribeOptions, timeoutToken.Token);
                 }
 
-                //Console.ReadLine();
-                Console.WriteLine("MQTT client subscribed to topic.");
+                Debug.WriteLine($"MQTT client {mqttClient.Options.ClientId} subscribed to topic '{CurrentTopic}'.");
                 // The response contains additional data sent by the server after subscribing.
-                response.DumpToConsole();
+                Output = response.DumpToString();
             }
             catch (OperationCanceledException e)
             {
@@ -136,8 +173,10 @@ namespace MqttClientSubscriber.ViewModels
             var mqttClientOptions = mqttFactory.CreateClientOptionsBuilder()
                 .WithClientId(clientId.ToString())
                 .WithTcpServer(Constants.Localhost, Constants.Port5004)
-                .WithCleanSession(true)
+                .WithCleanSession(IsCleanSessionOn)
                 .WithKeepAlivePeriod(new TimeSpan(0, 1, 0))
+                .WithProtocolVersion(ProtocolVersion)
+                .WithCredentials(Username, Password)
                 .Build();
 
             mqttClient.ApplicationMessageReceivedAsync += e =>
@@ -160,9 +199,11 @@ namespace MqttClientSubscriber.ViewModels
             mqttClient.ConnectingAsync += MqttClient_ConnectingAsync;
             mqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
 
+            MqttClientConnectResult result;
             try
             {
-                await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+                result = await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+                Output = result.DumpToString();
             }
             catch (Exception e)
             {
@@ -188,6 +229,9 @@ namespace MqttClientSubscriber.ViewModels
             DisconnectCommand.RaiseCanExecuteChanged();
             SubscribeCommand.RaiseCanExecuteChanged();
             UnsubscribeCommand.RaiseCanExecuteChanged();
+            ReceivedMessage = string.Empty;
+            Output = string.Empty;
+            ExceptionText = string.Empty;
             return Task.CompletedTask;
         }
 
@@ -198,7 +242,52 @@ namespace MqttClientSubscriber.ViewModels
             DisconnectCommand.RaiseCanExecuteChanged();
             SubscribeCommand.RaiseCanExecuteChanged();
             UnsubscribeCommand.RaiseCanExecuteChanged();
+            ReceivedMessage = string.Empty;
+            Output = string.Empty;
+            ExceptionText = string.Empty;
             return Task.CompletedTask;
+        }
+
+        private string currentTopic = "Topic1";
+        public string CurrentTopic
+        {
+            get => currentTopic;
+            set => SetProperty(ref currentTopic, value);
+        }
+
+        private bool isCleanSessionOn = true;
+        public bool IsCleanSessionOn
+        {
+            get => isCleanSessionOn;
+            set => SetProperty(ref isCleanSessionOn, value);
+        }
+
+        private MqttQualityOfServiceLevel qualityOfServiceLevel = MqttQualityOfServiceLevel.AtMostOnce;
+        public MqttQualityOfServiceLevel QualityOfServiceLevel
+        {
+            get => qualityOfServiceLevel;
+            set => SetProperty(ref qualityOfServiceLevel, value);
+        }
+
+        private string password = "1234";
+        public string Password
+        {
+            get => password;
+            set => SetProperty(ref password, value);
+        }
+
+        private string username = "admin";
+        public string Username
+        {
+            get => username;
+            set => SetProperty(ref username, value);
+        }
+
+        private MqttProtocolVersion protocolVersion = MqttProtocolVersion.V500;
+        public MqttProtocolVersion ProtocolVersion
+        {
+            get => protocolVersion;
+            set => SetProperty(ref protocolVersion, value);
         }
     }
 }
