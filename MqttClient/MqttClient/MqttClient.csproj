@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Prism.Unity" Version="8.1.97" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MqttClient.Core\MqttClient.Core.csproj" />
+    <ProjectReference Include="..\Modules\MqttClient.Modules.ModuleName\MqttClient.Modules.ModuleName.csproj" />
+    <ProjectReference Include="..\Services\MqttClient.Services.Interfaces\MqttClient.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\Services\MqttClient.Services\MqttClient.Services.csproj" />
+  </ItemGroup>
+</Project>
