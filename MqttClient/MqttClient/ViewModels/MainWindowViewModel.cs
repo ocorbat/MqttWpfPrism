@@ -3,7 +3,7 @@ using Prism.Mvvm;
 
 namespace MqttClient.ViewModels
 {
-    public class MainWindowViewModel : BindableBase
+    public class MainWindowViewModel : BindableBase, IMainWindowDataContext
     {
         private string _title = "MQTT Client";
         public string Title
