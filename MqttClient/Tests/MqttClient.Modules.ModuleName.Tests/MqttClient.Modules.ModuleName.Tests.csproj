@@ -20,8 +20,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Modules\MqttClient.Modules.ModuleName\MqttClient.Modules.ModuleName.csproj" />
-  </ItemGroup>
-
 </Project>

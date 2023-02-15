@@ -1,6 +1,8 @@
 ﻿
 using MqttClient.Modules.ModuleConnect;
-using MqttClient.Modules.ModuleName;
+using MqttClient.Modules.ModuleMessage;
+using MqttClient.Modules.ModulePublisher;
+using MqttClient.Modules.ModuleSubscriber;
 using MqttClient.Services;
 using MqttClient.Services.Interfaces;
 using MqttClient.Views;
@@ -28,8 +30,10 @@ namespace MqttClient
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
-            moduleCatalog.AddModule<ModuleNameModule>();
             moduleCatalog.AddModule<ModuleConnectModule>();
+            moduleCatalog.AddModule<ModuleMessageModule>();
+            moduleCatalog.AddModule<ModulePublisherModule>();
+            moduleCatalog.AddModule<ModuleSubscriberModule>();
         }
     }
 }

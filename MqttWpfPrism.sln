@@ -33,8 +33,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient", "MqttClient\Mq
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Core", "MqttClient\MqttClient.Core\MqttClient.Core.csproj", "{DD6BEE47-64C2-4970-9C41-1A1658940D70}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Modules.ModuleName", "MqttClient\Modules\MqttClient.Modules.ModuleName\MqttClient.Modules.ModuleName.csproj", "{55FB5322-664C-4289-B888-19BEBD537C18}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Services", "MqttClient\Services\MqttClient.Services\MqttClient.Services.csproj", "{0461D27B-4F80-4C17-B697-893F421FF132}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Services.Interfaces", "MqttClient\Services\MqttClient.Services.Interfaces\MqttClient.Services.Interfaces.csproj", "{46D996A3-23A1-4BDC-8EB4-1ECD24B9F123}"
@@ -42,6 +40,14 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Modules.ModuleName.Tests", "MqttClient\Tests\MqttClient.Modules.ModuleName.Tests\MqttClient.Modules.ModuleName.Tests.csproj", "{C2F1502A-0917-4CF1-9451-1343E9C95C1C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Modules.ModuleConnect", "MqttClient\Modules\MqttClient.Modules.ModuleConnect\MqttClient.Modules.ModuleConnect.csproj", "{77E8AE29-8D52-4F53-B2B2-97E3262D1634}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttClient.Modules.ModuleMessage", "MqttClient\Modules\MqttClient.Modules.ModuleMessage\MqttClient.Modules.ModuleMessage.csproj", "{18D0CEFE-AFC5-4EEC-AEDD-AABFF9FC4A82}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttClient.Modules.ModulePublisher", "MqttClient\Modules\MqttClient.Modules.ModulePublisher\MqttClient.Modules.ModulePublisher.csproj", "{BDBD0540-8EB0-4E19-9903-C9BBA384BA49}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttClient.Events", "MqttClient\Services\MqttClient.Events\MqttClient.Events.csproj", "{2E2746F8-D6EF-4D59-A0FB-26C3A28434AE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttClient.Modules.ModuleSubscriber", "MqttClient\Modules\MqttClient.Modules.ModuleSubscriber\MqttClient.Modules.ModuleSubscriber.csproj", "{85851FF1-C106-4F2A-8682-367213D36305}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,10 +103,6 @@ Global
 		{DD6BEE47-64C2-4970-9C41-1A1658940D70}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD6BEE47-64C2-4970-9C41-1A1658940D70}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD6BEE47-64C2-4970-9C41-1A1658940D70}.Release|Any CPU.Build.0 = Release|Any CPU
-		{55FB5322-664C-4289-B888-19BEBD537C18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{55FB5322-664C-4289-B888-19BEBD537C18}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{55FB5322-664C-4289-B888-19BEBD537C18}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{55FB5322-664C-4289-B888-19BEBD537C18}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0461D27B-4F80-4C17-B697-893F421FF132}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0461D27B-4F80-4C17-B697-893F421FF132}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0461D27B-4F80-4C17-B697-893F421FF132}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -117,6 +119,22 @@ Global
 		{77E8AE29-8D52-4F53-B2B2-97E3262D1634}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77E8AE29-8D52-4F53-B2B2-97E3262D1634}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77E8AE29-8D52-4F53-B2B2-97E3262D1634}.Release|Any CPU.Build.0 = Release|Any CPU
+		{18D0CEFE-AFC5-4EEC-AEDD-AABFF9FC4A82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{18D0CEFE-AFC5-4EEC-AEDD-AABFF9FC4A82}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{18D0CEFE-AFC5-4EEC-AEDD-AABFF9FC4A82}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{18D0CEFE-AFC5-4EEC-AEDD-AABFF9FC4A82}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDBD0540-8EB0-4E19-9903-C9BBA384BA49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDBD0540-8EB0-4E19-9903-C9BBA384BA49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDBD0540-8EB0-4E19-9903-C9BBA384BA49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDBD0540-8EB0-4E19-9903-C9BBA384BA49}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E2746F8-D6EF-4D59-A0FB-26C3A28434AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E2746F8-D6EF-4D59-A0FB-26C3A28434AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E2746F8-D6EF-4D59-A0FB-26C3A28434AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E2746F8-D6EF-4D59-A0FB-26C3A28434AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85851FF1-C106-4F2A-8682-367213D36305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85851FF1-C106-4F2A-8682-367213D36305}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85851FF1-C106-4F2A-8682-367213D36305}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85851FF1-C106-4F2A-8682-367213D36305}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -126,11 +144,14 @@ Global
 		{86460411-BC6E-4204-87EF-F2891D39C714} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
 		{A76B9823-109C-4A20-9D6D-B08767860DB0} = {EE87DA7C-2593-42A8-B734-43292576133A}
 		{8D11E518-1181-4944-B313-24E84BE24552} = {EE87DA7C-2593-42A8-B734-43292576133A}
-		{55FB5322-664C-4289-B888-19BEBD537C18} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
 		{0461D27B-4F80-4C17-B697-893F421FF132} = {EE87DA7C-2593-42A8-B734-43292576133A}
 		{46D996A3-23A1-4BDC-8EB4-1ECD24B9F123} = {EE87DA7C-2593-42A8-B734-43292576133A}
 		{C2F1502A-0917-4CF1-9451-1343E9C95C1C} = {DD98F096-6431-408E-93FF-E5A504BFFDA7}
 		{77E8AE29-8D52-4F53-B2B2-97E3262D1634} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
+		{18D0CEFE-AFC5-4EEC-AEDD-AABFF9FC4A82} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
+		{BDBD0540-8EB0-4E19-9903-C9BBA384BA49} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
+		{2E2746F8-D6EF-4D59-A0FB-26C3A28434AE} = {EE87DA7C-2593-42A8-B734-43292576133A}
+		{85851FF1-C106-4F2A-8682-367213D36305} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {815F87A5-1F23-4A6F-BCC1-8C98C8EE135E}

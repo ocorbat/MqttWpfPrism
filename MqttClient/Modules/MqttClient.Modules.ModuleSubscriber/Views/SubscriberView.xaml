@@ -1,0 +1,101 @@
+﻿<views:ClientViewBase
+    x:Class="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:MqttHelpers.Converters;assembly=MqttHelpers"
+    xmlns:core="clr-namespace:MqttClient.Core;assembly=MqttClient.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:MqttClient.Modules.ModuleSubscriber.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:mqtt="clr-namespace:MQTTnet.Protocol;assembly=MQTTnet"
+    xmlns:prism="http://prismlibrary.com/"
+    xmlns:viewmodels="clr-namespace:MqttClient.Modules.ModuleSubscriber.ViewModels"
+    xmlns:views="clr-namespace:MqttClient.Core.Views;assembly=MqttClient.Core"
+    d:DataContext="{d:DesignInstance viewmodels:SubscriberViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    prism:ViewModelLocator.AutoWireViewModel="True"
+    views:ClientViewBase.MqttClientController="{Binding (core:AttachedProperties.MqttClientController), RelativeSource={RelativeSource Self}, Mode=OneWay}"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:ComparisonConverter x:Key="ComparisonConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <GroupBox
+            Grid.Row="2"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Header="Subscribe">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <DockPanel
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3">
+                    <Label Content="Topic" DockPanel.Dock="Left" />
+                    <Button
+                        Command="{Binding UnsubscribeCommand}"
+                        Content="Unsubscribe"
+                        DockPanel.Dock="Right" />
+                    <Button
+                        Command="{Binding SubscribeCommand}"
+                        Content="Subscribe"
+                        DockPanel.Dock="Right" />
+                    <TextBox
+                        VerticalContentAlignment="Center"
+                        DockPanel.Dock="Left"
+                        Text="{Binding CurrentTopic, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </DockPanel>
+                <Expander
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="3"
+                    ExpandDirection="Down"
+                    Header="Options">
+                    <GroupBox Header="Quality Of Service Level">
+                        <StackPanel Orientation="Vertical">
+                            <RadioButton
+                                Content="0: At Most Once"
+                                GroupName="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView.QualityOfServiceLevel"
+                                IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttQualityOfServiceLevel.AtMostOnce}}" />
+                            <RadioButton
+                                Content="1: At Least Once"
+                                GroupName="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView.QualityOfServiceLevel"
+                                IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttQualityOfServiceLevel.AtLeastOnce}}" />
+                            <RadioButton
+                                Content="2: Exactly Once"
+                                GroupName="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView.QualityOfServiceLevel"
+                                IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttQualityOfServiceLevel.ExactlyOnce}}" />
+                        </StackPanel>
+                    </GroupBox>
+                </Expander>
+            </Grid>
+        </GroupBox>
+
+
+
+    </Grid>
+</views:ClientViewBase>

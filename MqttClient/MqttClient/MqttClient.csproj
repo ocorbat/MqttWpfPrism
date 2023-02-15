@@ -9,8 +9,10 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Modules\MqttClient.Modules.ModuleConnect\MqttClient.Modules.ModuleConnect.csproj" />
+    <ProjectReference Include="..\Modules\MqttClient.Modules.ModuleMessage\MqttClient.Modules.ModuleMessage.csproj" />
+    <ProjectReference Include="..\Modules\MqttClient.Modules.ModulePublisher\MqttClient.Modules.ModulePublisher.csproj" />
+    <ProjectReference Include="..\Modules\MqttClient.Modules.ModuleSubscriber\MqttClient.Modules.ModuleSubscriber.csproj" />
     <ProjectReference Include="..\MqttClient.Core\MqttClient.Core.csproj" />
-    <ProjectReference Include="..\Modules\MqttClient.Modules.ModuleName\MqttClient.Modules.ModuleName.csproj" />
     <ProjectReference Include="..\Services\MqttClient.Services.Interfaces\MqttClient.Services.Interfaces.csproj" />
     <ProjectReference Include="..\Services\MqttClient.Services\MqttClient.Services.csproj" />
   </ItemGroup>

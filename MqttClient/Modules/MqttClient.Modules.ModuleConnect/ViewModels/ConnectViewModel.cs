@@ -1,7 +1,7 @@
-﻿using MqttClient.Services.Interfaces;
+﻿using MqttClient.Core.ViewModels;
+using MqttClient.Services.Interfaces;
 using MqttCommon;
 using MqttCommon.Extensions;
-using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Formatter;
 using Prism.Commands;
@@ -13,24 +13,18 @@ using System.Threading.Tasks;
 
 namespace MqttClient.Modules.ModuleConnect.ViewModels
 {
-    public class ConnectViewModel : BindableBase
+    public class ConnectViewModel : BindableBase, IClientViewModelBase
     {
-        private MqttFactory mqttFactory = new MqttFactory();
-        private IMqttClient? mqttClient;
-        private Guid clientId;
-
         private string username = "admin";
         private string password = "1234";
+        private string status = string.Empty;
+        private bool isCleanSessionOn = true;
+        private MqttProtocolVersion protocolVersion = MqttProtocolVersion.V500;
 
         public ConnectViewModel()
         {
             ConnectCommand = new DelegateCommand(ConnectCommandExecute, ConnectCommandCanExecute);
             DisconnectCommand = new DelegateCommand(DisonnectCommandExecute, DisonnectCommandCanExecute);
-        }
-
-        static ConnectViewModel()
-        {
-
         }
 
         public DelegateCommand ConnectCommand { get; set; }
@@ -48,18 +42,28 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
             set => SetProperty(ref password, value);
         }
 
-
-        private bool ConnectCommandCanExecute()
+        public string Status
         {
-            return mqttClient == null ? true : !mqttClient.IsConnected;
+            get => status;
+            set => SetProperty(ref status, value);
+        }
+
+        public bool IsCleanSessionOn
+        {
+            get => isCleanSessionOn;
+            set => SetProperty(ref isCleanSessionOn, value);
+        }
+
+        public MqttProtocolVersion ProtocolVersion
+        {
+            get => protocolVersion;
+            set => SetProperty(ref protocolVersion, value);
         }
 
         private async void ConnectCommandExecute()
         {
-            mqttClient = mqttFactory.CreateMqttClient();
-
-            var mqttClientOptions = mqttFactory.CreateClientOptionsBuilder()
-                .WithClientId(clientId.ToString())
+            var mqttClientOptions = MqttClientController.MqttFactory.CreateClientOptionsBuilder()
+                .WithClientId(MqttClientController.ClientId.ToString())
                 .WithTcpServer(Constants.Localhost, Constants.Port5004)
                 .WithCleanSession(IsCleanSessionOn)
                 .WithKeepAlivePeriod(new TimeSpan(0, 1, 0))
@@ -67,7 +71,7 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
                 .WithCredentials(Username, Password)
                 .Build();
 
-            mqttClient.ApplicationMessageReceivedAsync += e =>
+            MqttClientController.MqttClient.ApplicationMessageReceivedAsync += e =>
             {
                 Console.WriteLine("Received application message.");
                 e.DumpToConsole();
@@ -83,83 +87,75 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
                 return Task.CompletedTask;
             };
 
-            mqttClient.ConnectedAsync += MqttClient_ConnectedAsync;
-            mqttClient.ConnectingAsync += MqttClient_ConnectingAsync;
-            mqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
+            MqttClientController.MqttClient.ConnectedAsync += MqttClient_ConnectedAsync;
+            MqttClientController.MqttClient.ConnectingAsync += MqttClient_ConnectingAsync;
+            MqttClientController.MqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
 
             MqttClientConnectResult result;
             try
             {
-                result = await mqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
-                Output = result.DumpToString();
+                result = await MqttClientController.MqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
+                //Output = result.DumpToString();
             }
             catch (Exception e)
             {
-                ExceptionText = $"({e})";
+                //ExceptionText = $"({e})";
                 Debug.WriteLine($"Timeout while publishing. {e}");
             }
         }
 
-        private string status = string.Empty;
-        public string Status
+        private bool ConnectCommandCanExecute()
         {
-            get => status;
-            set => SetProperty(ref status, value);
+            return MqttClientController == null
+                ? false
+                : MqttClientController.MqttClient == null ? true : !MqttClientController.MqttClient.IsConnected;
         }
+
+        private async void DisonnectCommandExecute()
+        {
+            await MqttClientController.MqttClient.DisconnectAsync();
+        }
+
+        private bool DisonnectCommandCanExecute()
+        {
+            return MqttClientController == null
+                ? false
+                : MqttClientController.MqttClient == null ? false : MqttClientController.MqttClient.IsConnected;
+        }
+
 
         private Task MqttClient_ConnectingAsync(MqttClientConnectingEventArgs arg)
         {
-            Status = $"Client {clientId} is connecting";
+            Status = $"Client {MqttClientController.ClientId} is connecting";
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
+            MqttClientController?.OnClientConnecting(arg);
             return Task.CompletedTask;
         }
 
         private Task MqttClient_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
         {
-            Status = $"Client {clientId} is disconnected";
+            Status = $"Client {MqttClientController.ClientId} is disconnected";
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
-            ReceivedMessage = string.Empty;
-            Output = string.Empty;
-            ExceptionText = string.Empty;
+            MqttClientController?.OnClientDisconnected(arg);
             return Task.CompletedTask;
         }
 
         private Task MqttClient_ConnectedAsync(MqttClientConnectedEventArgs arg)
         {
-            Status = $"Client {clientId} is connected";
+            Status = $"Client {MqttClientController.ClientId} is connected";
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
-            ReceivedMessage = string.Empty;
-            Output = string.Empty;
-            ExceptionText = string.Empty;
+            MqttClientController?.OnClientConnected(arg);
             return Task.CompletedTask;
         }
 
-        private bool DisonnectCommandCanExecute()
-        {
-            return mqttClient == null ? false : mqttClient.IsConnected;
-        }
 
-        private async void DisonnectCommandExecute()
-        {
-            await mqttClient.DisconnectAsync();
-        }
 
-        private bool isCleanSessionOn = true;
-        public bool IsCleanSessionOn
-        {
-            get => isCleanSessionOn;
-            set => SetProperty(ref isCleanSessionOn, value);
-        }
 
-        private MqttProtocolVersion protocolVersion = MqttProtocolVersion.V500;
-        public MqttProtocolVersion ProtocolVersion
-        {
-            get => protocolVersion;
-            set => SetProperty(ref protocolVersion, value);
-        }
+
+
 
         private string receivedMessage;
         public string ReceivedMessage
@@ -168,19 +164,19 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
             set => SetProperty(ref receivedMessage, value);
         }
 
-        private string output;
-        public string Output
-        {
-            get => output;
-            set => SetProperty(ref output, value);
-        }
+        //private string output;
+        //public string Output
+        //{
+        //    get => output;
+        //    set => SetProperty(ref output, value);
+        //}
 
-        private string exceptionText;
-        public string ExceptionText
-        {
-            get => exceptionText;
-            set => SetProperty(ref exceptionText, value);
-        }
+        //private string exceptionText;
+        //public string ExceptionText
+        //{
+        //    get => exceptionText;
+        //    set => SetProperty(ref exceptionText, value);
+        //}
 
         private IMqttClientController mqttClientController;
 
@@ -191,8 +187,8 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
             {
                 if (SetProperty(ref mqttClientController, value))
                 {
-                    mqttClient = MqttClientController.MqttClient;
-                    clientId = mqttClientController.ClientId;
+                    ConnectCommand.RaiseCanExecuteChanged();
+                    DisconnectCommand.RaiseCanExecuteChanged();
                 }
             }
         }
