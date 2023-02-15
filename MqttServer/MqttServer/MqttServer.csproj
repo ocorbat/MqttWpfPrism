@@ -9,6 +9,7 @@
     <PackageReference Include="Prism.Unity" Version="8.1.97" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Modules\MqttServer.Modules.ModuleExecute\MqttServer.Modules.ModuleExecute.csproj" />
     <ProjectReference Include="..\MqttServer.Core\MqttServer.Core.csproj" />
     <ProjectReference Include="..\Modules\MqttServer.Modules.ModuleName\MqttServer.Modules.ModuleName.csproj" />
     <ProjectReference Include="..\Services\MqttServer.Services.Interfaces\MqttServer.Services.Interfaces.csproj" />

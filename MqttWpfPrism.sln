@@ -39,13 +39,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Services.Interfa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Modules.ModuleConnect", "MqttClient\Modules\MqttClient.Modules.ModuleConnect\MqttClient.Modules.ModuleConnect.csproj", "{77E8AE29-8D52-4F53-B2B2-97E3262D1634}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttClient.Modules.ModuleMessage", "MqttClient\Modules\MqttClient.Modules.ModuleMessage\MqttClient.Modules.ModuleMessage.csproj", "{18D0CEFE-AFC5-4EEC-AEDD-AABFF9FC4A82}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Modules.ModuleMessage", "MqttClient\Modules\MqttClient.Modules.ModuleMessage\MqttClient.Modules.ModuleMessage.csproj", "{18D0CEFE-AFC5-4EEC-AEDD-AABFF9FC4A82}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttClient.Modules.ModulePublisher", "MqttClient\Modules\MqttClient.Modules.ModulePublisher\MqttClient.Modules.ModulePublisher.csproj", "{BDBD0540-8EB0-4E19-9903-C9BBA384BA49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Modules.ModulePublisher", "MqttClient\Modules\MqttClient.Modules.ModulePublisher\MqttClient.Modules.ModulePublisher.csproj", "{BDBD0540-8EB0-4E19-9903-C9BBA384BA49}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttClient.Events", "MqttClient\Services\MqttClient.Events\MqttClient.Events.csproj", "{2E2746F8-D6EF-4D59-A0FB-26C3A28434AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Events", "MqttClient\Services\MqttClient.Events\MqttClient.Events.csproj", "{2E2746F8-D6EF-4D59-A0FB-26C3A28434AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttClient.Modules.ModuleSubscriber", "MqttClient\Modules\MqttClient.Modules.ModuleSubscriber\MqttClient.Modules.ModuleSubscriber.csproj", "{85851FF1-C106-4F2A-8682-367213D36305}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Modules.ModuleSubscriber", "MqttClient\Modules\MqttClient.Modules.ModuleSubscriber\MqttClient.Modules.ModuleSubscriber.csproj", "{85851FF1-C106-4F2A-8682-367213D36305}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttServer.Modules.ModuleExecute", "MqttServer\Modules\MqttServer.Modules.ModuleExecute\MqttServer.Modules.ModuleExecute.csproj", "{830BFCA5-2151-431A-952F-592A61D4CCCA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -129,6 +131,10 @@ Global
 		{85851FF1-C106-4F2A-8682-367213D36305}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85851FF1-C106-4F2A-8682-367213D36305}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85851FF1-C106-4F2A-8682-367213D36305}.Release|Any CPU.Build.0 = Release|Any CPU
+		{830BFCA5-2151-431A-952F-592A61D4CCCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{830BFCA5-2151-431A-952F-592A61D4CCCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{830BFCA5-2151-431A-952F-592A61D4CCCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{830BFCA5-2151-431A-952F-592A61D4CCCA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +151,7 @@ Global
 		{BDBD0540-8EB0-4E19-9903-C9BBA384BA49} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
 		{2E2746F8-D6EF-4D59-A0FB-26C3A28434AE} = {EE87DA7C-2593-42A8-B734-43292576133A}
 		{85851FF1-C106-4F2A-8682-367213D36305} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
+		{830BFCA5-2151-431A-952F-592A61D4CCCA} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {815F87A5-1F23-4A6F-BCC1-8C98C8EE135E}

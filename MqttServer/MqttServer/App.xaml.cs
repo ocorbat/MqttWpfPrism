@@ -1,4 +1,5 @@
-﻿using MqttServer.Modules.ModuleName;
+﻿using MqttServer.Modules.ModuleExecute;
+using MqttServer.Modules.ModuleName;
 using MqttServer.Services;
 using MqttServer.Services.Interfaces;
 using MqttServer.Views;
@@ -21,11 +22,13 @@ namespace MqttServer
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<IMessageService, MessageService>();
+            containerRegistry.Register<IMqttServerController, MqttServerController>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             moduleCatalog.AddModule<ModuleNameModule>();
+            moduleCatalog.AddModule<ModuleExecuteModule>();
         }
     }
 }

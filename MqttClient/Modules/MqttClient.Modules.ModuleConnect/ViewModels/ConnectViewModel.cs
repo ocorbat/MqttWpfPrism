@@ -106,9 +106,7 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
 
         private bool ConnectCommandCanExecute()
         {
-            return MqttClientController == null
-                ? false
-                : MqttClientController.MqttClient == null ? true : !MqttClientController.MqttClient.IsConnected;
+            return MqttClientController != null && (MqttClientController.MqttClient == null || !MqttClientController.MqttClient.IsConnected);
         }
 
         private async void DisonnectCommandExecute()
@@ -118,9 +116,7 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
 
         private bool DisonnectCommandCanExecute()
         {
-            return MqttClientController == null
-                ? false
-                : MqttClientController.MqttClient == null ? false : MqttClientController.MqttClient.IsConnected;
+            return MqttClientController != null && (MqttClientController.MqttClient != null && MqttClientController.MqttClient.IsConnected);
         }
 
 
