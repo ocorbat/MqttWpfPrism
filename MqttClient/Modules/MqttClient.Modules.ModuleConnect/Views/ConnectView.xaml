@@ -9,7 +9,7 @@
     xmlns:mqttFormatter="clr-namespace:MQTTnet.Formatter;assembly=MQTTnet"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:viewmodels="clr-namespace:MqttClient.Modules.ModuleConnect.ViewModels"
-    d:DataContext="{d:DesignInstance viewmodels:ViewAViewModel}"
+    d:DataContext="{d:DesignInstance viewmodels:ConnectViewModel}"
     d:DesignHeight="300"
     d:DesignWidth="300"
     prism:ViewModelLocator.AutoWireViewModel="True"
