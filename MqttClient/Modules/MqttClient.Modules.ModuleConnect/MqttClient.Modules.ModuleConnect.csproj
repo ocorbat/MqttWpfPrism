@@ -11,5 +11,6 @@
     <ProjectReference Include="..\..\..\MqttCommon\MqttCommon.csproj" />
     <ProjectReference Include="..\..\..\MqttHelpers\MqttHelpers.csproj" />
     <ProjectReference Include="..\..\MqttClient.Core\MqttClient.Core.csproj" />
+    <ProjectReference Include="..\..\Services\MqttClient.Services.Interfaces\MqttClient.Services.Interfaces.csproj" />
   </ItemGroup>
 </Project>

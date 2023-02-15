@@ -1,4 +1,5 @@
-﻿using Prism.Mvvm;
+﻿using MqttClient.Services.Interfaces;
+using Prism.Mvvm;
 
 namespace MqttClient.ViewModels
 {
@@ -11,9 +12,17 @@ namespace MqttClient.ViewModels
             set => SetProperty(ref _title, value);
         }
 
-        public MainWindowViewModel()
+        public MainWindowViewModel(IMqttClientController mqttClientController)
         {
+            MqttClientController = mqttClientController;
+        }
 
+        private IMqttClientController mqttClientController;
+
+        public IMqttClientController MqttClientController
+        {
+            get => mqttClientController;
+            set => SetProperty(ref mqttClientController, value);
         }
     }
 }

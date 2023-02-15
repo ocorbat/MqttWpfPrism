@@ -1,4 +1,5 @@
-﻿using MqttCommon;
+﻿using MqttClient.Services.Interfaces;
+using MqttCommon;
 using MqttCommon.Extensions;
 using MQTTnet;
 using MQTTnet.Client;
@@ -16,33 +17,36 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
     {
         private MqttFactory mqttFactory = new MqttFactory();
         private IMqttClient? mqttClient;
-        private Guid clientId = Guid.NewGuid();
+        private Guid clientId;
 
-        private string _message;
-        public string Message
-        {
-            get => _message;
-            set => SetProperty(ref _message, value);
-        }
+        private string username = "admin";
+        private string password = "1234";
 
         public ConnectViewModel()
         {
-            Message = "View A from your Prism Module";
-
             ConnectCommand = new DelegateCommand(ConnectCommandExecute, ConnectCommandCanExecute);
             DisconnectCommand = new DelegateCommand(DisonnectCommandExecute, DisonnectCommandCanExecute);
+        }
+
+        static ConnectViewModel()
+        {
+
         }
 
         public DelegateCommand ConnectCommand { get; set; }
         public DelegateCommand DisconnectCommand { get; set; }
 
-        private string username = "admin";
+        public string Username
+        {
+            get => username;
+            set => SetProperty(ref username, value);
+        }
 
-        public string Username { get => username; set => SetProperty(ref username, value); }
-
-        private string password = "1234";
-
-        public string Password { get => password; set => SetProperty(ref password, value); }
+        public string Password
+        {
+            get => password;
+            set => SetProperty(ref password, value);
+        }
 
 
         private bool ConnectCommandCanExecute()
@@ -176,6 +180,21 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
         {
             get => exceptionText;
             set => SetProperty(ref exceptionText, value);
+        }
+
+        private IMqttClientController mqttClientController;
+
+        public IMqttClientController MqttClientController
+        {
+            get => mqttClientController;
+            set
+            {
+                if (SetProperty(ref mqttClientController, value))
+                {
+                    mqttClient = MqttClientController.MqttClient;
+                    clientId = mqttClientController.ClientId;
+                }
+            }
         }
     }
 }

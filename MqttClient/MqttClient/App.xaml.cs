@@ -23,6 +23,7 @@ namespace MqttClient
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterSingleton<IMessageService, MessageService>();
+            containerRegistry.Register<IMqttClientController, MqttClientController>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
