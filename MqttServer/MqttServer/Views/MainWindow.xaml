@@ -32,6 +32,6 @@
         <ContentControl
             Grid.Row="1"
             Grid.Column="0"
-            prism:RegionManager.RegionName="{x:Static core:RegionNames.ContentRegion}" />
+            prism:RegionManager.RegionName="{x:Static core:RegionNames.ClientsRegion}" />
     </Grid>
 </Window>

@@ -2,7 +2,7 @@
 {
     public static class RegionNames
     {
-        public const string ContentRegion = "ContentRegion";
+        public const string ClientsRegion = "ClientsRegion";
         public const string ExecuteRegion = "ExecuteRegion";
     }
 }

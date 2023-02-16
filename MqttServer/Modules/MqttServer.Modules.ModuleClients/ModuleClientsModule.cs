@@ -17,7 +17,7 @@ namespace MqttServer.Modules.ModuleClients
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, "ClientsView");
+            _regionManager.RequestNavigate(RegionNames.ClientsRegion, "ClientsView");
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)

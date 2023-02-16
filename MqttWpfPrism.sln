@@ -55,6 +55,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{8A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{C121C119-96E6-420B-B2EA-3635E14F6481}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttResources", "MqttResources\MqttResources.csproj", "{11751F7F-AC8B-462C-B6F6-ECE276BBE129}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -137,6 +139,10 @@ Global
 		{592BFA5A-AC92-4BFD-BB8B-DE8F4FD1EAC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{592BFA5A-AC92-4BFD-BB8B-DE8F4FD1EAC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{592BFA5A-AC92-4BFD-BB8B-DE8F4FD1EAC1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11751F7F-AC8B-462C-B6F6-ECE276BBE129}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11751F7F-AC8B-462C-B6F6-ECE276BBE129}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11751F7F-AC8B-462C-B6F6-ECE276BBE129}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11751F7F-AC8B-462C-B6F6-ECE276BBE129}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,6 +169,7 @@ Global
 		{2D3274F9-9D33-4CE4-AD42-4E2F4AFB760B} = {1F5734FF-EDDF-4C16-9C96-EF1213CBA76B}
 		{3A9ACE78-090A-4E97-8657-B8FD2CF0EA45} = {7CEA4BD7-078C-4215-8F9E-B9A31FEC89D2}
 		{8A13B052-6B59-4116-B530-A106D2816B8E} = {1F5734FF-EDDF-4C16-9C96-EF1213CBA76B}
+		{11751F7F-AC8B-462C-B6F6-ECE276BBE129} = {C121C119-96E6-420B-B2EA-3635E14F6481}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {815F87A5-1F23-4A6F-BCC1-8C98C8EE135E}
