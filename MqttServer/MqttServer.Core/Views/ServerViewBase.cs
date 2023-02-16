@@ -1,5 +1,4 @@
-﻿using MqttServer.Core.ViewModels;
-using MqttServer.Services.Interfaces;
+﻿using MqttServer.Services.Interfaces;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -38,7 +37,7 @@ namespace MqttServer.Core.Views
                 return;
             }
 
-            var dataContext = (IServerViewModelBase)view.DataContext;
+            var dataContext = (IMqttServerControllerViewModel)view.DataContext;
             dataContext.MqttServerController = (IMqttServerController)e.NewValue;
         }
     }

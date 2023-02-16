@@ -1,5 +1,4 @@
 ﻿using MQTTnet.Server;
-using MqttServer.Core.ViewModels;
 using MqttServer.Services.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -14,7 +13,7 @@ using System.Windows.Data;
 
 namespace MqttServer.Modules.ModuleName.ViewModels
 {
-    public class ClientsViewModel : BindableBase, IServerViewModelBase, INavigationAware, IConfirmNavigationRequest
+    public class ClientsViewModel : BindableBase, IMqttServerControllerViewModel, INavigationAware, IConfirmNavigationRequest
     {
         private IEnumerable<MqttClientStatus> connectedClients;
         private ObservableCollection<MqttClientStatus> subscribedClients;

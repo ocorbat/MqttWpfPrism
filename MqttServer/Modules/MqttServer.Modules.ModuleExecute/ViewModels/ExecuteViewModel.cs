@@ -2,7 +2,6 @@
 using MQTTnet.Internal;
 using MQTTnet.Server;
 using MqttServer.Core.Dispose;
-using MqttServer.Core.ViewModels;
 using MqttServer.Services.Interfaces;
 using Prism.Commands;
 using System.Threading.Tasks;
@@ -10,7 +9,7 @@ using System.Windows;
 
 namespace MqttServer.Modules.ModuleExecute.ViewModels
 {
-    public class ExecuteViewModel : DisposableBindableBase, IServerViewModelBase
+    public class ExecuteViewModel : DisposableBindableBase, IMqttServerControllerViewModel
     {
         // To detect redundant calls
         private bool _disposedValue;
