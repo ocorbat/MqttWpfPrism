@@ -1,4 +1,5 @@
 ﻿using MQTTnet;
+using MQTTnet.Server;
 using MqttServer.Services.Interfaces;
 using System;
 
@@ -19,6 +20,10 @@ namespace MqttServer.Services
 
         public event EventHandler<EventArgs> ServerStarted;
         public event EventHandler<EventArgs> ServerStopped;
+        public event EventHandler<ClientConnectedEventArgs> ClientConnected;
+        public event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
+        public event EventHandler<ClientSubscribedTopicEventArgs> ClientSubscribedTopic;
+        public event EventHandler<ClientUnsubscribedTopicEventArgs> ClientUnsubscribedTopic;
 
         public void OnServerStarted(EventArgs e)
         {
@@ -30,5 +35,24 @@ namespace MqttServer.Services
             ServerStopped?.Invoke(this, e);
         }
 
+        public void OnClientConnected(ClientConnectedEventArgs e)
+        {
+            ClientConnected?.Invoke(this, e);
+        }
+
+        public void OnClientDisconnected(ClientDisconnectedEventArgs e)
+        {
+            ClientDisconnected?.Invoke(this, e);
+        }
+
+        public void OnClientSubscribedTopic(ClientSubscribedTopicEventArgs e)
+        {
+            ClientSubscribedTopic?.Invoke(this, e);
+        }
+
+        public void OnClientUnsubscribedTopic(ClientUnsubscribedTopicEventArgs e)
+        {
+            ClientUnsubscribedTopic?.Invoke(this, e);
+        }
     }
 }

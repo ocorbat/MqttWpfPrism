@@ -1,31 +1,30 @@
 ﻿using MqttCommon;
 using MQTTnet.Internal;
 using MQTTnet.Server;
+using MqttServer.Core.Dispose;
 using MqttServer.Core.ViewModels;
 using MqttServer.Services.Interfaces;
 using Prism.Commands;
-using Prism.Mvvm;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
 namespace MqttServer.Modules.ModuleExecute.ViewModels
 {
-    public class ExecuteViewModel : BindableBase, IServerViewModelBase
+    public class ExecuteViewModel : DisposableBindableBase, IServerViewModelBase
     {
+        // To detect redundant calls
+        private bool _disposedValue;
+
+        ~ExecuteViewModel() => Dispose(false);
+
+        private IMqttServerController mqttServerController;
         private string status = string.Empty;
-        private ObservableCollection<MqttClientStatus> subscribedClients;
 
         public ExecuteViewModel()
         {
             StartServerCommand = new DelegateCommand(StartServerCommandExecute, StartServerCommandCanExecute);
             StopServerCommand = new DelegateCommand(StopServerCommandExecute, StopServerCommandCanExecute);
-
-            subscribedClients = new ObservableCollection<MqttClientStatus>();
         }
-
 
         public DelegateCommand StartServerCommand { get; set; }
         public DelegateCommand StopServerCommand { get; set; }
@@ -46,18 +45,17 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
                 .WithDefaultEndpointPort(Constants.Port5004)
                 .Build();
 
-
-
             MqttServerController.MqttServer = MqttServerController.MqttFactory.CreateMqttServer(mqttServerOptions);
 
+            MqttServerController.MqttServer.StartedAsync += MqttServer_StartedAsync;
+            MqttServerController.MqttServer.StoppedAsync += MqttServer_StoppedAsync;
             MqttServerController.MqttServer.ClientConnectedAsync += MqttServer_ClientConnectedAsync;
             MqttServerController.MqttServer.ClientDisconnectedAsync += MqttServer_ClientDisconnectedAsync;
             MqttServerController.MqttServer.ClientSubscribedTopicAsync += MqttServer_ClientSubscribedTopicAsync;
             MqttServerController.MqttServer.ClientUnsubscribedTopicAsync += MqttServer_ClientUnsubscribedTopicAsync;
+
             MqttServerController.MqttServer.ValidatingConnectionAsync += MqttServer_ValidatingConnectionAsync;
             MqttServerController.MqttServer.InterceptingSubscriptionAsync += MqttServer_InterceptingSubscriptionAsync;
-            MqttServerController.MqttServer.StartedAsync += MqttServer_StartedAsync;
-            MqttServerController.MqttServer.StoppedAsync += MqttServer_StoppedAsync;
             MqttServerController.MqttServer.InterceptingPublishAsync += MqttServer_InterceptingPublishAsync;
 
             await MqttServerController.MqttServer.StartAsync();
@@ -70,10 +68,8 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
 
         private async void StopServerCommandExecute()
         {
-
             await MqttServerController.MqttServer.StopAsync();
         }
-
 
         public string Status
         {
@@ -81,17 +77,9 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
             set => SetProperty(ref status, value);
         }
 
-        private IEnumerable<MqttClientStatus> connectedClients;
-        public IEnumerable<MqttClientStatus> ConnectedClients
-        {
-            get => connectedClients;
-            set => SetProperty(ref connectedClients, value);
-        }
-
-
         private async Task<Task> MqttServer_ClientConnectedAsync(ClientConnectedEventArgs arg)
         {
-            ConnectedClients = await MqttServerController.MqttServer.GetClientsAsync();
+            MqttServerController.OnClientConnected(arg);
 
             await Application.Current.Dispatcher.BeginInvoke(() =>
             {
@@ -102,7 +90,7 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
 
         private async Task<Task> MqttServer_ClientDisconnectedAsync(ClientDisconnectedEventArgs arg)
         {
-            ConnectedClients = await MqttServerController.MqttServer.GetClientsAsync();
+            MqttServerController.OnClientDisconnected(arg);
 
             await Application.Current.Dispatcher.BeginInvoke(() =>
             {
@@ -111,33 +99,15 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
             return CompletedTask.Instance;
         }
 
-        private async Task<Task> MqttServer_ClientSubscribedTopicAsync(ClientSubscribedTopicEventArgs arg)
+        private Task MqttServer_ClientSubscribedTopicAsync(ClientSubscribedTopicEventArgs arg)
         {
-            var id = arg.ClientId;
-            var connectedClients = await MqttServerController.MqttServer.GetClientsAsync();
-            var toto = connectedClients.SingleOrDefault(c => c.Id == id);
-
-            await Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                if (!subscribedClients.Any(c => c.Id == id))
-                {
-                    subscribedClients.Add(toto);
-                }
-            });
-
+            MqttServerController.OnClientSubscribedTopic(arg);
             return CompletedTask.Instance;
         }
 
         private Task MqttServer_ClientUnsubscribedTopicAsync(ClientUnsubscribedTopicEventArgs arg)
         {
-            var id = arg.ClientId;
-            var toto = subscribedClients.SingleOrDefault(c => c.Id == id);
-
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                subscribedClients.Remove(toto);
-            });
-
+            MqttServerController.OnClientUnsubscribedTopic(arg);
             return CompletedTask.Instance;
         }
 
@@ -179,25 +149,21 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
 
         //}
 
-        private async Task<Task> MqttServer_StartedAsync(System.EventArgs arg)
+        private Task MqttServer_StartedAsync(System.EventArgs arg)
         {
             Status = "Server started";
-            ConnectedClients = await MqttServerController.MqttServer.GetClientsAsync();
             StartServerCommand.RaiseCanExecuteChanged();
             StopServerCommand.RaiseCanExecuteChanged();
             MqttServerController.OnServerStarted(arg);
-            //GetConnectedClientsCommand.RaiseCanExecuteChanged();
             return CompletedTask.Instance;
         }
 
         private Task MqttServer_StoppedAsync(System.EventArgs arg)
         {
             Status = "Server stopped";
-            ConnectedClients = null;
             StartServerCommand.RaiseCanExecuteChanged();
             StopServerCommand.RaiseCanExecuteChanged();
             MqttServerController.OnServerStopped(arg);
-            //GetConnectedClientsCommand.RaiseCanExecuteChanged();
             return CompletedTask.Instance;
         }
 
@@ -211,20 +177,33 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
             return CompletedTask.Instance;
         }
 
+        // Protected implementation of Dispose pattern.
+        protected override void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    // TODO: dispose managed state (managed objects).
+                }
 
+                // TODO: free unmanaged resources (unmanaged objects) and override a finalizer below.
+                // TODO: set large fields to null.
+                MqttServerController.MqttServer.StartedAsync -= MqttServer_StartedAsync;
+                MqttServerController.MqttServer.StoppedAsync -= MqttServer_StoppedAsync;
+                MqttServerController.MqttServer.ClientConnectedAsync -= MqttServer_ClientConnectedAsync;
+                MqttServerController.MqttServer.ClientDisconnectedAsync -= MqttServer_ClientDisconnectedAsync;
+                MqttServerController.MqttServer.ClientSubscribedTopicAsync -= MqttServer_ClientSubscribedTopicAsync;
+                MqttServerController.MqttServer.ClientUnsubscribedTopicAsync -= MqttServer_ClientUnsubscribedTopicAsync;
+                MqttServerController.MqttServer.ValidatingConnectionAsync -= MqttServer_ValidatingConnectionAsync;
+                MqttServerController.MqttServer.InterceptingSubscriptionAsync -= MqttServer_InterceptingSubscriptionAsync;
+                MqttServerController.MqttServer.InterceptingPublishAsync -= MqttServer_InterceptingPublishAsync;
+                _disposedValue = true;
+            }
 
-
-
-
-
-
-
-
-
-
-
-
-        private IMqttServerController mqttServerController;
+            // Call the base class implementation.
+            base.Dispose(disposing);
+        }
 
         public IMqttServerController MqttServerController
         {
