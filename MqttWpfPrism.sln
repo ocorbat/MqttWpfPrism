@@ -3,13 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DD98F096-6431-408E-93FF-E5A504BFFDA7}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Modules.ModuleName.Tests", "MqttServer\Tests\MqttServer.Modules.ModuleName.Tests\MqttServer.Modules.ModuleName.Tests.csproj", "{D3C9B24A-E8A5-468B-933F-E4EE927CB398}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{F78C45A0-E044-4890-B8DD-F943BB8CDAAA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Modules.ModuleClients", "MqttServer\Modules\MqttServer.Modules.ModuleName\MqttServer.Modules.ModuleClients.csproj", "{86460411-BC6E-4204-87EF-F2891D39C714}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{EE87DA7C-2593-42A8-B734-43292576133A}"
 EndProject
@@ -47,7 +41,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Events", "MqttCl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Modules.ModuleSubscriber", "MqttClient\Modules\MqttClient.Modules.ModuleSubscriber\MqttClient.Modules.ModuleSubscriber.csproj", "{85851FF1-C106-4F2A-8682-367213D36305}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttServer.Modules.ModuleExecute", "MqttServer\Modules\MqttServer.Modules.ModuleExecute\MqttServer.Modules.ModuleExecute.csproj", "{830BFCA5-2151-431A-952F-592A61D4CCCA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Modules.ModuleExecute", "MqttServer\Modules\MqttServer.Modules.ModuleExecute\MqttServer.Modules.ModuleExecute.csproj", "{830BFCA5-2151-431A-952F-592A61D4CCCA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Modules.ModuleClients", "MqttServer\Modules\MqttServer.Modules.ModuleClients\MqttServer.Modules.ModuleClients.csproj", "{592BFA5A-AC92-4BFD-BB8B-DE8F4FD1EAC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -55,14 +51,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{D3C9B24A-E8A5-468B-933F-E4EE927CB398}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D3C9B24A-E8A5-468B-933F-E4EE927CB398}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D3C9B24A-E8A5-468B-933F-E4EE927CB398}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D3C9B24A-E8A5-468B-933F-E4EE927CB398}.Release|Any CPU.Build.0 = Release|Any CPU
-		{86460411-BC6E-4204-87EF-F2891D39C714}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{86460411-BC6E-4204-87EF-F2891D39C714}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{86460411-BC6E-4204-87EF-F2891D39C714}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{86460411-BC6E-4204-87EF-F2891D39C714}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A76B9823-109C-4A20-9D6D-B08767860DB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A76B9823-109C-4A20-9D6D-B08767860DB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A76B9823-109C-4A20-9D6D-B08767860DB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -135,13 +123,15 @@ Global
 		{830BFCA5-2151-431A-952F-592A61D4CCCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{830BFCA5-2151-431A-952F-592A61D4CCCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{830BFCA5-2151-431A-952F-592A61D4CCCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{592BFA5A-AC92-4BFD-BB8B-DE8F4FD1EAC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{592BFA5A-AC92-4BFD-BB8B-DE8F4FD1EAC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{592BFA5A-AC92-4BFD-BB8B-DE8F4FD1EAC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{592BFA5A-AC92-4BFD-BB8B-DE8F4FD1EAC1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{D3C9B24A-E8A5-468B-933F-E4EE927CB398} = {DD98F096-6431-408E-93FF-E5A504BFFDA7}
-		{86460411-BC6E-4204-87EF-F2891D39C714} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
 		{A76B9823-109C-4A20-9D6D-B08767860DB0} = {EE87DA7C-2593-42A8-B734-43292576133A}
 		{8D11E518-1181-4944-B313-24E84BE24552} = {EE87DA7C-2593-42A8-B734-43292576133A}
 		{0461D27B-4F80-4C17-B697-893F421FF132} = {EE87DA7C-2593-42A8-B734-43292576133A}
@@ -152,6 +142,7 @@ Global
 		{2E2746F8-D6EF-4D59-A0FB-26C3A28434AE} = {EE87DA7C-2593-42A8-B734-43292576133A}
 		{85851FF1-C106-4F2A-8682-367213D36305} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
 		{830BFCA5-2151-431A-952F-592A61D4CCCA} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
+		{592BFA5A-AC92-4BFD-BB8B-DE8F4FD1EAC1} = {F78C45A0-E044-4890-B8DD-F943BB8CDAAA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {815F87A5-1F23-4A6F-BCC1-8C98C8EE135E}

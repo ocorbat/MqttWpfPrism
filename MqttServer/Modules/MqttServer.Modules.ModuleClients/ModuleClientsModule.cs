@@ -4,7 +4,7 @@ using Prism.Ioc;
 using Prism.Modularity;
 using Prism.Regions;
 
-namespace MqttServer.Modules.ModuleName
+namespace MqttServer.Modules.ModuleClients
 {
     public class ModuleClientsModule : IModule
     {
