@@ -1,4 +1,6 @@
-﻿using MqttServer.Modules.ModuleClients;
+﻿using MqttServer.Core;
+using MqttServer.Core.Interfaces;
+using MqttServer.Modules.ModuleClients;
 using MqttServer.Modules.ModuleExecute;
 using MqttServer.Services;
 using MqttServer.Services.Interfaces;

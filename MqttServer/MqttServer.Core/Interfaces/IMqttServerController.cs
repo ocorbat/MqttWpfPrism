@@ -2,7 +2,7 @@
 using MQTTnet.Server;
 using System;
 
-namespace MqttServer.Services.Interfaces
+namespace MqttServer.Core.Interfaces
 {
     public interface IMqttServerController
     {

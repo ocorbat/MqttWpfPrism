@@ -1,4 +1,4 @@
-﻿namespace MqttServer.Services.Interfaces
+﻿namespace MqttServer.Core.Interfaces
 {
     public interface IMqttServerControllerViewModel
     {

@@ -2,7 +2,7 @@
 using MQTTnet.Internal;
 using MQTTnet.Server;
 using MqttServer.Core.Dispose;
-using MqttServer.Services.Interfaces;
+using MqttServer.Core.Interfaces;
 using Prism.Commands;
 using System.Threading.Tasks;
 using System.Windows;

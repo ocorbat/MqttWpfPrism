@@ -1,4 +1,4 @@
-﻿using MqttServer.Services.Interfaces;
+﻿using MqttServer.Core.Interfaces;
 using System.Windows;
 using System.Windows.Controls;
 

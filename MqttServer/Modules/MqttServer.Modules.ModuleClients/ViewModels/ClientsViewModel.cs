@@ -1,4 +1,5 @@
 ﻿using MQTTnet.Server;
+using MqttServer.Core.Interfaces;
 using MqttServer.Services.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
