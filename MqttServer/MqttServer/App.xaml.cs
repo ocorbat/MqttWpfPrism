@@ -27,7 +27,7 @@ namespace MqttServer
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
-            moduleCatalog.AddModule<ModuleNameModule>();
+            moduleCatalog.AddModule<ModuleClientsModule>();
             moduleCatalog.AddModule<ModuleExecuteModule>();
         }
     }

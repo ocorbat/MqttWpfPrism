@@ -6,20 +6,20 @@ namespace MqttServer.Services.Interfaces
     public interface IMqttServerController
     {
         MqttFactory MqttFactory { get; }
-        MQTTnet.Server.MqttServer MqttServer { get; }
+        MQTTnet.Server.MqttServer MqttServer { get; set; }
 
         Guid ClientId { get; }
 
 
-        //event EventHandler<MqttClientConnectingEventArgs> ClientConnecting;
-        //event EventHandler<MqttClientConnectedEventArgs> ClientConnected;
+        event EventHandler<EventArgs> ServerStarted;
+        event EventHandler<EventArgs> ServerStopped;
         //event EventHandler<MqttClientDisconnectedEventArgs> ClientDisconnected;
 
         //event EventHandler<OutputMessageEventArgs> OutputMessage;
 
-        //void OnClientConnecting(MqttClientConnectingEventArgs e);
-        //void OnClientConnected(MqttClientConnectedEventArgs e);
-        //void OnClientDisconnected(MqttClientDisconnectedEventArgs e);
+        void OnServerStarted(EventArgs e);
+        void OnServerStopped(EventArgs e);
+
 
 
         //void OnOutputMessage(OutputMessageEventArgs e);

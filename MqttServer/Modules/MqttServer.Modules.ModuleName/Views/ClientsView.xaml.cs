@@ -1,13 +1,13 @@
 ﻿using MqttServer.Core.Views;
 
-namespace MqttServer.Modules.ModuleExecute.Views
+namespace MqttServer.Modules.ModuleName.Views
 {
     /// <summary>
     /// Interaction logic for ViewA.xaml
     /// </summary>
-    public partial class ExecuteView : ServerViewBase
+    public partial class ClientsView : ServerViewBase
     {
-        public ExecuteView()
+        public ClientsView()
         {
             InitializeComponent();
         }

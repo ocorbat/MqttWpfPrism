@@ -6,23 +6,23 @@ using Prism.Regions;
 
 namespace MqttServer.Modules.ModuleName
 {
-    public class ModuleNameModule : IModule
+    public class ModuleClientsModule : IModule
     {
         private readonly IRegionManager _regionManager;
 
-        public ModuleNameModule(IRegionManager regionManager)
+        public ModuleClientsModule(IRegionManager regionManager)
         {
             _regionManager = regionManager;
         }
 
         public void OnInitialized(IContainerProvider containerProvider)
         {
-            _regionManager.RequestNavigate(RegionNames.ContentRegion, "ViewA");
+            _regionManager.RequestNavigate(RegionNames.ContentRegion, "ClientsView");
         }
 
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterForNavigation<ViewA>();
+            containerRegistry.RegisterForNavigation<ClientsView>();
         }
     }
 }

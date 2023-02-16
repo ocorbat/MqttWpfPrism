@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Modules.ModuleNa
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{F78C45A0-E044-4890-B8DD-F943BB8CDAAA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Modules.ModuleName", "MqttServer\Modules\MqttServer.Modules.ModuleName\MqttServer.Modules.ModuleName.csproj", "{86460411-BC6E-4204-87EF-F2891D39C714}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Modules.ModuleClients", "MqttServer\Modules\MqttServer.Modules.ModuleName\MqttServer.Modules.ModuleClients.csproj", "{86460411-BC6E-4204-87EF-F2891D39C714}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{EE87DA7C-2593-42A8-B734-43292576133A}"
 EndProject
