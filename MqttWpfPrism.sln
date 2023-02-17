@@ -11,10 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer", "MqttServer\Mq
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Core", "MqttServer\MqttServer.Core\MqttServer.Core.csproj", "{92AB8997-84D3-4885-9768-853C478FCE39}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClientSubscriber", "MqttClientSubscriber\MqttClientSubscriber.csproj", "{8114924C-AC86-4B5B-A118-91AD76A1B152}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClientPublisher", "MqttClientPublisher\MqttClientPublisher.csproj", "{E1A87EE0-E5B4-42BB-A6CA-FAC5DCE4E54C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttCommon", "MqttCommon\MqttCommon.csproj", "{094B51B6-FE56-4A8C-B864-23904407B322}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttHelpers", "MqttHelpers\MqttHelpers.csproj", "{EF8EBB1E-58C0-4877-81E0-B17CC5094B36}"
@@ -79,14 +75,6 @@ Global
 		{92AB8997-84D3-4885-9768-853C478FCE39}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{92AB8997-84D3-4885-9768-853C478FCE39}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{92AB8997-84D3-4885-9768-853C478FCE39}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8114924C-AC86-4B5B-A118-91AD76A1B152}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8114924C-AC86-4B5B-A118-91AD76A1B152}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8114924C-AC86-4B5B-A118-91AD76A1B152}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8114924C-AC86-4B5B-A118-91AD76A1B152}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E1A87EE0-E5B4-42BB-A6CA-FAC5DCE4E54C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E1A87EE0-E5B4-42BB-A6CA-FAC5DCE4E54C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E1A87EE0-E5B4-42BB-A6CA-FAC5DCE4E54C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E1A87EE0-E5B4-42BB-A6CA-FAC5DCE4E54C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{094B51B6-FE56-4A8C-B864-23904407B322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{094B51B6-FE56-4A8C-B864-23904407B322}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{094B51B6-FE56-4A8C-B864-23904407B322}.Release|Any CPU.ActiveCfg = Release|Any CPU
