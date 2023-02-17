@@ -16,7 +16,7 @@
         Right="2"
         Top="2" />
 
-    <Style TargetType="Button">
+    <Style TargetType="{x:Type Button}">
         <Setter Property="Margin" Value="{DynamicResource MarginDefault}" />
         <Setter Property="Padding" Value="{DynamicResource PaddingDefault}" />
     </Style>
