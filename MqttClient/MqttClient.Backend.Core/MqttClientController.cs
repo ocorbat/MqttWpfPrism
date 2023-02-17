@@ -186,19 +186,19 @@ namespace MqttClient.Backend.Core
 
         private Task MqttClient_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
         {
-            OnClientDisconnected(new Events.MqttClientDisconnectedEventArgs());
+            OnClientDisconnected(new Events.MqttClientDisconnectedEventArgs(arg.ConnectResult.DumpToString()));
             return Task.CompletedTask;
         }
 
         private Task MqttClient_ConnectedAsync(MqttClientConnectedEventArgs arg)
         {
-            OnClientConnected(new Events.MqttClientConnectedEventArgs());
+            OnClientConnected(new Events.MqttClientConnectedEventArgs(arg.ConnectResult.DumpToString()));
             return Task.CompletedTask;
         }
 
         private Task MqttClient_ConnectingAsync(MqttClientConnectingEventArgs arg)
         {
-            OnClientConnecting(new Events.MqttClientConnectingEventArgs());
+            OnClientConnecting(new Events.MqttClientConnectingEventArgs(arg.ClientOptions.DumpToString()));
             return Task.CompletedTask;
         }
 
@@ -232,7 +232,7 @@ namespace MqttClient.Backend.Core
             ApplicationMessageReceived?.Invoke(this, e);
         }
 
-        public void OnOutputMessage(OutputMessageEventArgs e)
+        private void OnOutputMessage(OutputMessageEventArgs e)
         {
             OutputMessage?.Invoke(this, e);
         }

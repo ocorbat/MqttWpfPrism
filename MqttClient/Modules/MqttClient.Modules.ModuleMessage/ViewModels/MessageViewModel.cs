@@ -33,8 +33,6 @@ namespace MqttClient.Modules.ModuleMessage.ViewModels
                     MqttClientController.ClientDisconnected += MqttClientController_ClientDisconnected;
 
                     MqttClientController.OutputMessage += MqttClientController_OutputMessage;
-                    //ConnectCommand.RaiseCanExecuteChanged();
-                    //DisconnectCommand.RaiseCanExecuteChanged();
                 }
             }
         }
@@ -46,17 +44,17 @@ namespace MqttClient.Modules.ModuleMessage.ViewModels
 
         private void MqttClientController_ClientConnecting(object sender, Backend.Events.MqttClientConnectingEventArgs e)
         {
-            //Message = e.ClientOptions.DumpToString();
+            Message = e.Message;
         }
 
         private void MqttClientController_ClientDisconnected(object sender, Backend.Events.MqttClientDisconnectedEventArgs e)
         {
-            //Message = e.ConnectResult.DumpToString();
+            Message = e.Message;
         }
 
         private void MqttClientController_ClientConnected(object sender, Backend.Events.MqttClientConnectedEventArgs e)
         {
-            //Message = e.ConnectResult.DumpToString();
+            Message = e.Message;
         }
     }
 }

@@ -32,13 +32,6 @@ namespace MqttClient.Backend.Core
 
         event EventHandler<OutputMessageEventArgs> OutputMessage;
 
-        //void OnClientConnecting(MqttClientConnectingEventArgs e);
-        //void OnClientConnected(MqttClientConnectedEventArgs e);
-        //void OnClientDisconnected(MqttClientDisconnectedEventArgs e);
-
-
-        void OnOutputMessage(OutputMessageEventArgs e);
-
         bool PublishCommandCanExecute();
 
         bool SubscribeCommandCanExecute();
