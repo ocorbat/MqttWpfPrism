@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace MqttClient.Backend.Events
+﻿namespace MqttCommon.Events
 {
     public class OutputMessageEventArgs : EventArgs
     {

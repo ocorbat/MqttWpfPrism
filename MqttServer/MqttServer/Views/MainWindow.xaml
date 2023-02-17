@@ -33,5 +33,9 @@
             Grid.Row="1"
             Grid.Column="0"
             prism:RegionManager.RegionName="{x:Static core:RegionNames.ClientsRegion}" />
+        <ContentControl
+            Grid.Row="2"
+            Grid.Column="0"
+            prism:RegionManager.RegionName="{x:Static core:RegionNames.MessageRegion}" />
     </Grid>
 </Window>

@@ -1,14 +1,8 @@
 ﻿using MqttClient.Backend.Core;
-using MqttClient.Backend.Events;
 using MqttClient.Core.ViewModels;
-using MqttCommon.Extensions;
-using MQTTnet;
-using MQTTnet.Client;
 using MQTTnet.Protocol;
 using Prism.Commands;
 using Prism.Mvvm;
-using System;
-using System.Threading;
 
 namespace MqttClient.Modules.ModulePublisher.ViewModels
 {
@@ -26,51 +20,15 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
         }
         public DelegateCommand PublishCommand { get; set; }
 
-
-
-
-
         private async void PublishCommandExecute()
         {
-            var applicationMessage = new MqttApplicationMessageBuilder()
-               .WithTopic(CurrentTopic)
-               .WithPayload(SendMessageText)
-               .WithRetainFlag(IsRetainModeOn)
-               .WithQualityOfServiceLevel(QualityOfServiceLevel)
-               .Build();
-
-            try
-            {
-                MqttClientPublishResult response;
-
-                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(1)))
-                {
-                    response = await MqttClientController.MqttClient.PublishAsync(applicationMessage, timeoutToken.Token);
-
-                    if (response.IsSuccess)
-                    {
-                        MqttClientController.OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
-                    }
-                }
-            }
-            catch (OperationCanceledException e)
-            {
-                MqttClientController.OnOutputMessage(new OutputMessageEventArgs($"({e})"));
-            }
-            catch (MQTTnet.Exceptions.MqttCommunicationTimedOutException e)
-            {
-                MqttClientController.OnOutputMessage(new OutputMessageEventArgs($"({e})"));
-            }
+            await MqttClientController.PublishAsync(CurrentTopic, SendMessageText, IsRetainModeOn, QualityOfServiceLevel);
         }
 
         private bool PublishCommandCanExecute()
         {
-            return MqttClientController == null
-                ? false
-                : MqttClientController.MqttClient == null ? false : MqttClientController.MqttClient.IsConnected;
+            return MqttClientController != null && MqttClientController.PublishCommandCanExecute();
         }
-
-
 
         public bool IsRetainModeOn
         {
@@ -123,17 +81,17 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             }
         }
 
-        private void MqttClientController_ClientConnecting(object sender, MqttClientConnectingEventArgs e)
+        private void MqttClientController_ClientConnecting(object sender, Backend.Events.MqttClientConnectingEventArgs e)
         {
             PublishCommand.RaiseCanExecuteChanged();
         }
 
-        private void MqttClientController_ClientDisconnected(object sender, MqttClientDisconnectedEventArgs e)
+        private void MqttClientController_ClientDisconnected(object sender, Backend.Events.MqttClientDisconnectedEventArgs e)
         {
             PublishCommand.RaiseCanExecuteChanged();
         }
 
-        private void MqttClientController_ClientConnected(object sender, MqttClientConnectedEventArgs e)
+        private void MqttClientController_ClientConnected(object sender, Backend.Events.MqttClientConnectedEventArgs e)
         {
             PublishCommand.RaiseCanExecuteChanged();
         }

@@ -4,5 +4,6 @@
     {
         public const string ClientsRegion = "ClientsRegion";
         public const string ExecuteRegion = "ExecuteRegion";
+        public const string MessageRegion = "MessageRegion";
     }
 }

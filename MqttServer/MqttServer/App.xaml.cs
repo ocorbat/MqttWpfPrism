@@ -4,6 +4,7 @@ using MqttServer.Backend.Services.Interfaces;
 using MqttServer.Core;
 using MqttServer.Modules.ModuleClients;
 using MqttServer.Modules.ModuleExecute;
+using MqttServer.Modules.ModuleMessage;
 using MqttServer.Views;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -31,6 +32,7 @@ namespace MqttServer
         {
             moduleCatalog.AddModule<ModuleClientsModule>();
             moduleCatalog.AddModule<ModuleExecuteModule>();
+            moduleCatalog.AddModule<ModuleMessageModule>();
         }
     }
 }

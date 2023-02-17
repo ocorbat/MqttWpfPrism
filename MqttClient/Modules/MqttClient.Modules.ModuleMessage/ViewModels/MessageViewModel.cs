@@ -1,8 +1,6 @@
 ﻿using MqttClient.Backend.Core;
-using MqttClient.Backend.Events;
 using MqttClient.Core.ViewModels;
-using MqttCommon.Extensions;
-using MQTTnet.Client;
+using MqttCommon.Events;
 using Prism.Mvvm;
 
 namespace MqttClient.Modules.ModuleMessage.ViewModels
@@ -46,19 +44,19 @@ namespace MqttClient.Modules.ModuleMessage.ViewModels
             Message = e.Message;
         }
 
-        private void MqttClientController_ClientConnecting(object sender, MqttClientConnectingEventArgs e)
+        private void MqttClientController_ClientConnecting(object sender, Backend.Events.MqttClientConnectingEventArgs e)
         {
-            Message = e.ClientOptions.DumpToString();
+            //Message = e.ClientOptions.DumpToString();
         }
 
-        private void MqttClientController_ClientDisconnected(object sender, MqttClientDisconnectedEventArgs e)
+        private void MqttClientController_ClientDisconnected(object sender, Backend.Events.MqttClientDisconnectedEventArgs e)
         {
-            Message = e.ConnectResult.DumpToString();
+            //Message = e.ConnectResult.DumpToString();
         }
 
-        private void MqttClientController_ClientConnected(object sender, MqttClientConnectedEventArgs e)
+        private void MqttClientController_ClientConnected(object sender, Backend.Events.MqttClientConnectedEventArgs e)
         {
-            Message = e.ConnectResult.DumpToString();
+            //Message = e.ConnectResult.DumpToString();
         }
     }
 }

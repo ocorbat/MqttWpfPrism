@@ -1,20 +1,13 @@
 ﻿using MqttClient.Backend.Core;
 using MqttClient.Core.ViewModels;
-using MqttCommon.Extensions;
-using MQTTnet.Client;
 using MQTTnet.Protocol;
 using Prism.Commands;
 using Prism.Mvvm;
-using System;
-using System.Diagnostics;
-using System.Threading;
 
 namespace MqttClient.Modules.ModuleSubscriber.ViewModels
 {
     public class SubscriberViewModel : BindableBase, IClientViewModelBase
     {
-        private string receivedMessage;
-
         public SubscriberViewModel()
         {
             SubscribeCommand = new DelegateCommand(SubscribeCommandExecute, SubscribeCommandCanExecute);
@@ -28,89 +21,24 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
 
         private async void SubscribeCommandExecute()
         {
-            MqttClientSubscribeOptions mqttSubscribeOptions;
-
-            switch (QualityOfServiceLevel)
-            {
-                case MqttQualityOfServiceLevel.AtMostOnce:
-                default:
-                    mqttSubscribeOptions = MqttClientController.MqttFactory.CreateSubscribeOptionsBuilder()
-               .WithTopicFilter(
-                   f =>
-                   {
-                       f.WithTopic(CurrentTopic).WithAtMostOnceQoS();
-                   })
-               .Build();
-                    break;
-                case MqttQualityOfServiceLevel.AtLeastOnce:
-                    mqttSubscribeOptions = MqttClientController.MqttFactory.CreateSubscribeOptionsBuilder()
-               .WithTopicFilter(
-                   f =>
-                   {
-                       f.WithTopic(CurrentTopic).WithAtLeastOnceQoS();
-                   })
-                    .Build();
-
-                    break;
-                case MqttQualityOfServiceLevel.ExactlyOnce:
-                    mqttSubscribeOptions = MqttClientController.MqttFactory.CreateSubscribeOptionsBuilder()
-               .WithTopicFilter(
-                   f =>
-                   {
-                       f.WithTopic(CurrentTopic).WithExactlyOnceQoS();
-                   })
-               .Build();
-                    break;
-            }
-
-            try
-            {
-                MqttClientSubscribeResult response;
-
-                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
-                {
-                    response = await MqttClientController.MqttClient.SubscribeAsync(mqttSubscribeOptions, timeoutToken.Token);
-                }
-
-                Debug.WriteLine($"MQTT client {MqttClientController.MqttClient.Options.ClientId} subscribed to topic '{CurrentTopic}'.");
-                // The response contains additional data sent by the server after subscribing.
-                MqttClientController.OnOutputMessage(new Backend.Events.OutputMessageEventArgs(response.DumpToString()));
-            }
-            catch (OperationCanceledException e)
-            {
-                MqttClientController.OnOutputMessage(new Backend.Events.OutputMessageEventArgs($"({e})"));
-            }
-            catch (MQTTnet.Exceptions.MqttCommunicationTimedOutException e)
-            {
-                MqttClientController.OnOutputMessage(new Backend.Events.OutputMessageEventArgs($"({e})"));
-            }
+            await MqttClientController.SubscribeAsync(CurrentTopic, QualityOfServiceLevel);
         }
 
         private bool SubscribeCommandCanExecute()
         {
-            return MqttClientController == null
-                ? false
-                : MqttClientController.MqttClient == null ? false : MqttClientController.MqttClient.IsConnected;
+            return MqttClientController != null && MqttClientController.SubscribeCommandCanExecute();
         }
 
 
 
         private bool UnsubscribeCommandCanExecute()
         {
-            return MqttClientController == null
-                ? false
-                : MqttClientController.MqttClient == null ? false : MqttClientController.MqttClient.IsConnected;
+            return MqttClientController != null && MqttClientController.UnsubscribeCommandCanExecute();
         }
 
         private async void UnsubscribeCommandExecute()
         {
-            MqttClientUnsubscribeResult result;
-            var mqttUnsubscribeOptions = MqttClientController.MqttFactory.CreateUnsubscribeOptionsBuilder()
-                .WithTopicFilter(CurrentTopic)
-                .Build();
-
-            result = await MqttClientController.MqttClient.UnsubscribeAsync(mqttUnsubscribeOptions);
-            MqttClientController.OnOutputMessage(new Backend.Events.OutputMessageEventArgs(result.DumpToString()));
+            await MqttClientController.UnsubscribeAsync(CurrentTopic);
         }
 
 
@@ -151,19 +79,19 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
             }
         }
 
-        private void MqttClientController_ClientConnecting(object sender, MqttClientConnectingEventArgs e)
+        private void MqttClientController_ClientConnecting(object sender, Backend.Events.MqttClientConnectingEventArgs e)
         {
             SubscribeCommand.RaiseCanExecuteChanged();
             UnsubscribeCommand.RaiseCanExecuteChanged();
         }
 
-        private void MqttClientController_ClientDisconnected(object sender, MqttClientDisconnectedEventArgs e)
+        private void MqttClientController_ClientDisconnected(object sender, Backend.Events.MqttClientDisconnectedEventArgs e)
         {
             SubscribeCommand.RaiseCanExecuteChanged();
             UnsubscribeCommand.RaiseCanExecuteChanged();
         }
 
-        private void MqttClientController_ClientConnected(object sender, MqttClientConnectedEventArgs e)
+        private void MqttClientController_ClientConnected(object sender, Backend.Events.MqttClientConnectedEventArgs e)
         {
             SubscribeCommand.RaiseCanExecuteChanged();
             UnsubscribeCommand.RaiseCanExecuteChanged();

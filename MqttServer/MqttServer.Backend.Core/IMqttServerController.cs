@@ -1,4 +1,5 @@
-﻿using MQTTnet;
+﻿using MqttCommon.Events;
+using MQTTnet;
 using MQTTnet.Server;
 
 namespace MqttServer.Backend.Core
@@ -6,32 +7,39 @@ namespace MqttServer.Backend.Core
     public interface IMqttServerController
     {
         MqttFactory MqttFactory { get; }
-        MQTTnet.Server.MqttServer MqttServer { get; set; }
+        MQTTnet.Server.MqttServer MqttServer { get; }
+
+        IList<MqttClientStatus>? ConnectedClients { get; }
 
         Guid ClientId { get; }
+
+        MQTTnet.Server.MqttServer? CreateServer();
+        Task<IList<MqttClientStatus>> RefreshConnectedClientsAsync();
+
+        bool GetConnectedClientsCommandCanExecute();
 
 
         event EventHandler<EventArgs> ServerStarted;
         event EventHandler<EventArgs> ServerStopped;
-        event EventHandler<ClientConnectedEventArgs> ClientConnected;
-        event EventHandler<ClientDisconnectedEventArgs> ClientDisconnected;
-        event EventHandler<ClientSubscribedTopicEventArgs> ClientSubscribedTopic;
-        event EventHandler<ClientUnsubscribedTopicEventArgs> ClientUnsubscribedTopic;
-        //event EventHandler<MqttClientDisconnectedEventArgs> ClientDisconnected;
+        event EventHandler<Events.ClientConnectedEventArgs> ClientConnected;
+        event EventHandler<Events.ClientDisconnectedEventArgs> ClientDisconnected;
+        event EventHandler<Events.ClientSubscribedTopicEventArgs> ClientSubscribedTopic;
+        event EventHandler<Events.ClientUnsubscribedTopicEventArgs> ClientUnsubscribedTopic;
 
-        //event EventHandler<OutputMessageEventArgs> OutputMessage;
 
-        void OnServerStarted(EventArgs e);
-        void OnServerStopped(EventArgs e);
-        void OnClientConnected(ClientConnectedEventArgs e);
-        void OnClientDisconnected(ClientDisconnectedEventArgs e);
+        event EventHandler<OutputMessageEventArgs> OutputMessage;
 
-        void OnClientSubscribedTopic(ClientSubscribedTopicEventArgs e);
-        void OnClientUnsubscribedTopic(ClientUnsubscribedTopicEventArgs e);
+
+        Task StopAsync();
+
+        Task StartAsync();
 
 
 
 
-        //void OnOutputMessage(OutputMessageEventArgs e);
+
+        bool StopServerCommandCanExecute();
+
+        bool StartServerCommandCanExecute();
     }
 }

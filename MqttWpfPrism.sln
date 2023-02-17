@@ -53,9 +53,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Backend.Services
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Backend.Services.Interfaces", "MqttClient\MqttClient.Backend.Services.Interfaces\MqttClient.Backend.Services.Interfaces.csproj", "{73F988BC-6400-4012-8D88-A28A95C443CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttServer.Backend.Services", "MqttServer\MqttServer.Backend.Services\MqttServer.Backend.Services.csproj", "{948AF75F-9DF4-4C74-8039-6B084817F129}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Backend.Services", "MqttServer\MqttServer.Backend.Services\MqttServer.Backend.Services.csproj", "{948AF75F-9DF4-4C74-8039-6B084817F129}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttServer.Backend.Services.Interfaces", "MqttServer\MqttServer.Backend.Services.Interfaces\MqttServer.Backend.Services.Interfaces.csproj", "{9DE08923-0E45-4790-89CD-0FF6D2133D09}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Backend.Services.Interfaces", "MqttServer\MqttServer.Backend.Services.Interfaces\MqttServer.Backend.Services.Interfaces.csproj", "{9DE08923-0E45-4790-89CD-0FF6D2133D09}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttServer.Backend.Events", "MqttServer\MqttServer.Backend.Events\MqttServer.Backend.Events.csproj", "{1B1B698A-31D8-4B52-9564-DA0E55DA4CE1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttServer.Modules.ModuleMessage", "MqttServer\Modules\MqttServer.Modules.ModuleMessage\MqttServer.Modules.ModuleMessage.csproj", "{1EC792AE-52A0-4677-9615-23B034839FF9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -143,6 +147,14 @@ Global
 		{9DE08923-0E45-4790-89CD-0FF6D2133D09}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DE08923-0E45-4790-89CD-0FF6D2133D09}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9DE08923-0E45-4790-89CD-0FF6D2133D09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B1B698A-31D8-4B52-9564-DA0E55DA4CE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B1B698A-31D8-4B52-9564-DA0E55DA4CE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B1B698A-31D8-4B52-9564-DA0E55DA4CE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B1B698A-31D8-4B52-9564-DA0E55DA4CE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EC792AE-52A0-4677-9615-23B034839FF9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EC792AE-52A0-4677-9615-23B034839FF9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EC792AE-52A0-4677-9615-23B034839FF9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EC792AE-52A0-4677-9615-23B034839FF9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -172,6 +184,8 @@ Global
 		{73F988BC-6400-4012-8D88-A28A95C443CA} = {5E201FD8-C39E-4CE6-8FA9-CC19175A55AB}
 		{948AF75F-9DF4-4C74-8039-6B084817F129} = {04002EBB-E938-457B-A36D-B814CD5D3B9D}
 		{9DE08923-0E45-4790-89CD-0FF6D2133D09} = {04002EBB-E938-457B-A36D-B814CD5D3B9D}
+		{1B1B698A-31D8-4B52-9564-DA0E55DA4CE1} = {04002EBB-E938-457B-A36D-B814CD5D3B9D}
+		{1EC792AE-52A0-4677-9615-23B034839FF9} = {2D3274F9-9D33-4CE4-AD42-4E2F4AFB760B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {815F87A5-1F23-4A6F-BCC1-8C98C8EE135E}

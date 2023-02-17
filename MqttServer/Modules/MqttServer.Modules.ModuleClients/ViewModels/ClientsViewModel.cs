@@ -50,12 +50,12 @@ namespace MqttServer.Modules.ModuleName.ViewModels
 
         private bool GetConnectedClientsCommandCanExecute()
         {
-            return MqttServerController != null && MqttServerController.MqttServer != null && MqttServerController.MqttServer.IsStarted;
+            return MqttServerController == null ? false : MqttServerController.GetConnectedClientsCommandCanExecute();
         }
 
         private async void GetConnectedClientsCommandExecute()
         {
-            ConnectedClients = MqttServerController?.MqttServer != null ? await MqttServerController.MqttServer.GetClientsAsync() : (IEnumerable<MqttClientStatus>)null;
+            ConnectedClients = await MqttServerController.RefreshConnectedClientsAsync();
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
@@ -98,7 +98,7 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             }
         }
 
-        private async void MqttServerController_ClientSubscribedTopic(object sender, ClientSubscribedTopicEventArgs e)
+        private async void MqttServerController_ClientSubscribedTopic(object sender, Backend.Events.ClientSubscribedTopicEventArgs e)
         {
             var id = e.ClientId;
             var connectedClients = await MqttServerController.MqttServer.GetClientsAsync();
@@ -113,7 +113,7 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             });
         }
 
-        private void MqttServerController_ClientUnsubscribedTopic(object sender, ClientUnsubscribedTopicEventArgs e)
+        private void MqttServerController_ClientUnsubscribedTopic(object sender, Backend.Events.ClientUnsubscribedTopicEventArgs e)
         {
             var id = e.ClientId;
             var toto = subscribedClients.SingleOrDefault(c => c.Id == id);
@@ -124,14 +124,14 @@ namespace MqttServer.Modules.ModuleName.ViewModels
             });
         }
 
-        private async void MqttServerController_ClientDisconnected(object sender, ClientDisconnectedEventArgs e)
+        private void MqttServerController_ClientDisconnected(object sender, Backend.Events.ClientDisconnectedEventArgs e)
         {
-            ConnectedClients = MqttServerController?.MqttServer != null ? await MqttServerController.MqttServer.GetClientsAsync() : (IEnumerable<MqttClientStatus>)null;
+            ConnectedClients = e.CurrentConnectedClients;
         }
 
-        private async void MqttServerController_ClientConnected(object sender, ClientConnectedEventArgs e)
+        private void MqttServerController_ClientConnected(object sender, Backend.Events.ClientConnectedEventArgs e)
         {
-            ConnectedClients = MqttServerController?.MqttServer != null ? await MqttServerController.MqttServer.GetClientsAsync() : (IEnumerable<MqttClientStatus>)null;
+            ConnectedClients = e.CurrentConnectedClients;
         }
 
         private void MqttServerController_ServerStopped(object sender, EventArgs e)
