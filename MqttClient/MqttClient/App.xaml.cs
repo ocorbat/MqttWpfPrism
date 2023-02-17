@@ -1,10 +1,9 @@
 ﻿
+using MqttClient.Backend.Core;
 using MqttClient.Modules.ModuleConnect;
 using MqttClient.Modules.ModuleMessage;
 using MqttClient.Modules.ModulePublisher;
 using MqttClient.Modules.ModuleSubscriber;
-using MqttClient.Services;
-using MqttClient.Services.Interfaces;
 using MqttClient.ViewModels;
 using MqttClient.Views;
 using Prism.Ioc;
@@ -46,7 +45,7 @@ namespace MqttClient
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            containerRegistry.RegisterSingleton<IMessageService, MessageService>();
+            //containerRegistry.RegisterSingleton<IMessageService, MessageService>();
             containerRegistry.Register<IMqttClientController, MqttClientController>();
         }
 

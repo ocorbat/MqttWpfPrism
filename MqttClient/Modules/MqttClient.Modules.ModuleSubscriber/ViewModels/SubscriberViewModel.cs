@@ -1,5 +1,5 @@
-﻿using MqttClient.Core.ViewModels;
-using MqttClient.Services.Interfaces;
+﻿using MqttClient.Backend.Core;
+using MqttClient.Core.ViewModels;
 using MqttCommon.Extensions;
 using MQTTnet.Client;
 using MQTTnet.Protocol;
@@ -74,15 +74,15 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
 
                 Debug.WriteLine($"MQTT client {MqttClientController.MqttClient.Options.ClientId} subscribed to topic '{CurrentTopic}'.");
                 // The response contains additional data sent by the server after subscribing.
-                MqttClientController.OnOutputMessage(new Events.OutputMessageEventArgs(response.DumpToString()));
+                MqttClientController.OnOutputMessage(new Backend.Events.OutputMessageEventArgs(response.DumpToString()));
             }
             catch (OperationCanceledException e)
             {
-                MqttClientController.OnOutputMessage(new Events.OutputMessageEventArgs($"({e})"));
+                MqttClientController.OnOutputMessage(new Backend.Events.OutputMessageEventArgs($"({e})"));
             }
             catch (MQTTnet.Exceptions.MqttCommunicationTimedOutException e)
             {
-                MqttClientController.OnOutputMessage(new Events.OutputMessageEventArgs($"({e})"));
+                MqttClientController.OnOutputMessage(new Backend.Events.OutputMessageEventArgs($"({e})"));
             }
         }
 
@@ -97,11 +97,9 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
 
         private bool UnsubscribeCommandCanExecute()
         {
-            if (MqttClientController == null)
-            {
-                return false;
-            }
-            return MqttClientController.MqttClient == null ? false : MqttClientController.MqttClient.IsConnected;
+            return MqttClientController == null
+                ? false
+                : MqttClientController.MqttClient == null ? false : MqttClientController.MqttClient.IsConnected;
         }
 
         private async void UnsubscribeCommandExecute()
@@ -112,7 +110,7 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
                 .Build();
 
             result = await MqttClientController.MqttClient.UnsubscribeAsync(mqttUnsubscribeOptions);
-            MqttClientController.OnOutputMessage(new Events.OutputMessageEventArgs(result.DumpToString()));
+            MqttClientController.OnOutputMessage(new Backend.Events.OutputMessageEventArgs(result.DumpToString()));
         }
 
 

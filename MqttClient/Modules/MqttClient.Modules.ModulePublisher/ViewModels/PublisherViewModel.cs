@@ -1,5 +1,6 @@
-﻿using MqttClient.Core.ViewModels;
-using MqttClient.Services.Interfaces;
+﻿using MqttClient.Backend.Core;
+using MqttClient.Backend.Events;
+using MqttClient.Core.ViewModels;
 using MqttCommon.Extensions;
 using MQTTnet;
 using MQTTnet.Client;
@@ -48,17 +49,17 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
 
                     if (response.IsSuccess)
                     {
-                        MqttClientController.OnOutputMessage(new Events.OutputMessageEventArgs(response.DumpToString()));
+                        MqttClientController.OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
                     }
                 }
             }
             catch (OperationCanceledException e)
             {
-                MqttClientController.OnOutputMessage(new Events.OutputMessageEventArgs($"({e})"));
+                MqttClientController.OnOutputMessage(new OutputMessageEventArgs($"({e})"));
             }
             catch (MQTTnet.Exceptions.MqttCommunicationTimedOutException e)
             {
-                MqttClientController.OnOutputMessage(new Events.OutputMessageEventArgs($"({e})"));
+                MqttClientController.OnOutputMessage(new OutputMessageEventArgs($"({e})"));
             }
         }
 

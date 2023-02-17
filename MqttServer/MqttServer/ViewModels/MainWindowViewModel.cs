@@ -1,4 +1,4 @@
-﻿using MqttServer.Core.Interfaces;
+﻿using MqttServer.Backend.Core;
 using Prism.Mvvm;
 
 namespace MqttServer.ViewModels

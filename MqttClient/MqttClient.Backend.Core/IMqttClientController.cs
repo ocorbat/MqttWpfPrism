@@ -1,9 +1,8 @@
-﻿using MqttClient.Events;
+﻿using MqttClient.Backend.Events;
 using MQTTnet;
 using MQTTnet.Client;
-using System;
 
-namespace MqttClient.Services.Interfaces
+namespace MqttClient.Backend.Core
 {
     public interface IMqttClientController
     {

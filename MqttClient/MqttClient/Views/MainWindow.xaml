@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:attachedProperties="clr-namespace:MqttClient.Core;assembly=MqttClient.Core"
+    xmlns:core1="clr-namespace:MqttClient.Backend.Core;assembly=MqttClient.Backend.Core"
     xmlns:core="clr-namespace:MqttClient.Core;assembly=MqttClient.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"

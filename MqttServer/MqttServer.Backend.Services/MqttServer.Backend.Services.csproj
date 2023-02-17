@@ -2,10 +2,11 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MqttServer.Services.Interfaces\MqttServer.Services.Interfaces.csproj" />
+    <ProjectReference Include="..\MqttServer.Backend.Services.Interfaces\MqttServer.Backend.Services.Interfaces.csproj" />
   </ItemGroup>
 
 </Project>

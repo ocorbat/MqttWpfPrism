@@ -1,4 +1,4 @@
-﻿using MqttClient.Services.Interfaces;
+﻿using MqttClient.Backend.Core;
 
 namespace MqttClient.Core.ViewModels
 {

@@ -1,4 +1,5 @@
-﻿using MqttClient.Services.Interfaces;
+﻿
+using MqttClient.Backend.Core;
 using System.Windows;
 
 namespace MqttClient.Core

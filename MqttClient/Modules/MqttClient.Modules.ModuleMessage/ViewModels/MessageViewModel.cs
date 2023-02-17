@@ -1,5 +1,6 @@
-﻿using MqttClient.Core.ViewModels;
-using MqttClient.Services.Interfaces;
+﻿using MqttClient.Backend.Core;
+using MqttClient.Backend.Events;
+using MqttClient.Core.ViewModels;
 using MqttCommon.Extensions;
 using MQTTnet.Client;
 using Prism.Mvvm;
@@ -40,7 +41,7 @@ namespace MqttClient.Modules.ModuleMessage.ViewModels
             }
         }
 
-        private void MqttClientController_OutputMessage(object sender, Events.OutputMessageEventArgs e)
+        private void MqttClientController_OutputMessage(object sender, OutputMessageEventArgs e)
         {
             Message = e.Message;
         }

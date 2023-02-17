@@ -1,9 +1,9 @@
-﻿using MqttServer.Core;
-using MqttServer.Core.Interfaces;
+﻿using MqttServer.Backend.Core;
+using MqttServer.Backend.Services;
+using MqttServer.Backend.Services.Interfaces;
+using MqttServer.Core;
 using MqttServer.Modules.ModuleClients;
 using MqttServer.Modules.ModuleExecute;
-using MqttServer.Services;
-using MqttServer.Services.Interfaces;
 using MqttServer.Views;
 using Prism.Ioc;
 using Prism.Modularity;

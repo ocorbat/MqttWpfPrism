@@ -4,13 +4,7 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MQTTnet" Version="4.1.4.563" />
-    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\MqttCommon\MqttCommon.csproj" />
-    <ProjectReference Include="..\..\..\MqttHelpers\MqttHelpers.csproj" />
     <ProjectReference Include="..\..\MqttClient.Core\MqttClient.Core.csproj" />
-    <ProjectReference Include="..\..\Services\MqttClient.Services.Interfaces\MqttClient.Services.Interfaces.csproj" />
   </ItemGroup>
 </Project>

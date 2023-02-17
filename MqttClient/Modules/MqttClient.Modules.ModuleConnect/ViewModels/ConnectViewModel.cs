@@ -1,5 +1,5 @@
-﻿using MqttClient.Core.ViewModels;
-using MqttClient.Services.Interfaces;
+﻿using MqttClient.Backend.Core;
+using MqttClient.Core.ViewModels;
 using MqttCommon;
 using MqttCommon.Extensions;
 using MQTTnet.Client;

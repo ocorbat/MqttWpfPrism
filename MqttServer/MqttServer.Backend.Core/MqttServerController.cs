@@ -1,6 +1,6 @@
 ﻿using MQTTnet;
 using MQTTnet.Server;
-using MqttServer.Core.Interfaces;
+using MqttServer.Backend.Core;
 using System;
 
 namespace MqttServer.Core

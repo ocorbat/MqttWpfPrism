@@ -1,4 +1,4 @@
-﻿namespace MqttServer.Services.Interfaces
+﻿namespace MqttServer.Backend.Services.Interfaces
 {
     public interface IMessageService
     {

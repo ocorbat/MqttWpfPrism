@@ -1,6 +1,7 @@
 ﻿using MqttCommon;
 using MQTTnet.Internal;
 using MQTTnet.Server;
+using MqttServer.Backend.Core;
 using MqttServer.Core.Dispose;
 using MqttServer.Core.Interfaces;
 using Prism.Commands;

@@ -4,10 +4,8 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\..\MqttCommon\MqttCommon.csproj" />
+    <ProjectReference Include="..\..\MqttClient.Backend.Events\MqttClient.Backend.Events.csproj" />
     <ProjectReference Include="..\..\MqttClient.Core\MqttClient.Core.csproj" />
   </ItemGroup>
 </Project>

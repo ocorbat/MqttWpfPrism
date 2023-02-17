@@ -1,6 +1,6 @@
-﻿using MqttServer.Services.Interfaces;
+﻿using MqttServer.Backend.Services.Interfaces;
 
-namespace MqttServer.Services
+namespace MqttServer.Backend.Services
 {
     public class MessageService : IMessageService
     {

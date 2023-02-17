@@ -1,4 +1,5 @@
-﻿using MqttClient.Services.Interfaces;
+﻿
+using MqttClient.Backend.Core;
 using Prism.Mvvm;
 
 namespace MqttClient.ViewModels

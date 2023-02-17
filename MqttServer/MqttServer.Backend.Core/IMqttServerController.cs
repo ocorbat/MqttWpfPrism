@@ -1,8 +1,7 @@
 ﻿using MQTTnet;
 using MQTTnet.Server;
-using System;
 
-namespace MqttServer.Core.Interfaces
+namespace MqttServer.Backend.Core
 {
     public interface IMqttServerController
     {
