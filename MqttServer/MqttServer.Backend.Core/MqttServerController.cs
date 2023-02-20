@@ -15,11 +15,7 @@ namespace MqttServer.Core
     {
         public MqttFactory MqttFactory { get; } = new MqttFactory();
         public MQTTnet.Server.MqttServer MqttServer { get; private set; } = default!;
-
-        public Guid ClientId { get; }
-
         public ObservableCollection<ClientSubscribedItem> ClientSubscribedItems { get; }
-
         public IList<MqttClientStatus>? ConnectedClients { get; private set; }
 
         private readonly string storePath;

@@ -8,16 +8,9 @@ namespace MqttServer.Backend.Core
     {
         MqttFactory MqttFactory { get; }
         MQTTnet.Server.MqttServer MqttServer { get; }
-
         IList<MqttClientStatus>? ConnectedClients { get; }
-
-        Guid ClientId { get; }
-
         MQTTnet.Server.MqttServer? CreateServer(int portNumber);
         Task<IList<MqttClientStatus>> RefreshConnectedClientsAsync();
-
-        bool GetConnectedClientsCommandCanExecute();
-
 
         event EventHandler<EventArgs> ServerStarted;
         event EventHandler<EventArgs> ServerStopped;
@@ -25,21 +18,13 @@ namespace MqttServer.Backend.Core
         event EventHandler<Events.ClientDisconnectedEventArgs> ClientDisconnected;
         event EventHandler<Events.ClientSubscribedTopicEventArgs> ClientSubscribedTopic;
         event EventHandler<Events.ClientUnsubscribedTopicEventArgs> ClientUnsubscribedTopic;
-
-
         event EventHandler<OutputMessageEventArgs> OutputMessage;
 
-
         Task StopAsync();
-
         Task StartAsync();
 
-
-
-
-
         bool StopServerCommandCanExecute();
-
         bool StartServerCommandCanExecute();
+        bool GetConnectedClientsCommandCanExecute();
     }
 }
