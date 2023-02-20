@@ -12,8 +12,6 @@
     xmlns:viewmodels="clr-namespace:MqttClient.Modules.ModuleConnect.ViewModels"
     xmlns:views="clr-namespace:MqttClient.Core.Views;assembly=MqttClient.Core"
     d:DataContext="{d:DesignInstance viewmodels:ConnectViewModel}"
-    d:DesignHeight="300"
-    d:DesignWidth="300"
     prism:ViewModelLocator.AutoWireViewModel="True"
     views:ClientViewBase.MqttClientController="{Binding (core:AttachedProperties.MqttClientController), RelativeSource={RelativeSource Self}, Mode=OneWay}"
     mc:Ignorable="d">
@@ -170,11 +168,6 @@
                 Background="AliceBlue"
                 DockPanel.Dock="Right"
                 Text="{Binding ReceivedMessage}" />
-            <ListBox AlternationCount="1"  MaxHeight="100"
-                Grid.Row="1"
-                Grid.Column="0"
-                Grid.ColumnSpan="8"
-                ItemsSource="{Binding ListReceivedMessages, Mode=OneWay}" />
         </Grid>
     </Grid>
 </views:ClientViewBase>

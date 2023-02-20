@@ -3,8 +3,6 @@ using MqttClient.Core.ViewModels;
 using MQTTnet.Formatter;
 using Prism.Commands;
 using Prism.Mvvm;
-using System.Collections.ObjectModel;
-using System.Windows;
 
 namespace MqttClient.Modules.ModuleConnect.ViewModels
 {
@@ -108,11 +106,6 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
 
         private void MqttClientController_ApplicationMessageReceived(object sender, Backend.Events.ApplicationMessageReceivedEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke(() =>
-            {
-                ListReceivedMessages.Add(ReceivedMessage);
-            });
-
             ReceivedMessage = e.ApplicationMessage.ToString();
         }
 
@@ -137,8 +130,6 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
             DisconnectCommand.RaiseCanExecuteChanged();
         }
 
-        private ObservableCollection<string> listReceivedMessages = new ObservableCollection<string>();
 
-        public ObservableCollection<string> ListReceivedMessages { get => listReceivedMessages; set => SetProperty(ref listReceivedMessages, value); }
     }
 }

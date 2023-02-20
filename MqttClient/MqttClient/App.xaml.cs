@@ -2,6 +2,7 @@
 using MqttClient.Backend.Core;
 using MqttClient.Modules.ModuleConnect;
 using MqttClient.Modules.ModuleMessage;
+using MqttClient.Modules.ModuleMessageHistory;
 using MqttClient.Modules.ModulePublisher;
 using MqttClient.Modules.ModuleSubscriber;
 using MqttClient.ViewModels;
@@ -52,6 +53,7 @@ namespace MqttClient
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
             moduleCatalog.AddModule<ModuleConnectModule>();
+            moduleCatalog.AddModule<ModuleMessageHistoryModule>();
             moduleCatalog.AddModule<ModuleMessageModule>();
 
             if (startupEventArgs.Args.Count() == 0)

@@ -1,7 +1,6 @@
 ﻿using MqttCommon;
 using MqttCommon.Events;
 using MQTTnet;
-using MQTTnet.Internal;
 using MQTTnet.Packets;
 using MQTTnet.Server;
 using MqttServer.Backend.Core;
@@ -118,13 +117,26 @@ namespace MqttServer.Core
             // transmitting is not supported and makes no sense at all.
             //args.ApplicationMessage.Topic += "/manipulated";
 
-            return CompletedTask.Instance;
+            //var payload = arg.ApplicationMessage?.Payload == null ? null : Encoding.UTF8.GetString(arg.ApplicationMessage?.Payload);
+
+
+            //WriteLine(
+            //    " TimeStamp: {0} -- Message: ClientId = {1}, Topic = {2}, Payload = {3}, QoS = {4}, Retain-Flag = {5}",
+
+            //    DateTime.Now,
+            //    arg.ClientId,
+            //    arg.ApplicationMessage?.Topic,
+            //    payload,
+            //    arg.ApplicationMessage?.QualityOfServiceLevel,
+            //    arg.ApplicationMessage?.Retain);
+
+            return Task.CompletedTask;
         }
 
         private Task MqttServer_InterceptingSubscriptionAsync(InterceptingSubscriptionEventArgs arg)
         {
             arg.CloseConnection = false;
-            return CompletedTask.Instance;
+            return Task.CompletedTask;
         }
 
         private Task MqttServer_ValidatingConnectionAsync(ValidatingConnectionEventArgs arg)
@@ -132,7 +144,7 @@ namespace MqttServer.Core
             if (arg.UserName != "admin" || arg.Password != "1234")
             {
                 arg.ReasonCode = MQTTnet.Protocol.MqttConnectReasonCode.BadUserNameOrPassword;
-                return CompletedTask.Instance;
+                return Task.CompletedTask;
             }
 
             arg.ReasonCode = MQTTnet.Protocol.MqttConnectReasonCode.Success;

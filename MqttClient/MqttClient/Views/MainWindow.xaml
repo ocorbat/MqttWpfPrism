@@ -25,11 +25,13 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <ContentControl Grid.Row="0" prism:RegionManager.RegionName="{x:Static core:RegionNames.ConnectRegion}" />
-            <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static core:RegionNames.SubscriberRegion}" />
-            <ContentControl Grid.Row="2" prism:RegionManager.RegionName="{x:Static core:RegionNames.PublisherRegion}" />
-            <ContentControl Grid.Row="3" prism:RegionManager.RegionName="{x:Static core:RegionNames.MessageRegion}" />
+            <ContentControl Grid.Row="1" prism:RegionManager.RegionName="{x:Static core:RegionNames.MessageHistoryRegion}" />
+            <ContentControl Grid.Row="2" prism:RegionManager.RegionName="{x:Static core:RegionNames.SubscriberRegion}" />
+            <ContentControl Grid.Row="3" prism:RegionManager.RegionName="{x:Static core:RegionNames.PublisherRegion}" />
+            <ContentControl Grid.Row="4" prism:RegionManager.RegionName="{x:Static core:RegionNames.MessageRegion}" />
         </Grid>
     </ScrollViewer>
 </Window>
