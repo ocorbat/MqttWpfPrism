@@ -74,6 +74,7 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
                 if (SetProperty(ref mqttClientController, value))
                 {
                     PublishCommand.RaiseCanExecuteChanged();
+                    IsEnabled = PublishCommandCanExecute();
                     MqttClientController.ClientConnecting += MqttClientController_ClientConnecting;
                     MqttClientController.ClientConnected += MqttClientController_ClientConnected;
                     MqttClientController.ClientDisconnected += MqttClientController_ClientDisconnected;
@@ -84,16 +85,23 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
         private void MqttClientController_ClientConnecting(object sender, Backend.Events.MqttClientConnectingEventArgs e)
         {
             PublishCommand.RaiseCanExecuteChanged();
+            IsEnabled = PublishCommandCanExecute();
         }
 
         private void MqttClientController_ClientDisconnected(object sender, Backend.Events.MqttClientDisconnectedEventArgs e)
         {
             PublishCommand.RaiseCanExecuteChanged();
+            IsEnabled = PublishCommandCanExecute();
         }
 
         private void MqttClientController_ClientConnected(object sender, Backend.Events.MqttClientConnectedEventArgs e)
         {
             PublishCommand.RaiseCanExecuteChanged();
+            IsEnabled = PublishCommandCanExecute();
         }
+
+        private bool isEnabled;
+
+        public bool IsEnabled { get => isEnabled; set => SetProperty(ref isEnabled, value); }
     }
 }

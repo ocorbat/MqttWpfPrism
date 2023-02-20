@@ -14,12 +14,12 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 
-namespace MqttServer.Modules.ModuleName.ViewModels
+namespace MqttServer.Modules.ModuleClients.ViewModels
 {
     public class ClientsViewModel : BindableBase, IMqttServerControllerViewModel, INavigationAware, IConfirmNavigationRequest
     {
         private IEnumerable<MqttClientStatus> connectedClients;
-        private ObservableCollection<MqttClientStatus> subscribedClients;
+        private ObservableCollection<ConnectedClientViewModel> subscribedClients;
         private ICollectionView subscribedClientsView;
 
         public ClientsViewModel(IRegionManager regionManager, IMessageService messageService)
@@ -28,7 +28,7 @@ namespace MqttServer.Modules.ModuleName.ViewModels
 
             GetConnectedClientsCommand = new DelegateCommand(GetConnectedClientsCommandExecute, GetConnectedClientsCommandCanExecute);
 
-            subscribedClients = new ObservableCollection<MqttClientStatus>();
+            subscribedClients = new ObservableCollection<ConnectedClientViewModel>();
             SubscribedClientsView = CollectionViewSource.GetDefaultView(subscribedClients);
         }
 
@@ -100,28 +100,30 @@ namespace MqttServer.Modules.ModuleName.ViewModels
 
         private async void MqttServerController_ClientSubscribedTopic(object sender, Backend.Events.ClientSubscribedTopicEventArgs e)
         {
-            var id = e.ClientId;
-            var connectedClients = await MqttServerController.MqttServer.GetClientsAsync();
-            var toto = connectedClients.SingleOrDefault(c => c.Id == id);
+            var connectedClientViewModel = new ConnectedClientViewModel
+            {
+                ClientId = e.ClientId,
+                Topic = e.Topic
+            };
 
             await Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                if (!subscribedClients.Any(c => c.Id == id))
-                {
-                    subscribedClients.Add(toto);
-                }
+                subscribedClients.Add(connectedClientViewModel);
             });
         }
 
         private void MqttServerController_ClientUnsubscribedTopic(object sender, Backend.Events.ClientUnsubscribedTopicEventArgs e)
         {
             var id = e.ClientId;
-            var toto = subscribedClients.SingleOrDefault(c => c.Id == id);
+            var toto = subscribedClients.Where(c => c.ClientId == id);
 
-            Application.Current.Dispatcher.BeginInvoke(() =>
+            foreach (var item in toto)
             {
-                subscribedClients.Remove(toto);
-            });
+                Application.Current.Dispatcher.BeginInvoke(() =>
+                {
+                    subscribedClients.Remove(item);
+                });
+            }
         }
 
         private void MqttServerController_ClientDisconnected(object sender, Backend.Events.ClientDisconnectedEventArgs e)

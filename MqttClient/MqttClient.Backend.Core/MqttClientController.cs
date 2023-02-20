@@ -1,5 +1,4 @@
-﻿using MqttCommon;
-using MqttCommon.Events;
+﻿using MqttCommon.Events;
 using MqttCommon.Extensions;
 using MQTTnet;
 using MQTTnet.Client;
@@ -16,6 +15,8 @@ namespace MqttClient.Backend.Core
 
         public MqttFactory MqttFactory { get; } = new MqttFactory();
 
+        private IList<string> listReceivedData = new List<string>();
+
         public MqttClientController()
         {
             MqttClient = MqttFactory.CreateMqttClient();
@@ -31,7 +32,7 @@ namespace MqttClient.Backend.Core
         {
             var mqttClientOptions = MqttFactory.CreateClientOptionsBuilder()
                 .WithClientId(ClientId.ToString())
-                .WithTcpServer(Constants.Localhost, Constants.Port5004)
+                .WithTcpServer(MqttCommon.Constants.Localhost, MqttCommon.Constants.Port5004)
                 .WithCleanSession(isCleanSessionOn)
                 .WithKeepAlivePeriod(new TimeSpan(0, 1, 0))
                 .WithProtocolVersion(protocolVersion)
@@ -50,6 +51,7 @@ namespace MqttClient.Backend.Core
 
                 if (payload != null)
                 {
+                    listReceivedData.Add(payload);
                     OnApplicationMessageReceived(new Events.ApplicationMessageReceivedEventArgs(payload));
                 }
 
@@ -61,13 +63,16 @@ namespace MqttClient.Backend.Core
             MqttClientConnectResult result;
             try
             {
-                result = await MqttClient.ConnectAsync(mqttClientOptions, CancellationToken.None);
-                //Output = result.DumpToString();
+                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientConnectionTimeout)))
+                {
+                    result = await MqttClient.ConnectAsync(mqttClientOptions, timeoutToken.Token);
+                }
+
+                OnOutputMessage(new OutputMessageEventArgs(result.DumpToString()));
             }
             catch (Exception e)
             {
-                //ExceptionText = $"({e})";
-                Debug.WriteLine($"Timeout while publishing. {e}");
+                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
             }
         }
 
@@ -85,14 +90,14 @@ namespace MqttClient.Backend.Core
             {
                 MqttClientPublishResult response;
 
-                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(1)))
+                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientPublishTimeout)))
                 {
                     response = await MqttClient.PublishAsync(applicationMessage, timeoutToken.Token);
+                }
 
-                    if (response.IsSuccess)
-                    {
-                        OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
-                    }
+                if (response.IsSuccess)
+                {
+                    OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
                 }
             }
             catch (OperationCanceledException e)
@@ -106,48 +111,27 @@ namespace MqttClient.Backend.Core
         }
 
 
-        public async Task SubscribeAsync(string topic, MqttQualityOfServiceLevel qualityOfServiceLevel)
+        public async Task SubscribeAsync(string topic, MqttQualityOfServiceLevel qualityOfServiceLevel, bool isNoLocalOn, bool isRetainAsPublishedOn, MqttRetainHandling retainHandling)
         {
             MqttClientSubscribeOptions mqttSubscribeOptions;
 
-            switch (qualityOfServiceLevel)
-            {
-                case MqttQualityOfServiceLevel.AtMostOnce:
-                default:
-                    mqttSubscribeOptions = MqttFactory.CreateSubscribeOptionsBuilder()
+            mqttSubscribeOptions = MqttFactory.CreateSubscribeOptionsBuilder()
                .WithTopicFilter(
                    f =>
                    {
                        f.WithTopic(topic).WithAtMostOnceQoS();
+                       f.WithQualityOfServiceLevel(qualityOfServiceLevel);
+                       f.WithNoLocal(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && isNoLocalOn);
+                       f.WithRetainAsPublished(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && isRetainAsPublishedOn);
+                       f.WithRetainHandling(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 ? retainHandling : MqttRetainHandling.SendAtSubscribe);
                    })
                .Build();
-                    break;
-                case MqttQualityOfServiceLevel.AtLeastOnce:
-                    mqttSubscribeOptions = MqttFactory.CreateSubscribeOptionsBuilder()
-               .WithTopicFilter(
-                   f =>
-                   {
-                       f.WithTopic(topic).WithAtLeastOnceQoS();
-                   })
-                    .Build();
-
-                    break;
-                case MqttQualityOfServiceLevel.ExactlyOnce:
-                    mqttSubscribeOptions = MqttFactory.CreateSubscribeOptionsBuilder()
-               .WithTopicFilter(
-                   f =>
-                   {
-                       f.WithTopic(topic).WithExactlyOnceQoS();
-                   })
-               .Build();
-                    break;
-            }
 
             try
             {
                 MqttClientSubscribeResult response;
 
-                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(5)))
+                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientSubscriptionTimeout)))
                 {
                     response = await MqttClient.SubscribeAsync(mqttSubscribeOptions, timeoutToken.Token);
                 }
@@ -174,8 +158,27 @@ namespace MqttClient.Backend.Core
                 .WithTopicFilter(topic)
                 .Build();
 
-            result = await MqttClient.UnsubscribeAsync(mqttUnsubscribeOptions);
-            OnOutputMessage(new OutputMessageEventArgs(result.DumpToString()));
+            try
+            {
+                MqttClientUnsubscribeResult response;
+
+                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientUnsubscriptionTimeout)))
+                {
+                    response = await MqttClient.UnsubscribeAsync(mqttUnsubscribeOptions, timeoutToken.Token);
+                }
+
+                Debug.WriteLine($"MQTT client {MqttClient.Options.ClientId} unsubscribed to topic '{topic}'.");
+                // The response contains additional data sent by the server after subscribing.
+                OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
+            }
+            catch (OperationCanceledException e)
+            {
+                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
+            }
+            catch (MQTTnet.Exceptions.MqttCommunicationTimedOutException e)
+            {
+                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
+            }
         }
 
         public async Task DisconnectAsync()

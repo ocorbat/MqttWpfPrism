@@ -7,6 +7,7 @@ using MQTTnet.Server;
 using MqttServer.Backend.Core;
 using MqttServer.Backend.Core.Model;
 using System.Collections;
+using System.Collections.ObjectModel;
 
 namespace MqttServer.Core
 {
@@ -17,13 +18,19 @@ namespace MqttServer.Core
 
         public Guid ClientId { get; }
 
-        public IList<ClientSubscribedItem> ClientSubscribedItems { get; }
+        public ObservableCollection<ClientSubscribedItem> ClientSubscribedItems { get; }
 
         public IList<MqttClientStatus>? ConnectedClients { get; private set; }
 
         public MqttServerController()
         {
-            ClientSubscribedItems = new List<ClientSubscribedItem>();
+            ClientSubscribedItems = new ObservableCollection<ClientSubscribedItem>();
+            ClientSubscribedItems.CollectionChanged += ClientSubscribedItems_CollectionChanged;
+        }
+
+        private void ClientSubscribedItems_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        {
+
         }
 
         public event EventHandler<EventArgs> ServerStarted = default!;
@@ -32,6 +39,7 @@ namespace MqttServer.Core
         public event EventHandler<Backend.Events.ClientDisconnectedEventArgs> ClientDisconnected = default!;
         public event EventHandler<Backend.Events.ClientSubscribedTopicEventArgs> ClientSubscribedTopic = default!;
         public event EventHandler<Backend.Events.ClientUnsubscribedTopicEventArgs> ClientUnsubscribedTopic = default!;
+
 
         public event EventHandler<OutputMessageEventArgs> OutputMessage = default!;
 
@@ -148,8 +156,8 @@ namespace MqttServer.Core
             IDictionary sessionItems = arg.SessionItems;
 
             ClientSubscribedItems.Add(new ClientSubscribedItem(arg.ClientId, arg.TopicFilter, arg.SessionItems));
+            OnClientSubscribedTopic(new Backend.Events.ClientSubscribedTopicEventArgs(arg.ClientId, arg.TopicFilter.Topic));
 
-            OnClientSubscribedTopic(new Backend.Events.ClientSubscribedTopicEventArgs(arg.ClientId));
             return Task.CompletedTask;
         }
 

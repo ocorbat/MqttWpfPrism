@@ -16,6 +16,7 @@
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     views:ClientViewBase.MqttClientController="{Binding (core:AttachedProperties.MqttClientController), RelativeSource={RelativeSource Self}, Mode=OneWay}"
+    IsEnabled="{Binding IsEnabled, Mode=OneWay}"
     mc:Ignorable="d">
     <UserControl.Resources>
         <converters:ComparisonConverter x:Key="ComparisonConverter" />
@@ -75,27 +76,64 @@
                     Grid.ColumnSpan="3"
                     ExpandDirection="Down"
                     Header="Options">
-                    <GroupBox Header="Quality Of Service Level">
-                        <StackPanel Orientation="Vertical">
-                            <RadioButton
-                                Content="0: At Most Once"
-                                GroupName="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView.QualityOfServiceLevel"
-                                IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttQualityOfServiceLevel.AtMostOnce}}" />
-                            <RadioButton
-                                Content="1: At Least Once"
-                                GroupName="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView.QualityOfServiceLevel"
-                                IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttQualityOfServiceLevel.AtLeastOnce}}" />
-                            <RadioButton
-                                Content="2: Exactly Once"
-                                GroupName="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView.QualityOfServiceLevel"
-                                IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttQualityOfServiceLevel.ExactlyOnce}}" />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Orientation="Vertical">
+                            <CheckBox Content="IsNoLocal (V5)" IsChecked="{Binding IsNoLocalOn, Mode=TwoWay}" />
+                            <CheckBox Content="IsRetainAsPublishedOn (V5)" IsChecked="{Binding IsRetainAsPublishedOn, Mode=TwoWay}" />
                         </StackPanel>
-                    </GroupBox>
+                        <GroupBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Header="Quality Of Service Level">
+                            <StackPanel Orientation="Vertical">
+                                <RadioButton
+                                    Content="0: At Most Once"
+                                    GroupName="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView.QualityOfServiceLevel"
+                                    IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttQualityOfServiceLevel.AtMostOnce}}" />
+                                <RadioButton
+                                    Content="1: At Least Once"
+                                    GroupName="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView.QualityOfServiceLevel"
+                                    IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttQualityOfServiceLevel.AtLeastOnce}}" />
+                                <RadioButton
+                                    Content="2: Exactly Once"
+                                    GroupName="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView.QualityOfServiceLevel"
+                                    IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttQualityOfServiceLevel.ExactlyOnce}}" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Header="Retain Handling (V5)">
+                            <StackPanel Orientation="Vertical">
+                                <RadioButton
+                                    Content="SendAtSubscribe"
+                                    GroupName="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView.RetainHandling"
+                                    IsChecked="{Binding RetainHandling, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttRetainHandling.SendAtSubscribe}}" />
+                                <RadioButton
+                                    Content="SendAtSubscribeIfNewSubscriptionOnly"
+                                    GroupName="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView.RetainHandling"
+                                    IsChecked="{Binding RetainHandling, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttRetainHandling.SendAtSubscribeIfNewSubscriptionOnly}}" />
+                                <RadioButton
+                                    Content="DoNotSendOnSubscribe"
+                                    GroupName="MqttClient.Modules.ModuleSubscriber.Views.SubscriberView.RetainHandling"
+                                    IsChecked="{Binding RetainHandling, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttRetainHandling.DoNotSendOnSubscribe}}" />
+                            </StackPanel>
+                        </GroupBox>
+                    </Grid>
                 </Expander>
             </Grid>
         </GroupBox>
-
-
-
     </Grid>
 </views:ClientViewBase>

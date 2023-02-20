@@ -9,8 +9,6 @@
     xmlns:viewmodels="clr-namespace:MqttServer.Modules.ModuleExecute.ViewModels"
     xmlns:views="clr-namespace:MqttServer.Core.Views;assembly=MqttServer.Core"
     d:DataContext="{d:DesignInstance viewmodels:ExecuteViewModel}"
-    d:DesignHeight="300"
-    d:DesignWidth="300"
     prism:ViewModelLocator.AutoWireViewModel="True"
     views:ServerViewBase.MqttServerController="{Binding (core:AttachedProperties.MqttServerController), RelativeSource={RelativeSource Self}, Mode=OneWay}"
     mc:Ignorable="d">
@@ -18,9 +16,6 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />

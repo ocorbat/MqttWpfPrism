@@ -16,7 +16,8 @@
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     views:ClientViewBase.MqttClientController="{Binding (core:AttachedProperties.MqttClientController), RelativeSource={RelativeSource Self}, Mode=OneWay}"
-    mc:Ignorable="d">
+    mc:Ignorable="d"
+    IsEnabled="{Binding IsEnabled, Mode=OneWay}">
     <UserControl.Resources>
         <converters:ComparisonConverter x:Key="ComparisonConverter" />
     </UserControl.Resources>

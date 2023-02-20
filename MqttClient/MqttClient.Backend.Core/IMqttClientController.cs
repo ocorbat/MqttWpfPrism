@@ -21,7 +21,7 @@ namespace MqttClient.Backend.Core
         Task PublishAsync(string topic, string payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel);
 
 
-        Task SubscribeAsync(string topic, MqttQualityOfServiceLevel qualityOfServiceLevel);
+        Task SubscribeAsync(string topic, MqttQualityOfServiceLevel qualityOfServiceLevel, bool isNoLocalOn, bool isRetainAsPublishedOn, MqttRetainHandling retainHandling);
         Task UnsubscribeAsync(string topic);
 
 

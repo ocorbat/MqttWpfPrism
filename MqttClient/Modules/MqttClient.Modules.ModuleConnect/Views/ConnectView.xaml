@@ -98,12 +98,15 @@
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition />
                             <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <CheckBox
+                        <StackPanel
                             Grid.Row="0"
                             Grid.Column="0"
-                            Content="IsCleanSession"
-                            IsChecked="{Binding IsCleanSessionOn}" />
+                            Orientation="Vertical">
+                            <CheckBox Content="IsCleanSession" IsChecked="{Binding IsCleanSessionOn}" />
+                        </StackPanel>
                         <GroupBox
                             Grid.Row="0"
                             Grid.Column="1"
@@ -134,20 +137,44 @@
             Background="#55FFFF00"
             Content="{Binding Status}"
             FontWeight="Bold" />
-        <DockPanel
+        <Grid
             Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
             <Label
+                Grid.Row="0"
+                Grid.Column="0"
                 VerticalAlignment="Center"
                 Content="Received Message:"
                 DockPanel.Dock="Left"
                 FontWeight="Bold" />
             <TextBlock
+                Grid.Row="0"
+                Grid.Column="1"
+                Grid.ColumnSpan="7"
                 VerticalAlignment="Center"
                 Background="AliceBlue"
                 DockPanel.Dock="Right"
                 Text="{Binding ReceivedMessage}" />
-        </DockPanel>
+            <ListBox AlternationCount="1"  MaxHeight="100"
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="8"
+                ItemsSource="{Binding ListReceivedMessages, Mode=OneWay}" />
+        </Grid>
     </Grid>
 </views:ClientViewBase>

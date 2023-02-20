@@ -9,33 +9,35 @@
     xmlns:prism="http://prismlibrary.com/"
     xmlns:viewmodels="clr-namespace:MqttServer.ViewModels"
     Title="{Binding Title}"
-    MinWidth="600"
-    MinHeight="400"
+    Width="800"
+    Height="600"
     core:AttachedProperties.MqttServerController="{Binding MqttServerController, Mode=OneWay}"
     d:DataContext="{d:DesignInstance viewmodels:MainWindowViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
-    SizeToContent="WidthAndHeight"
+    ResizeMode="CanResize"
     mc:Ignorable="d">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition />
-        </Grid.ColumnDefinitions>
-        <ContentControl
-            Grid.Row="0"
-            Grid.Column="0"
-            prism:RegionManager.RegionName="{x:Static core:RegionNames.ExecuteRegion}" />
-        <ContentControl
-            Grid.Row="1"
-            Grid.Column="0"
-            prism:RegionManager.RegionName="{x:Static core:RegionNames.ClientsRegion}" />
-        <ContentControl
-            Grid.Row="2"
-            Grid.Column="0"
-            prism:RegionManager.RegionName="{x:Static core:RegionNames.MessageRegion}" />
-    </Grid>
+    <ScrollViewer>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <ContentControl
+                Grid.Row="0"
+                Grid.Column="0"
+                prism:RegionManager.RegionName="{x:Static core:RegionNames.ExecuteRegion}" />
+            <ContentControl
+                Grid.Row="1"
+                Grid.Column="0"
+                prism:RegionManager.RegionName="{x:Static core:RegionNames.ClientsRegion}" />
+            <ContentControl
+                Grid.Row="2"
+                Grid.Column="0"
+                prism:RegionManager.RegionName="{x:Static core:RegionNames.MessageRegion}" />
+        </Grid>
+    </ScrollViewer>
 </Window>
