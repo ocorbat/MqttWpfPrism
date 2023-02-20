@@ -11,16 +11,11 @@ namespace MqttClient.Modules.ModuleMessageHistory.ViewModels
     public class MessageHistoryViewModel : BindableBase, IClientViewModelBase
     {
         private IMqttClientController mqttClientController;
-        private string _message;
-        public string Message
-        {
-            get => _message;
-            set => SetProperty(ref _message, value);
-        }
+        private ObservableCollection<string> listReceivedMessages = new();
+
 
         public MessageHistoryViewModel()
         {
-            Message = "View A from your Prism Module";
             ClearCommand = new DelegateCommand(ClearCommandExecute, ClearCommandCanExecute);
         }
 
@@ -47,12 +42,9 @@ namespace MqttClient.Modules.ModuleMessageHistory.ViewModels
                 {
                     ClearCommand.RaiseCanExecuteChanged();
                     MqttClientController.ApplicationMessageReceived += MqttClientController_ApplicationMessageReceived;
-                    //ConnectCommand.RaiseCanExecuteChanged();
-                    //DisconnectCommand.RaiseCanExecuteChanged();
                     //MqttClientController.ClientConnecting += MqttClientController_ClientConnecting;
                     //MqttClientController.ClientConnected += MqttClientController_ClientConnected;
                     //MqttClientController.ClientDisconnected += MqttClientController_ClientDisconnected;
-                    //MqttClientController.ApplicationMessageReceived += MqttClientController_ApplicationMessageReceived;
                 }
             }
         }
@@ -66,7 +58,7 @@ namespace MqttClient.Modules.ModuleMessageHistory.ViewModels
             ClearCommand.RaiseCanExecuteChanged();
         }
 
-        private ObservableCollection<string> listReceivedMessages = new ObservableCollection<string>();
+
 
         public ObservableCollection<string> ListReceivedMessages { get => listReceivedMessages; set => SetProperty(ref listReceivedMessages, value); }
     }

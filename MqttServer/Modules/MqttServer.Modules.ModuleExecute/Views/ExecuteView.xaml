@@ -26,19 +26,59 @@
             Grid.Row="0"
             Grid.Column="0"
             Grid.ColumnSpan="3">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Button
+                Grid.Row="0"
                 Grid.Column="0"
                 Command="{Binding StartServerCommand}"
                 Content="START Server" />
             <Button
+                Grid.Row="0"
                 Grid.Column="1"
                 Command="{Binding StopServerCommand}"
                 Content="STOP Server"
                 DockPanel.Dock="Right" />
+            <Expander
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Header="Settings">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Row="0" Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Label
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Content="Port" />
+                        <TextBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Text="{Binding PortNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </Grid>
+            </Expander>
         </Grid>
         <Label
             Grid.Row="1"

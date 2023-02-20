@@ -1,5 +1,5 @@
-﻿using MqttCommon;
-using MqttCommon.Events;
+﻿using MqttCommon.Events;
+using MqttCommon.Extensions;
 using MQTTnet;
 using MQTTnet.Packets;
 using MQTTnet.Server;
@@ -7,6 +7,7 @@ using MqttServer.Backend.Core;
 using MqttServer.Backend.Core.Model;
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.Text.Json;
 
 namespace MqttServer.Core
 {
@@ -21,8 +22,14 @@ namespace MqttServer.Core
 
         public IList<MqttClientStatus>? ConnectedClients { get; private set; }
 
+        private readonly string storePath;
+
+        private IList<MqttApplicationMessage>? listRetainedMessages;
+
         public MqttServerController()
         {
+            storePath = Path.Combine(Directory.GetCurrentDirectory(), "RetainedMessages.json");
+
             ClientSubscribedItems = new ObservableCollection<ClientSubscribedItem>();
             ClientSubscribedItems.CollectionChanged += ClientSubscribedItems_CollectionChanged;
         }
@@ -81,7 +88,7 @@ namespace MqttServer.Core
             await MqttServer.StartAsync();
         }
 
-        public MQTTnet.Server.MqttServer? CreateServer()
+        public MQTTnet.Server.MqttServer? CreateServer(int portNumber)
         {
             // Start server
             // The port for the default endpoint is 1883.
@@ -89,7 +96,7 @@ namespace MqttServer.Core
             // Use the builder classes where possible.
             var mqttServerOptions = MqttFactory.CreateServerOptionsBuilder()
                 .WithDefaultEndpoint()
-                .WithDefaultEndpointPort(Constants.Port5004)
+                .WithDefaultEndpointPort(portNumber)
                 .Build();
 
             MqttServer = MqttFactory.CreateMqttServer(mqttServerOptions);
@@ -105,13 +112,77 @@ namespace MqttServer.Core
                 MqttServer.ValidatingConnectionAsync += MqttServer_ValidatingConnectionAsync;
                 MqttServer.InterceptingSubscriptionAsync += MqttServer_InterceptingSubscriptionAsync;
                 MqttServer.InterceptingPublishAsync += MqttServer_InterceptingPublishAsync;
+                MqttServer.LoadingRetainedMessageAsync += MqttServer_LoadingRetainedMessageAsync;
+                MqttServer.RetainedMessageChangedAsync += MqttServer_RetainedMessageChangedAsync;
+                MqttServer.RetainedMessagesClearedAsync += MqttServer_RetainedMessagesClearedAsync;
             }
 
             return MqttServer;
+
+
+        }
+
+        private Task MqttServer_RetainedMessagesClearedAsync(EventArgs arg)
+        {
+            // Make sure to clear the retained messages when they are all deleted via API.
+            File.Delete(storePath);
+            return Task.CompletedTask;
+        }
+
+        private async Task MqttServer_RetainedMessageChangedAsync(RetainedMessageChangedEventArgs arg)
+        {
+            // Make sure to persist the changed retained messages.
+            try
+            {
+                // This sample uses the property _StoredRetainedMessages_ which will contain all(!) retained messages.
+                // The event args also contain the affected retained message (property ChangedRetainedMessage). This can be
+                // used to write all retained messages to dedicated files etc. Then all files must be loaded and a full list
+                // of retained messages must be provided in the loaded event.
+
+                listRetainedMessages = arg.StoredRetainedMessages;
+                var buffer = JsonSerializer.SerializeToUtf8Bytes(arg.StoredRetainedMessages);
+                await File.WriteAllBytesAsync(storePath, buffer);
+                OnOutputMessage(new OutputMessageEventArgs("Retained messages saved."));
+            }
+            catch (Exception exception)
+            {
+                OnOutputMessage(new OutputMessageEventArgs(exception.ToString()));
+            }
+        }
+
+        private async Task MqttServer_LoadingRetainedMessageAsync(LoadingRetainedMessagesEventArgs arg)
+        {
+            // Make sure that the server will load the retained messages.
+            try
+            {
+                arg.LoadedRetainedMessages = await JsonSerializer.DeserializeAsync<List<MqttApplicationMessage>>(File.OpenRead(storePath));
+                listRetainedMessages = arg.LoadedRetainedMessages;
+                OnOutputMessage(new OutputMessageEventArgs("Retained messages loaded."));
+                OnOutputMessage(new OutputMessageEventArgs(arg.LoadedRetainedMessages.DumpToString()));
+            }
+            catch (FileNotFoundException)
+            {
+                // Ignore because nothing is stored yet.
+                OnOutputMessage(new OutputMessageEventArgs("No retained messages stored yet."));
+            }
+            catch (Exception exception)
+            {
+                OnOutputMessage(new OutputMessageEventArgs(exception.ToString()));
+            }
         }
 
         private Task MqttServer_InterceptingPublishAsync(InterceptingPublishEventArgs arg)
         {
+            if (!(arg.SessionItems.Contains("Test")))
+            {
+                arg.SessionItems.Add("Test", 123);
+            }
+
+            if ((arg.ApplicationMessage.Payload == null) && (listRetainedMessages?.SingleOrDefault(x => x.Topic == arg.ApplicationMessage.Topic) == null))
+            {
+                OnOutputMessage(new OutputMessageEventArgs("Kein Topic in den retained messages"));
+            }
+
             // Here we only change the topic of the received application message.
             // but also changing the payload etc. is required. Changing the QoS after
             // transmitting is not supported and makes no sense at all.
@@ -135,12 +206,23 @@ namespace MqttServer.Core
 
         private Task MqttServer_InterceptingSubscriptionAsync(InterceptingSubscriptionEventArgs arg)
         {
+            if (!(arg.SessionItems.Contains("SomeData")))
+            {
+                arg.SessionItems.Add("SomeData", true);
+            }
+
             arg.CloseConnection = false;
             return Task.CompletedTask;
         }
 
         private Task MqttServer_ValidatingConnectionAsync(ValidatingConnectionEventArgs arg)
         {
+
+            if (!(arg.SessionItems.Contains(arg.ClientId)))
+            {
+                arg.SessionItems.Add(arg.ClientId, true);
+            }
+
             if (arg.UserName != "admin" || arg.Password != "1234")
             {
                 arg.ReasonCode = MQTTnet.Protocol.MqttConnectReasonCode.BadUserNameOrPassword;
@@ -217,8 +299,6 @@ namespace MqttServer.Core
 
         private async Task OnClientDisconnectedAsync(ClientDisconnectedEventArgs e)
         {
-            //if (MqttServer != null)
-            //{
             try
             {
                 ConnectedClients = await MqttServer.GetClientsAsync();
@@ -227,7 +307,6 @@ namespace MqttServer.Core
             {
                 OnOutputMessage(new OutputMessageEventArgs(exception.ToString()));
             }
-            //}
 
             ClientDisconnected?.Invoke(this, new Backend.Events.ClientDisconnectedEventArgs(e.ClientId, ConnectedClients));
         }

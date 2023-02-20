@@ -124,6 +124,24 @@
                                     IsChecked="{Binding ProtocolVersion, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqttFormatter:MqttProtocolVersion.V500}}" />
                             </StackPanel>
                         </GroupBox>
+                        <Grid Grid.Row="0" Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Label
+                                Grid.Row="0"
+                                Grid.Column="0"
+                                Content="Port" />
+                            <TextBox
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                Text="{Binding PortNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
                     </Grid>
                 </Expander>
             </Grid>

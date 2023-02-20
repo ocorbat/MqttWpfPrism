@@ -13,7 +13,7 @@ namespace MqttServer.Backend.Core
 
         Guid ClientId { get; }
 
-        MQTTnet.Server.MqttServer? CreateServer();
+        MQTTnet.Server.MqttServer? CreateServer(int portNumber);
         Task<IList<MqttClientStatus>> RefreshConnectedClientsAsync();
 
         bool GetConnectedClientsCommandCanExecute();

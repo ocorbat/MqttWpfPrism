@@ -19,20 +19,19 @@ namespace MqttClient.Backend.Core
 
         public MqttClientController()
         {
+            ClientId = Guid.NewGuid();
             MqttClient = MqttFactory.CreateMqttClient();
 
             MqttClient.ConnectingAsync += MqttClient_ConnectingAsync;
             MqttClient.ConnectedAsync += MqttClient_ConnectedAsync;
             MqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
-
-            ClientId = Guid.NewGuid();
         }
 
-        public async Task ConnectAsync(bool isCleanSessionOn, MqttProtocolVersion protocolVersion, string username, string password)
+        public async Task ConnectAsync(int portNumber, bool isCleanSessionOn, MqttProtocolVersion protocolVersion, string username, string password)
         {
             var mqttClientOptions = MqttFactory.CreateClientOptionsBuilder()
                 .WithClientId(ClientId.ToString())
-                .WithTcpServer(MqttCommon.Constants.Localhost, MqttCommon.Constants.Port5004)
+                .WithTcpServer(MqttCommon.Constants.Localhost, portNumber)
                 .WithCleanSession(isCleanSessionOn)
                 .WithKeepAlivePeriod(new TimeSpan(0, 1, 0))
                 .WithProtocolVersion(protocolVersion)
@@ -110,6 +109,36 @@ namespace MqttClient.Backend.Core
             }
         }
 
+        public async Task PublishEmptyAsync(string topic, bool isRetainModeOn = true)
+        {
+            var applicationMessage = new MqttApplicationMessageBuilder()
+               .WithTopic(topic)
+               .WithRetainFlag(isRetainModeOn)
+               .Build();
+
+            try
+            {
+                MqttClientPublishResult response;
+
+                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientPublishTimeout)))
+                {
+                    response = await MqttClient.PublishAsync(applicationMessage, timeoutToken.Token);
+                }
+
+                if (response.IsSuccess)
+                {
+                    OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
+                }
+            }
+            catch (OperationCanceledException e)
+            {
+                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
+            }
+            catch (MQTTnet.Exceptions.MqttCommunicationTimedOutException e)
+            {
+                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
+            }
+        }
 
         public async Task SubscribeAsync(string topic, MqttQualityOfServiceLevel qualityOfServiceLevel, bool isNoLocalOn, bool isRetainAsPublishedOn, MqttRetainHandling retainHandling)
         {
@@ -153,7 +182,6 @@ namespace MqttClient.Backend.Core
 
         public async Task UnsubscribeAsync(string topic)
         {
-            MqttClientUnsubscribeResult result;
             var mqttUnsubscribeOptions = MqttFactory.CreateUnsubscribeOptionsBuilder()
                 .WithTopicFilter(topic)
                 .Build();
@@ -183,7 +211,9 @@ namespace MqttClient.Backend.Core
 
         public async Task DisconnectAsync()
         {
-            await MqttClient.DisconnectAsync();
+            // Calling _DisconnectAsync_ will send a DISCONNECT packet before closing the connection.
+            // Using a reason code requires MQTT version 5.0.0!
+            await MqttClient.DisconnectAsync(MqttClientDisconnectReason.NormalDisconnection);
         }
 
 
@@ -265,6 +295,9 @@ namespace MqttClient.Backend.Core
             return MqttClient != null && MqttClient.IsConnected;
         }
 
-
+        public bool DeleteRetainedMessagesCommandCanExecute()
+        {
+            return MqttClient != null && MqttClient.IsConnected;
+        }
     }
 }

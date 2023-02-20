@@ -1,5 +1,6 @@
 ﻿using MqttClient.Backend.Core;
 using MqttClient.Core.ViewModels;
+using MqttCommon;
 using MQTTnet.Formatter;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -56,7 +57,7 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
 
         private async void ConnectCommandExecute()
         {
-            await MqttClientController.ConnectAsync(IsCleanSessionOn, ProtocolVersion, Username, Password);
+            await MqttClientController.ConnectAsync(PortNumber, IsCleanSessionOn, ProtocolVersion, Username, Password);
         }
 
         private bool ConnectCommandCanExecute()
@@ -129,6 +130,10 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
         }
+
+        private int portNumber = Constants.Port5004;
+
+        public int PortNumber { get => portNumber; set => SetProperty(ref portNumber, value); }
 
 
     }

@@ -12,10 +12,14 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
         {
             SubscribeCommand = new DelegateCommand(SubscribeCommandExecute, SubscribeCommandCanExecute);
             UnsubscribeCommand = new DelegateCommand(UnsubscribeCommandExecute, UnsubscribeCommandCanExecute);
+            DeleteRetainedMessagesCommand = new DelegateCommand(DeleteRetainedMessagesCommandExecute, DeleteRetainedMessagesCommandCanExecute);
         }
+
+
 
         public DelegateCommand SubscribeCommand { get; set; }
         public DelegateCommand UnsubscribeCommand { get; set; }
+        public DelegateCommand DeleteRetainedMessagesCommand { get; set; }
 
 
 
@@ -41,6 +45,17 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
             await MqttClientController.UnsubscribeAsync(CurrentTopic);
         }
 
+
+
+        private async void DeleteRetainedMessagesCommandExecute()
+        {
+            await MqttClientController.PublishEmptyAsync(CurrentTopic);
+        }
+
+        private bool DeleteRetainedMessagesCommandCanExecute()
+        {
+            return MqttClientController != null && MqttClientController.DeleteRetainedMessagesCommandCanExecute();
+        }
 
 
         private MqttQualityOfServiceLevel qualityOfServiceLevel = MqttQualityOfServiceLevel.AtMostOnce;
@@ -79,6 +94,7 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
                 {
                     SubscribeCommand.RaiseCanExecuteChanged();
                     UnsubscribeCommand.RaiseCanExecuteChanged();
+                    DeleteRetainedMessagesCommand.RaiseCanExecuteChanged();
                     IsEnabled = SubscribeCommandCanExecute();
                     MqttClientController.ClientConnecting += MqttClientController_ClientConnecting;
                     MqttClientController.ClientConnected += MqttClientController_ClientConnected;
@@ -91,6 +107,7 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
         {
             SubscribeCommand.RaiseCanExecuteChanged();
             UnsubscribeCommand.RaiseCanExecuteChanged();
+            DeleteRetainedMessagesCommand.RaiseCanExecuteChanged();
             IsEnabled = SubscribeCommandCanExecute();
         }
 
@@ -98,6 +115,7 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
         {
             SubscribeCommand.RaiseCanExecuteChanged();
             UnsubscribeCommand.RaiseCanExecuteChanged();
+            DeleteRetainedMessagesCommand.RaiseCanExecuteChanged();
             IsEnabled = SubscribeCommandCanExecute();
         }
 
@@ -105,6 +123,7 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
         {
             SubscribeCommand.RaiseCanExecuteChanged();
             UnsubscribeCommand.RaiseCanExecuteChanged();
+            DeleteRetainedMessagesCommand.RaiseCanExecuteChanged();
             IsEnabled = SubscribeCommandCanExecute();
         }
 

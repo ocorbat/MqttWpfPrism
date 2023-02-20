@@ -1,4 +1,5 @@
-﻿using MqttServer.Backend.Core;
+﻿using MqttCommon;
+using MqttServer.Backend.Core;
 using MqttServer.Core.Dispose;
 using MqttServer.Core.Interfaces;
 using Prism.Commands;
@@ -32,7 +33,7 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
 
         private async void StartServerCommandExecute()
         {
-            var mqttServer = MqttServerController?.CreateServer();
+            var mqttServer = MqttServerController?.CreateServer(PortNumber);
 
             if (mqttServer != null)
             {
@@ -58,7 +59,12 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
 
 
 
-
+        private int portNumber = Constants.Port5004;
+        public int PortNumber
+        {
+            get => portNumber;
+            set => SetProperty(ref portNumber, value);
+        }
 
 
         // Protected implementation of Dispose pattern.

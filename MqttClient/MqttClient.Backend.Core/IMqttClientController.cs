@@ -13,12 +13,14 @@ namespace MqttClient.Backend.Core
 
         Guid ClientId { get; }
 
-        Task ConnectAsync(bool isCleanSessionOn, MqttProtocolVersion protocolVersion, string username, string password);
+        Task ConnectAsync(int portNumber, bool isCleanSessionOn, MqttProtocolVersion protocolVersion, string username, string password);
 
         Task DisconnectAsync();
 
 
         Task PublishAsync(string topic, string payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel);
+
+        Task PublishEmptyAsync(string topic, bool isRetainModeOn = true);
 
 
         Task SubscribeAsync(string topic, MqttQualityOfServiceLevel qualityOfServiceLevel, bool isNoLocalOn, bool isRetainAsPublishedOn, MqttRetainHandling retainHandling);
@@ -40,5 +42,6 @@ namespace MqttClient.Backend.Core
 
         bool ConnectCommandCanExecute();
         bool DisonnectCommandCanExecute();
+        bool DeleteRetainedMessagesCommandCanExecute();
     }
 }

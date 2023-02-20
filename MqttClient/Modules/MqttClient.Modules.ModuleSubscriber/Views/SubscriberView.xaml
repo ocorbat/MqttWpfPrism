@@ -58,6 +58,10 @@
                     Grid.ColumnSpan="3">
                     <Label Content="Topic" DockPanel.Dock="Left" />
                     <Button
+                        Command="{Binding DeleteRetainedMessagesCommand}"
+                        Content="Delete retained messages"
+                        DockPanel.Dock="Right" />
+                    <Button
                         Command="{Binding UnsubscribeCommand}"
                         Content="Unsubscribe"
                         DockPanel.Dock="Right" />
