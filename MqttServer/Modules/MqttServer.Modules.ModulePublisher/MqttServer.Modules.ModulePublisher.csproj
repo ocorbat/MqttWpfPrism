@@ -7,8 +7,6 @@
     <PackageReference Include="Prism.Wpf" Version="8.1.97" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\MqttHelpers\MqttHelpers.csproj" />
-    <ProjectReference Include="..\..\MqttResources\MqttResources.csproj" />
-    <ProjectReference Include="..\MqttServer.Backend.Core\MqttServer.Backend.Core.csproj" />
+    <ProjectReference Include="..\..\MqttServer.Core\MqttServer.Core.csproj" />
   </ItemGroup>
 </Project>

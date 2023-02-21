@@ -61,7 +61,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Backend.Events",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Modules.ModuleMessage", "MqttServer\Modules\MqttServer.Modules.ModuleMessage\MqttServer.Modules.ModuleMessage.csproj", "{1EC792AE-52A0-4677-9615-23B034839FF9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttClient.Modules.ModuleMessageHistory", "MqttClient\Modules\MqttClient.Modules.ModuleMessageHistory\MqttClient.Modules.ModuleMessageHistory.csproj", "{9945ED95-0916-414E-8824-CFB5954A3F77}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Modules.ModuleMessageHistory", "MqttClient\Modules\MqttClient.Modules.ModuleMessageHistory\MqttClient.Modules.ModuleMessageHistory.csproj", "{9945ED95-0916-414E-8824-CFB5954A3F77}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttServer.Modules.ModulePublisher", "MqttServer\Modules\MqttServer.Modules.ModulePublisher\MqttServer.Modules.ModulePublisher.csproj", "{0A36B383-8397-4EFF-8732-600480D7A8AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -161,6 +163,10 @@ Global
 		{9945ED95-0916-414E-8824-CFB5954A3F77}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9945ED95-0916-414E-8824-CFB5954A3F77}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9945ED95-0916-414E-8824-CFB5954A3F77}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A36B383-8397-4EFF-8732-600480D7A8AB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A36B383-8397-4EFF-8732-600480D7A8AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A36B383-8397-4EFF-8732-600480D7A8AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A36B383-8397-4EFF-8732-600480D7A8AB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -193,6 +199,7 @@ Global
 		{1B1B698A-31D8-4B52-9564-DA0E55DA4CE1} = {04002EBB-E938-457B-A36D-B814CD5D3B9D}
 		{1EC792AE-52A0-4677-9615-23B034839FF9} = {2D3274F9-9D33-4CE4-AD42-4E2F4AFB760B}
 		{9945ED95-0916-414E-8824-CFB5954A3F77} = {EB7A588B-2839-418D-A4C2-CF467759EB37}
+		{0A36B383-8397-4EFF-8732-600480D7A8AB} = {2D3274F9-9D33-4CE4-AD42-4E2F4AFB760B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {815F87A5-1F23-4A6F-BCC1-8C98C8EE135E}

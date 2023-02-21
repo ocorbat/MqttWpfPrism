@@ -2,8 +2,9 @@
 {
     public static class RegionNames
     {
-        public const string ClientsRegion = "ClientsRegion";
-        public const string ExecuteRegion = "ExecuteRegion";
-        public const string MessageRegion = "MessageRegion";
+        public static string ClientsRegion { get; } = nameof(ClientsRegion);
+        public static string ExecuteRegion { get; } = nameof(ExecuteRegion);
+        public static string MessageRegion { get; } = nameof(MessageRegion);
+        public static string PublisherRegion { get; } = nameof(PublisherRegion);
     }
 }

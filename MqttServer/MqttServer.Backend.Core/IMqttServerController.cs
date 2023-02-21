@@ -1,5 +1,6 @@
 ﻿using MqttCommon.Events;
 using MQTTnet;
+using MQTTnet.Protocol;
 using MQTTnet.Server;
 
 namespace MqttServer.Backend.Core
@@ -11,6 +12,8 @@ namespace MqttServer.Backend.Core
         IList<MqttClientStatus>? ConnectedClients { get; }
         MQTTnet.Server.MqttServer? CreateServer(int portNumber);
         Task<IList<MqttClientStatus>> RefreshConnectedClientsAsync();
+
+        Task PublishAsync(string topic, string payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel);
 
         event EventHandler<EventArgs> ServerStarted;
         event EventHandler<EventArgs> ServerStopped;
@@ -26,5 +29,6 @@ namespace MqttServer.Backend.Core
         bool StopServerCommandCanExecute();
         bool StartServerCommandCanExecute();
         bool GetConnectedClientsCommandCanExecute();
+        bool PublishCommandCanExecute();
     }
 }

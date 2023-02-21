@@ -2,6 +2,7 @@
 using MqttCommon.Extensions;
 using MQTTnet;
 using MQTTnet.Packets;
+using MQTTnet.Protocol;
 using MQTTnet.Server;
 using MqttServer.Backend.Core;
 using MqttServer.Backend.Core.Model;
@@ -74,6 +75,11 @@ namespace MqttServer.Core
             return MqttServer == null || !MqttServer.IsStarted;
         }
 
+        public bool PublishCommandCanExecute()
+        {
+            return MqttServer != null && MqttServer.IsStarted;
+        }
+
         public async Task StopAsync()
         {
             await MqttServer.StopAsync();
@@ -114,8 +120,34 @@ namespace MqttServer.Core
             }
 
             return MqttServer;
+        }
 
+        public async Task PublishAsync(string topic, string payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel)
+        {
+            var applicationMessage = new MqttApplicationMessageBuilder()
+                .WithTopic(topic)
+                .WithPayload(payload)
+                .WithRetainFlag(isRetainModeOn)
+                .WithQualityOfServiceLevel(qualityOfServiceLevel)
+                .Build();
 
+            InjectedMqttApplicationMessage injectedMqttApplicationMessage = new InjectedMqttApplicationMessage(applicationMessage);
+
+            try
+            {
+                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ServerPublishTimeout)))
+                {
+                    await MqttServer.InjectApplicationMessage(injectedMqttApplicationMessage, timeoutToken.Token);
+                }
+            }
+            catch (OperationCanceledException e)
+            {
+                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
+            }
+            catch (MQTTnet.Exceptions.MqttCommunicationTimedOutException e)
+            {
+                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
+            }
         }
 
         private Task MqttServer_RetainedMessagesClearedAsync(EventArgs arg)
@@ -316,5 +348,7 @@ namespace MqttServer.Core
         {
             ClientUnsubscribedTopic?.Invoke(this, e);
         }
+
+
     }
 }

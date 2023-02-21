@@ -1,5 +1,4 @@
-﻿using MqttCommon;
-using MqttServer.Backend.Core;
+﻿using MqttServer.Backend.Core;
 using MqttServer.Core.Dispose;
 using MqttServer.Core.Interfaces;
 using Prism.Commands;
@@ -59,7 +58,7 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
 
 
 
-        private int portNumber = Constants.Port5004;
+        private int portNumber = MqttCommon.Constants.Port5004;
         public int PortNumber
         {
             get => portNumber;

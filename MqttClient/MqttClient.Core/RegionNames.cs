@@ -2,10 +2,10 @@
 {
     public static class RegionNames
     {
-        public const string ConnectRegion = nameof(ConnectRegion);
-        public const string MessageRegion = nameof(MessageRegion);
-        public const string PublisherRegion = nameof(PublisherRegion);
-        public const string SubscriberRegion = nameof(SubscriberRegion);
-        public const string MessageHistoryRegion = nameof(MessageHistoryRegion);
+        public static string ConnectRegion { get; } = nameof(ConnectRegion);
+        public static string MessageRegion { get; } = nameof(MessageRegion);
+        public static string PublisherRegion { get; } = nameof(PublisherRegion);
+        public static string SubscriberRegion { get; } = nameof(SubscriberRegion);
+        public static string MessageHistoryRegion { get; } = nameof(MessageHistoryRegion);
     }
 }

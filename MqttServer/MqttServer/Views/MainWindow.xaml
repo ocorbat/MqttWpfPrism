@@ -22,6 +22,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -33,9 +34,13 @@
             <ContentControl
                 Grid.Row="1"
                 Grid.Column="0"
-                prism:RegionManager.RegionName="{x:Static core:RegionNames.ClientsRegion}" />
+                prism:RegionManager.RegionName="{x:Static core:RegionNames.PublisherRegion}" />
             <ContentControl
                 Grid.Row="2"
+                Grid.Column="0"
+                prism:RegionManager.RegionName="{x:Static core:RegionNames.ClientsRegion}" />
+            <ContentControl
+                Grid.Row="3"
                 Grid.Column="0"
                 prism:RegionManager.RegionName="{x:Static core:RegionNames.MessageRegion}" />
         </Grid>

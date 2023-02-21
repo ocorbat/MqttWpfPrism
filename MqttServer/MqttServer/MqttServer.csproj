@@ -11,6 +11,7 @@
     <ProjectReference Include="..\Modules\MqttServer.Modules.ModuleClients\MqttServer.Modules.ModuleClients.csproj" />
     <ProjectReference Include="..\Modules\MqttServer.Modules.ModuleExecute\MqttServer.Modules.ModuleExecute.csproj" />
     <ProjectReference Include="..\Modules\MqttServer.Modules.ModuleMessage\MqttServer.Modules.ModuleMessage.csproj" />
+    <ProjectReference Include="..\Modules\MqttServer.Modules.ModulePublisher\MqttServer.Modules.ModulePublisher.csproj" />
     <ProjectReference Include="..\MqttServer.Backend.Services\MqttServer.Backend.Services.csproj" />
     <ProjectReference Include="..\MqttServer.Core\MqttServer.Core.csproj" />
   </ItemGroup>

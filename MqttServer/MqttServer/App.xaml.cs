@@ -5,6 +5,7 @@ using MqttServer.Core;
 using MqttServer.Modules.ModuleClients;
 using MqttServer.Modules.ModuleExecute;
 using MqttServer.Modules.ModuleMessage;
+using MqttServer.Modules.ModulePublisher;
 using MqttServer.Views;
 using Prism.Ioc;
 using Prism.Modularity;
@@ -30,6 +31,7 @@ namespace MqttServer
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)
         {
+            moduleCatalog.AddModule<ModulePublisherModule>();
             moduleCatalog.AddModule<ModuleClientsModule>();
             moduleCatalog.AddModule<ModuleExecuteModule>();
             moduleCatalog.AddModule<ModuleMessageModule>();
