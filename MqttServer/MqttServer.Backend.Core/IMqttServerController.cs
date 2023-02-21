@@ -15,6 +15,8 @@ namespace MqttServer.Backend.Core
 
         Task PublishAsync(string topic, string payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel);
 
+        Task DeleteRetainedMessagesAsync();
+
         event EventHandler<EventArgs> ServerStarted;
         event EventHandler<EventArgs> ServerStopped;
         event EventHandler<Events.ClientConnectedEventArgs> ClientConnected;
@@ -30,5 +32,7 @@ namespace MqttServer.Backend.Core
         bool StartServerCommandCanExecute();
         bool GetConnectedClientsCommandCanExecute();
         bool PublishCommandCanExecute();
+
+        bool DeleteRetainedMessagesCommandCanExecute();
     }
 }

@@ -49,6 +49,10 @@
         <Setter Property="Margin" Value="{DynamicResource MarginDefault}" />
         <Setter Property="Padding" Value="{DynamicResource PaddingDefault}" />
     </Style>
+    <Style TargetType="{x:Type ListBox}">
+        <Setter Property="Margin" Value="{DynamicResource MarginDefault}" />
+        <Setter Property="Padding" Value="{DynamicResource PaddingDefault}" />
+    </Style>
     <Style TargetType="{x:Type DockPanel}">
         <Setter Property="Margin" Value="{DynamicResource MarginDefault}" />
     </Style>

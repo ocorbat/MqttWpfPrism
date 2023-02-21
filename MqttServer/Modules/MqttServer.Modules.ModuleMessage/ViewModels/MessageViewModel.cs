@@ -1,26 +1,27 @@
 ﻿using MqttServer.Backend.Core;
 using MqttServer.Core.Interfaces;
 using Prism.Mvvm;
+using System;
+using System.Collections.ObjectModel;
+using System.Windows;
 
 namespace MqttServer.Modules.ModuleMessage.ViewModels
 {
     public class MessageViewModel : BindableBase, IMqttServerControllerViewModel
     {
-        private string _message;
-
+        private IMqttServerController mqttServerController;
+        private ObservableCollection<MessageItemViewModel> messages = new();
 
         public MessageViewModel()
         {
-            Message = "View A from your Prism Module";
+
         }
 
-
-        public string Message
+        public ObservableCollection<MessageItemViewModel> Messages
         {
-            get => _message;
-            set => SetProperty(ref _message, value);
+            get => messages;
+            set => SetProperty(ref messages, value);
         }
-        private IMqttServerController mqttServerController;
 
         public IMqttServerController MqttServerController
         {
@@ -43,19 +44,23 @@ namespace MqttServer.Modules.ModuleMessage.ViewModels
 
         private void MqttServerController_OutputMessage(object sender, MqttCommon.Events.OutputMessageEventArgs e)
         {
-            Message = e.Message;
+            Messages.Insert(0, new MessageItemViewModel() { Timestamp = DateTime.UtcNow, Message = e.Message });
         }
 
-        private void MqttServerController_ServerStopped(object sender, System.EventArgs e)
+        private void MqttServerController_ServerStopped(object sender, EventArgs e)
         {
-            Message = "Server stopped";
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                Messages.Insert(0, new MessageItemViewModel() { Timestamp = DateTime.UtcNow, Message = "Server stopped" });
+            });
         }
 
-        private void MqttServerController_ServerStarted(object sender, System.EventArgs e)
+        private void MqttServerController_ServerStarted(object sender, EventArgs e)
         {
-            Message = "Server started";
+            Application.Current.Dispatcher.BeginInvoke(() =>
+            {
+                Messages.Insert(0, new MessageItemViewModel() { Timestamp = DateTime.UtcNow, Message = "Server started" });
+            });
         }
-
-
     }
 }

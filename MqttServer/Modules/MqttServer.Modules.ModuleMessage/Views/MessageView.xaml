@@ -6,24 +6,28 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:prism="http://prismlibrary.com/"
+    xmlns:viewmodels="clr-namespace:MqttServer.Modules.ModuleMessage.ViewModels"
     xmlns:views="clr-namespace:MqttServer.Core.Views;assembly=MqttServer.Core"
+    d:DataContext="{d:DesignInstance viewmodels:MessageViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
     views:ServerViewBase.MqttServerController="{Binding (core:AttachedProperties.MqttServerController), RelativeSource={RelativeSource Self}, Mode=OneWay}"
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <Label Grid.Row="0" Content="Output Message" />
-        <TextBlock
+        <Label Grid.Row="0" Content="Output Messages" />
+        <DataGrid
             Grid.Row="1"
-            Grid.Column="0"
+            MaxHeight="200"
+            AutoGenerateColumns="true"
             Background="#33FF4500"
-            Text="{Binding Message}"
-            TextWrapping="Wrap" />
+            FrozenColumnCount="1"
+            ItemsSource="{Binding Messages, Mode=OneWay}"
+            ScrollViewer.CanContentScroll="False" />
     </Grid>
 </views:ServerViewBase>

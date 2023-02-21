@@ -80,6 +80,11 @@ namespace MqttServer.Core
             return MqttServer != null && MqttServer.IsStarted;
         }
 
+        public bool DeleteRetainedMessagesCommandCanExecute()
+        {
+            return true;
+        }
+
         public async Task StopAsync()
         {
             await MqttServer.StopAsync();
@@ -150,10 +155,24 @@ namespace MqttServer.Core
             }
         }
 
+        public async Task DeleteRetainedMessagesAsync()
+        {
+            await MqttServer.DeleteRetainedMessagesAsync();
+        }
+
         private Task MqttServer_RetainedMessagesClearedAsync(EventArgs arg)
         {
             // Make sure to clear the retained messages when they are all deleted via API.
-            File.Delete(storePath);
+            try
+            {
+                File.Delete(storePath);
+            }
+            catch (Exception exception)
+            {
+                OnOutputMessage(new OutputMessageEventArgs($"{exception.Message}"));
+            }
+
+            OnOutputMessage(new OutputMessageEventArgs("Retained messages deleted"));
             return Task.CompletedTask;
         }
 
@@ -183,10 +202,17 @@ namespace MqttServer.Core
             // Make sure that the server will load the retained messages.
             try
             {
-                arg.LoadedRetainedMessages = await JsonSerializer.DeserializeAsync<List<MqttApplicationMessage>>(File.OpenRead(storePath));
+                using (FileStream fileStream = File.OpenRead(storePath))
+                {
+                    arg.LoadedRetainedMessages = await JsonSerializer.DeserializeAsync<List<MqttApplicationMessage>>(fileStream);
+                }
+
                 listRetainedMessages = arg.LoadedRetainedMessages;
                 OnOutputMessage(new OutputMessageEventArgs("Retained messages loaded."));
-                OnOutputMessage(new OutputMessageEventArgs(arg.LoadedRetainedMessages.DumpToString()));
+                if (arg.LoadedRetainedMessages != null && arg.LoadedRetainedMessages.Any())
+                {
+                    OnOutputMessage(new OutputMessageEventArgs(arg.LoadedRetainedMessages.DumpToString()));
+                }
             }
             catch (FileNotFoundException)
             {
@@ -206,6 +232,7 @@ namespace MqttServer.Core
                 arg.SessionItems.Add("Test", 123);
             }
 
+            // Message with empty payload was sent to delete retained message of corresponding topic
             if ((arg.ApplicationMessage.Payload == null) && (listRetainedMessages?.SingleOrDefault(x => x.Topic == arg.ApplicationMessage.Topic) == null))
             {
                 OnOutputMessage(new OutputMessageEventArgs("Kein Topic in den retained messages"));

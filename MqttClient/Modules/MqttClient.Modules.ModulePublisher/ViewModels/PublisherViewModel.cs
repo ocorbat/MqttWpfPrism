@@ -8,63 +8,19 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
 {
     public class PublisherViewModel : BindableBase, IClientViewModelBase
     {
+        private IMqttClientController mqttClientController;
         private string sendMessageText = "Enter Message";
-        private bool isRetainModeOn = false;
+        private bool isRetainModeOn = true;
         private string currentTopic = "Topic1";
-        private MqttQualityOfServiceLevel qualityOfServiceLevel = MqttQualityOfServiceLevel.AtMostOnce;
+        private MqttQualityOfServiceLevel qualityOfServiceLevel = MqttQualityOfServiceLevel.AtLeastOnce;
         private bool isCleanSessionOn = true;
+        private bool isEnabled;
 
         public PublisherViewModel()
         {
             PublishCommand = new DelegateCommand(PublishCommandExecute, PublishCommandCanExecute);
         }
         public DelegateCommand PublishCommand { get; set; }
-
-        private async void PublishCommandExecute()
-        {
-            await MqttClientController.PublishAsync(CurrentTopic, SendMessageText, IsRetainModeOn, QualityOfServiceLevel);
-        }
-
-        private bool PublishCommandCanExecute()
-        {
-            return MqttClientController != null && MqttClientController.PublishCommandCanExecute();
-        }
-
-        public bool IsRetainModeOn
-        {
-            get => isRetainModeOn;
-            set => SetProperty(ref isRetainModeOn, value);
-        }
-
-
-        public string CurrentTopic
-        {
-            get => currentTopic;
-            set => SetProperty(ref currentTopic, value);
-        }
-
-
-        public MqttQualityOfServiceLevel QualityOfServiceLevel
-        {
-            get => qualityOfServiceLevel;
-            set => SetProperty(ref qualityOfServiceLevel, value);
-        }
-
-
-        public bool IsCleanSessionOn
-        {
-            get => isCleanSessionOn;
-            set => SetProperty(ref isCleanSessionOn, value);
-        }
-
-        public string SendMessageText
-        {
-            get => sendMessageText;
-            set => SetProperty(ref sendMessageText, value);
-        }
-
-
-        private IMqttClientController mqttClientController;
 
         public IMqttClientController MqttClientController
         {
@@ -80,6 +36,48 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
                     MqttClientController.ClientDisconnected += MqttClientController_ClientDisconnected;
                 }
             }
+        }
+
+        public bool IsEnabled { get => isEnabled; set => SetProperty(ref isEnabled, value); }
+
+        public bool IsRetainModeOn
+        {
+            get => isRetainModeOn;
+            set => SetProperty(ref isRetainModeOn, value);
+        }
+
+        public string CurrentTopic
+        {
+            get => currentTopic;
+            set => SetProperty(ref currentTopic, value);
+        }
+
+        public MqttQualityOfServiceLevel QualityOfServiceLevel
+        {
+            get => qualityOfServiceLevel;
+            set => SetProperty(ref qualityOfServiceLevel, value);
+        }
+
+        public bool IsCleanSessionOn
+        {
+            get => isCleanSessionOn;
+            set => SetProperty(ref isCleanSessionOn, value);
+        }
+
+        public string SendMessageText
+        {
+            get => sendMessageText;
+            set => SetProperty(ref sendMessageText, value);
+        }
+
+        private async void PublishCommandExecute()
+        {
+            await MqttClientController.PublishAsync(CurrentTopic, SendMessageText, IsRetainModeOn, QualityOfServiceLevel);
+        }
+
+        private bool PublishCommandCanExecute()
+        {
+            return MqttClientController != null && MqttClientController.PublishCommandCanExecute();
         }
 
         private void MqttClientController_ClientConnecting(object sender, Backend.Events.MqttClientConnectingEventArgs e)
@@ -99,9 +97,5 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             PublishCommand.RaiseCanExecuteChanged();
             IsEnabled = PublishCommandCanExecute();
         }
-
-        private bool isEnabled;
-
-        public bool IsEnabled { get => isEnabled; set => SetProperty(ref isEnabled, value); }
     }
 }

@@ -10,33 +10,52 @@ namespace MqttServer.Modules.ModulePublisher.ViewModels
     {
         private IMqttServerController mqttServerController;
         private string sendMessageText = "Enter Message";
-        private bool isRetainModeOn = false;
+        private bool isRetainModeOn = true;
         private string currentTopic = "Topic1";
-        private MqttQualityOfServiceLevel qualityOfServiceLevel = MqttQualityOfServiceLevel.AtMostOnce;
+        private MqttQualityOfServiceLevel qualityOfServiceLevel = MqttQualityOfServiceLevel.AtLeastOnce;
+        private bool isEnabled;
 
         public PublisherViewModel()
         {
             PublishCommand = new DelegateCommand(PublishCommandExecute, PublishCommandCanExecute);
+            DeleteRetainedMessagesCommand = new DelegateCommand(DeleteRetainedMessagesCommandExecute, DeleteRetainedMessagesCommandCanExecute);
         }
         public DelegateCommand PublishCommand { get; set; }
 
+        public DelegateCommand DeleteRetainedMessagesCommand { get; set; }
 
-        private async void PublishCommandExecute()
+        public IMqttServerController MqttServerController
         {
-            await MqttServerController.PublishAsync(CurrentTopic, SendMessageText, IsRetainModeOn, QualityOfServiceLevel);
+            get => mqttServerController;
+            set
+            {
+                if (SetProperty(ref mqttServerController, value))
+                {
+                    PublishCommand.RaiseCanExecuteChanged();
+                    DeleteRetainedMessagesCommand.RaiseCanExecuteChanged();
+                    IsEnabled = PublishCommandCanExecute();
+
+                    MqttServerController.ServerStarted += MqttServerController_ServerStarted;
+                    MqttServerController.ServerStopped += MqttServerController_ServerStopped;
+                    //StartServerCommand.RaiseCanExecuteChanged();
+                    //StopServerCommand.RaiseCanExecuteChanged();
+
+                    //MqttServerController.ClientConnected += MqttServerController_ClientConnected;
+                    //MqttServerController.ClientDisconnected += MqttServerController_ClientDisconnected;
+
+                    //MqttServerController.ServerStarted += MqttServerController_ServerStarted;
+                    //MqttServerController.ServerStopped += MqttServerController_ServerStopped;
+                }
+            }
         }
 
-        private bool PublishCommandCanExecute()
-        {
-            return MqttServerController != null && MqttServerController.PublishCommandCanExecute();
-        }
+        public bool IsEnabled { get => isEnabled; set => SetProperty(ref isEnabled, value); }
 
         public bool IsRetainModeOn
         {
             get => isRetainModeOn;
             set => SetProperty(ref isRetainModeOn, value);
         }
-
 
         public string CurrentTopic
         {
@@ -56,45 +75,38 @@ namespace MqttServer.Modules.ModulePublisher.ViewModels
             set => SetProperty(ref qualityOfServiceLevel, value);
         }
 
-        private bool isEnabled;
-
-        public bool IsEnabled { get => isEnabled; set => SetProperty(ref isEnabled, value); }
-
-
-        public IMqttServerController MqttServerController
+        private async void PublishCommandExecute()
         {
-            get => mqttServerController;
-            set
-            {
-                if (SetProperty(ref mqttServerController, value))
-                {
-                    PublishCommand.RaiseCanExecuteChanged();
-                    IsEnabled = PublishCommandCanExecute();
+            await MqttServerController.PublishAsync(CurrentTopic, SendMessageText, IsRetainModeOn, QualityOfServiceLevel);
+        }
 
-                    MqttServerController.ServerStarted += MqttServerController_ServerStarted;
-                    MqttServerController.ServerStopped += MqttServerController_ServerStopped;
-                    //StartServerCommand.RaiseCanExecuteChanged();
-                    //StopServerCommand.RaiseCanExecuteChanged();
+        private bool PublishCommandCanExecute()
+        {
+            return MqttServerController != null && MqttServerController.PublishCommandCanExecute();
+        }
 
-                    //MqttServerController.ClientConnected += MqttServerController_ClientConnected;
-                    //MqttServerController.ClientDisconnected += MqttServerController_ClientDisconnected;
+        private async void DeleteRetainedMessagesCommandExecute()
+        {
+            await MqttServerController.DeleteRetainedMessagesAsync();
+        }
 
-                    //MqttServerController.ServerStarted += MqttServerController_ServerStarted;
-                    //MqttServerController.ServerStopped += MqttServerController_ServerStopped;
-                }
-            }
+        private bool DeleteRetainedMessagesCommandCanExecute()
+        {
+            return MqttServerController != null && MqttServerController.DeleteRetainedMessagesCommandCanExecute();
         }
 
         private void MqttServerController_ServerStopped(object sender, System.EventArgs e)
         {
             IsEnabled = false;
             PublishCommand.RaiseCanExecuteChanged();
+            DeleteRetainedMessagesCommand.RaiseCanExecuteChanged();
         }
 
         private void MqttServerController_ServerStarted(object sender, System.EventArgs e)
         {
             IsEnabled = true;
             PublishCommand.RaiseCanExecuteChanged();
+            DeleteRetainedMessagesCommand.RaiseCanExecuteChanged();
         }
     }
 }
