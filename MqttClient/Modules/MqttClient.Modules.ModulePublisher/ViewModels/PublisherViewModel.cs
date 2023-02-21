@@ -1,5 +1,6 @@
 ﻿using MqttClient.Backend.Core;
 using MqttClient.Core.ViewModels;
+using MqttCommon;
 using MQTTnet.Protocol;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -87,7 +88,8 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
 
         private async void PublishImageCommandExecute()
         {
-            string resourcePath = "pack://application:,,,/MqttResources;component/Resources/icon_det_256.png";
+            //string resourcePath = "pack://application:,,,/MqttResources;component/Resources/icon_det_256.png";
+            string resourcePath = "pack://application:,,,/MqttResources;component/Resources/th.jpeg";
             StreamResourceInfo streamResourceInfo = Application.GetResourceStream(new System.Uri(resourcePath));
             if (streamResourceInfo == null)
             {
@@ -98,7 +100,7 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             await streamResourceInfo.Stream.CopyToAsync(memoryStream);
             byte[] bytes = memoryStream.ToArray();
 
-            await MqttClientController.PublishImageAsync(CurrentTopic, bytes, IsRetainModeOn, QualityOfServiceLevel);
+            await MqttClientController.PublishImageAsync(CurrentTopic, bytes, MimeTypes.ImageJpeg, IsRetainModeOn, QualityOfServiceLevel);
         }
 
         private bool PublishImageCommandCanExecute()

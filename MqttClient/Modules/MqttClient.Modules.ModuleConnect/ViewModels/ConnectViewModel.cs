@@ -5,7 +5,6 @@ using MQTTnet.Formatter;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
-using System.Drawing;
 using System.IO;
 
 namespace MqttClient.Modules.ModuleConnect.ViewModels
@@ -113,14 +112,15 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
 
             switch (e.ContentType)
             {
-                case "image/png":
+                case MimeTypes.ImagePng:
+                case MimeTypes.ImageJpeg:
                     MemoryStream memoryStream = new(e.ApplicationMessage);
-                    Bitmap image = new(memoryStream);
-                    string filePath = Guid.NewGuid().ToString() + ".png";
-                    image.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+                    //Bitmap image = new(memoryStream);
+                    //string filePath = Guid.NewGuid().ToString() + ".png";
+                    //image.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
                     ReceivedImage = e.ApplicationMessage;
                     break;
-                case "text/plain":
+                case MimeTypes.TextPlain:
                     var payloadString = Convert.ToString(e.ApplicationMessage);
 
                     // Convert Payload to string

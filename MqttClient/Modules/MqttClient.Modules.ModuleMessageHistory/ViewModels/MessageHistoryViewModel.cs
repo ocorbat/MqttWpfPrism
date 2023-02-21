@@ -1,5 +1,6 @@
 ﻿using MqttClient.Backend.Core;
 using MqttClient.Core.ViewModels;
+using MqttCommon;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -54,14 +55,15 @@ namespace MqttClient.Modules.ModuleMessageHistory.ViewModels
         {
             switch (e.ContentType)
             {
-                case "image/png":
+                case MimeTypes.ImagePng:
+                case MimeTypes.ImageJpeg:
                     //MemoryStream memoryStream = new(e.ApplicationMessage);
                     //Bitmap image = new(memoryStream);
                     //string filePath = Guid.NewGuid().ToString() + ".png";
                     //image.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
                     //ReceivedImage = e.ApplicationMessage;
                     break;
-                default:
+                case MimeTypes.TextPlain:
                     var payloadString = Convert.ToString(e.ApplicationMessage);
 
                     // Convert Payload to string
@@ -78,6 +80,10 @@ namespace MqttClient.Modules.ModuleMessageHistory.ViewModels
                         ListReceivedMessages.Add(payload);
                     });
                     break;
+
+                default:
+                    break;
+
             }
 
             ClearCommand.RaiseCanExecuteChanged();

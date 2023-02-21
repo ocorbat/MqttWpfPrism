@@ -1,4 +1,5 @@
-﻿using MqttCommon.Events;
+﻿using MqttCommon;
+using MqttCommon.Events;
 using MqttCommon.Extensions;
 using MQTTnet;
 using MQTTnet.Client;
@@ -64,7 +65,7 @@ namespace MqttClient.Backend.Core
                .WithRetainFlag(isRetainModeOn)
                .WithQualityOfServiceLevel(qualityOfServiceLevel)
                .WithPayloadFormatIndicator(MqttPayloadFormatIndicator.Unspecified)
-               .WithContentType("text/plain")
+               .WithContentType(MimeTypes.TextPlain)
                .Build();
 
             try
@@ -91,7 +92,7 @@ namespace MqttClient.Backend.Core
             }
         }
 
-        public async Task PublishImageAsync(string topic, byte[] payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel)
+        public async Task PublishImageAsync(string topic, byte[] payload, string contentType, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel)
         {
             var applicationMessage = new MqttApplicationMessageBuilder()
                .WithTopic(topic)
@@ -99,7 +100,7 @@ namespace MqttClient.Backend.Core
                .WithRetainFlag(isRetainModeOn)
                .WithQualityOfServiceLevel(qualityOfServiceLevel)
                .WithPayloadFormatIndicator(MqttPayloadFormatIndicator.Unspecified)
-               .WithContentType("image/png")
+               .WithContentType(contentType)
                .Build();
 
             try

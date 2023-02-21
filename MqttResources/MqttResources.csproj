@@ -7,7 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\th.jpeg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\icon_det_256.png" />
+    <Resource Include="Resources\th.jpeg" />
   </ItemGroup>
 
 </Project>

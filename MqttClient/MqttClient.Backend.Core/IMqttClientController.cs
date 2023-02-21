@@ -20,7 +20,7 @@ namespace MqttClient.Backend.Core
 
         Task PublishAsync(string topic, string payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel);
 
-        Task PublishImageAsync(string topic, byte[] payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel);
+        Task PublishImageAsync(string topic, byte[] payload, string contentType, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel);
 
         Task PublishEmptyAsync(string topic, bool isRetainModeOn = true);
 

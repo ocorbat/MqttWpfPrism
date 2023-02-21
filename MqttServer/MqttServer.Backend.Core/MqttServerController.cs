@@ -1,4 +1,5 @@
-﻿using MqttCommon.Events;
+﻿using MqttCommon;
+using MqttCommon.Events;
 using MqttCommon.Extensions;
 using MQTTnet;
 using MQTTnet.Packets;
@@ -9,6 +10,7 @@ using MqttServer.Backend.Core.Model;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Text.Json;
+using Constants = MqttServer.Backend.Core.Constants;
 
 namespace MqttServer.Core
 {
@@ -135,7 +137,7 @@ namespace MqttServer.Core
                 .WithRetainFlag(isRetainModeOn)
                 .WithQualityOfServiceLevel(qualityOfServiceLevel)
                 .WithPayloadFormatIndicator(MqttPayloadFormatIndicator.Unspecified)
-                .WithContentType("text/plain")
+                .WithContentType(MimeTypes.TextPlain)
                 .Build();
 
             InjectedMqttApplicationMessage injectedMqttApplicationMessage = new InjectedMqttApplicationMessage(applicationMessage);
