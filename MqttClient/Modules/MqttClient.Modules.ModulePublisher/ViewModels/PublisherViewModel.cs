@@ -13,7 +13,7 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
     public class PublisherViewModel : BindableBase, IClientViewModelBase
     {
         private IMqttClientController mqttClientController;
-        private string sendMessageText = "Enter Message";
+        private string messageText = "Enter Message";
         private bool isRetainModeOn = true;
         private string currentTopic = "Topic1";
         private MqttQualityOfServiceLevel qualityOfServiceLevel = MqttQualityOfServiceLevel.AtLeastOnce;
@@ -70,15 +70,15 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             set => SetProperty(ref isCleanSessionOn, value);
         }
 
-        public string SendMessageText
+        public string MessageText
         {
-            get => sendMessageText;
-            set => SetProperty(ref sendMessageText, value);
+            get => messageText;
+            set => SetProperty(ref messageText, value);
         }
 
         private async void PublishCommandExecute()
         {
-            await MqttClientController.PublishAsync(CurrentTopic, SendMessageText, IsRetainModeOn, QualityOfServiceLevel);
+            await MqttClientController.PublishAsync(CurrentTopic, MessageText, IsRetainModeOn, QualityOfServiceLevel);
         }
 
         private bool PublishCommandCanExecute()
@@ -100,7 +100,7 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             await streamResourceInfo.Stream.CopyToAsync(memoryStream);
             byte[] bytes = memoryStream.ToArray();
 
-            await MqttClientController.PublishImageAsync(CurrentTopic, bytes, MimeTypes.ImageJpeg, IsRetainModeOn, QualityOfServiceLevel);
+            await MqttClientController.PublishAsync(CurrentTopic, bytes, MimeTypes.ImageJpeg, IsRetainModeOn, QualityOfServiceLevel);
         }
 
         private bool PublishImageCommandCanExecute()

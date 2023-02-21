@@ -16,8 +16,8 @@
     d:DesignWidth="800"
     prism:ViewModelLocator.AutoWireViewModel="True"
     views:ClientViewBase.MqttClientController="{Binding (core:AttachedProperties.MqttClientController), RelativeSource={RelativeSource Self}, Mode=OneWay}"
-    mc:Ignorable="d"
-    IsEnabled="{Binding IsEnabled, Mode=OneWay}">
+    IsEnabled="{Binding IsEnabled, Mode=OneWay}"
+    mc:Ignorable="d">
     <UserControl.Resources>
         <converters:ComparisonConverter x:Key="ComparisonConverter" />
     </UserControl.Resources>
@@ -72,8 +72,8 @@
                         MinWidth="150"
                         VerticalAlignment="Center"
                         DockPanel.Dock="Left"
-                        Text="{Binding SendMessageText, Mode=TwoWay}" />
-                    <Button Content="Publish Image" Command="{Binding PublishImageCommand}"></Button>
+                        Text="{Binding MessageText, Mode=TwoWay}" />
+                    <Button Command="{Binding PublishImageCommand}" Content="Publish Image" />
                 </DockPanel>
                 <StackPanel
                     Grid.Row="1"

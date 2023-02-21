@@ -92,7 +92,7 @@ namespace MqttClient.Backend.Core
             }
         }
 
-        public async Task PublishImageAsync(string topic, byte[] payload, string contentType, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel)
+        public async Task PublishAsync(string topic, byte[] payload, string contentType, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel)
         {
             var applicationMessage = new MqttApplicationMessageBuilder()
                .WithTopic(topic)
