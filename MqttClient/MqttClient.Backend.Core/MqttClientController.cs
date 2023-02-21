@@ -68,28 +68,7 @@ namespace MqttClient.Backend.Core
                .WithContentType(MimeTypes.TextPlain)
                .Build();
 
-            try
-            {
-                MqttClientPublishResult response;
-
-                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientPublishTimeout)))
-                {
-                    response = await MqttClient.PublishAsync(applicationMessage, timeoutToken.Token);
-                }
-
-                if (response.IsSuccess)
-                {
-                    OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
-                }
-            }
-            catch (OperationCanceledException e)
-            {
-                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
-            }
-            catch (MQTTnet.Exceptions.MqttCommunicationTimedOutException e)
-            {
-                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
-            }
+            await PublishAsync(applicationMessage);
         }
 
         public async Task PublishAsync(string topic, byte[] payload, string contentType, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel)
@@ -103,28 +82,7 @@ namespace MqttClient.Backend.Core
                .WithContentType(contentType)
                .Build();
 
-            try
-            {
-                MqttClientPublishResult response;
-
-                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientPublishTimeout)))
-                {
-                    response = await MqttClient.PublishAsync(applicationMessage, timeoutToken.Token);
-                }
-
-                if (response.IsSuccess)
-                {
-                    OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
-                }
-            }
-            catch (OperationCanceledException e)
-            {
-                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
-            }
-            catch (MQTTnet.Exceptions.MqttCommunicationTimedOutException e)
-            {
-                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
-            }
+            await PublishAsync(applicationMessage);
         }
 
         public async Task PublishEmptyAsync(string topic, bool isRetainModeOn = true)
@@ -134,13 +92,18 @@ namespace MqttClient.Backend.Core
                .WithRetainFlag(isRetainModeOn)
                .Build();
 
+            await PublishAsync(applicationMessage);
+        }
+
+        private async Task PublishAsync(MqttApplicationMessage mqttApplicationMessage)
+        {
             try
             {
                 MqttClientPublishResult response;
 
                 using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientPublishTimeout)))
                 {
-                    response = await MqttClient.PublishAsync(applicationMessage, timeoutToken.Token);
+                    response = await MqttClient.PublishAsync(mqttApplicationMessage, timeoutToken.Token);
                 }
 
                 if (response.IsSuccess)
