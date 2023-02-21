@@ -25,6 +25,7 @@ namespace MqttClient.Backend.Core
             MqttClient.ConnectingAsync += MqttClient_ConnectingAsync;
             MqttClient.ConnectedAsync += MqttClient_ConnectedAsync;
             MqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
+            MqttClient.ApplicationMessageReceivedAsync += MqttClient_ApplicationMessageReceivedAsync;
         }
 
         public async Task ConnectAsync(int portNumber, bool isCleanSessionOn, MqttProtocolVersion protocolVersion, string username, string password)
@@ -38,30 +39,9 @@ namespace MqttClient.Backend.Core
                 .WithCredentials(username, password)
                 .Build();
 
-            MqttClient.ApplicationMessageReceivedAsync += e =>
-            {
-                Console.WriteLine("Received application message.");
-                e.DumpToConsole();
-
-                var payloadString = Convert.ToString(e.ApplicationMessage.Payload);
-
-                // Convert Payload to string
-                var payload = e.ApplicationMessage?.Payload == null ? null : System.Text.Encoding.UTF8.GetString(e.ApplicationMessage?.Payload);
-
-                if (payload != null)
-                {
-                    listReceivedData.Add(payload);
-                    OnApplicationMessageReceived(new Events.ApplicationMessageReceivedEventArgs(payload));
-                }
-
-                Debug.WriteLine(payload);
-
-                return Task.CompletedTask;
-            };
-
-            MqttClientConnectResult result;
             try
             {
+                MqttClientConnectResult result;
                 using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientConnectionTimeout)))
                 {
                     result = await MqttClient.ConnectAsync(mqttClientOptions, timeoutToken.Token);
@@ -83,6 +63,43 @@ namespace MqttClient.Backend.Core
                .WithPayload(payload)
                .WithRetainFlag(isRetainModeOn)
                .WithQualityOfServiceLevel(qualityOfServiceLevel)
+               .WithPayloadFormatIndicator(MqttPayloadFormatIndicator.Unspecified)
+               .WithContentType("text/plain")
+               .Build();
+
+            try
+            {
+                MqttClientPublishResult response;
+
+                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientPublishTimeout)))
+                {
+                    response = await MqttClient.PublishAsync(applicationMessage, timeoutToken.Token);
+                }
+
+                if (response.IsSuccess)
+                {
+                    OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
+                }
+            }
+            catch (OperationCanceledException e)
+            {
+                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
+            }
+            catch (MQTTnet.Exceptions.MqttCommunicationTimedOutException e)
+            {
+                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
+            }
+        }
+
+        public async Task PublishImageAsync(string topic, byte[] payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel)
+        {
+            var applicationMessage = new MqttApplicationMessageBuilder()
+               .WithTopic(topic)
+               .WithPayload(payload)
+               .WithRetainFlag(isRetainModeOn)
+               .WithQualityOfServiceLevel(qualityOfServiceLevel)
+               .WithPayloadFormatIndicator(MqttPayloadFormatIndicator.Unspecified)
+               .WithContentType("image/png")
                .Build();
 
             try
@@ -216,7 +233,6 @@ namespace MqttClient.Backend.Core
             await MqttClient.DisconnectAsync(MqttClientDisconnectReason.NormalDisconnection);
         }
 
-
         private Task MqttClient_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)
         {
             OnClientDisconnected(new Events.MqttClientDisconnectedEventArgs(arg.ConnectResult.DumpToString()));
@@ -232,6 +248,12 @@ namespace MqttClient.Backend.Core
         private Task MqttClient_ConnectingAsync(MqttClientConnectingEventArgs arg)
         {
             OnClientConnecting(new Events.MqttClientConnectingEventArgs(arg.ClientOptions.DumpToString()));
+            return Task.CompletedTask;
+        }
+
+        private Task MqttClient_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
+        {
+            OnApplicationMessageReceived(new Events.ApplicationMessageReceivedEventArgs(arg.ApplicationMessage.Payload, arg.ApplicationMessage.ContentType));
             return Task.CompletedTask;
         }
 
@@ -281,6 +303,11 @@ namespace MqttClient.Backend.Core
         }
 
         public bool PublishCommandCanExecute()
+        {
+            return MqttClient != null && MqttClient.IsConnected;
+        }
+
+        public bool PublishImageCommandCanExecute()
         {
             return MqttClient != null && MqttClient.IsConnected;
         }

@@ -4,6 +4,9 @@ using MqttCommon;
 using MQTTnet.Formatter;
 using Prism.Commands;
 using Prism.Mvvm;
+using System;
+using System.Drawing;
+using System.IO;
 
 namespace MqttClient.Modules.ModuleConnect.ViewModels
 {
@@ -107,7 +110,36 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
 
         private void MqttClientController_ApplicationMessageReceived(object sender, Backend.Events.ApplicationMessageReceivedEventArgs e)
         {
-            ReceivedMessage = e.ApplicationMessage.ToString();
+
+            switch (e.ContentType)
+            {
+                case "image/png":
+                    MemoryStream memoryStream = new(e.ApplicationMessage);
+                    Bitmap image = new(memoryStream);
+                    string filePath = Guid.NewGuid().ToString() + ".png";
+                    image.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+                    ReceivedImage = e.ApplicationMessage;
+                    break;
+                case "text/plain":
+                    var payloadString = Convert.ToString(e.ApplicationMessage);
+
+                    // Convert Payload to string
+                    var payload = e.ApplicationMessage == null ? null : System.Text.Encoding.UTF8.GetString(e.ApplicationMessage);
+
+                    //if (payload != null)
+                    //{
+                    //    listReceivedData.Add(payload);
+                    //    OnApplicationMessageReceived(new Events.ApplicationMessageReceivedEventArgs(payload));
+                    //}
+
+                    ReceivedMessage = payload;
+                    break;
+                default:
+                    ReceivedMessage = string.Empty;
+                    ReceivedImage = null;
+                    break;
+
+            }
         }
 
         private void MqttClientController_ClientDisconnected(object sender, Backend.Events.MqttClientDisconnectedEventArgs e)
@@ -134,6 +166,10 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
         private int portNumber = Constants.Port5004;
 
         public int PortNumber { get => portNumber; set => SetProperty(ref portNumber, value); }
+
+        private byte[] receivedImage;
+
+        public byte[] ReceivedImage { get => receivedImage; set => SetProperty(ref receivedImage, value); }
 
 
     }

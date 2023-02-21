@@ -11,6 +11,8 @@
     Title="{Binding Title}"
     Width="800"
     Height="600"
+    MaxWidth="1200"
+    MaxHeight="800"
     core:AttachedProperties.MqttServerController="{Binding MqttServerController, Mode=OneWay}"
     d:DataContext="{d:DesignInstance viewmodels:MainWindowViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"
@@ -22,7 +24,7 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />

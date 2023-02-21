@@ -6,4 +6,8 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Resource Include="Resources\icon_det_256.png" />
+  </ItemGroup>
+
 </Project>

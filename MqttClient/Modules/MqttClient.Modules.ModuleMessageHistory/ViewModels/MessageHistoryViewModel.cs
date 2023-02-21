@@ -2,6 +2,7 @@
 using MqttClient.Core.ViewModels;
 using Prism.Commands;
 using Prism.Mvvm;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -51,10 +52,34 @@ namespace MqttClient.Modules.ModuleMessageHistory.ViewModels
 
         private void MqttClientController_ApplicationMessageReceived(object sender, Backend.Events.ApplicationMessageReceivedEventArgs e)
         {
-            Application.Current.Dispatcher.BeginInvoke(() =>
+            switch (e.ContentType)
             {
-                ListReceivedMessages.Add(e.ApplicationMessage.ToString());
-            });
+                case "image/png":
+                    //MemoryStream memoryStream = new(e.ApplicationMessage);
+                    //Bitmap image = new(memoryStream);
+                    //string filePath = Guid.NewGuid().ToString() + ".png";
+                    //image.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
+                    //ReceivedImage = e.ApplicationMessage;
+                    break;
+                default:
+                    var payloadString = Convert.ToString(e.ApplicationMessage);
+
+                    // Convert Payload to string
+                    var payload = e.ApplicationMessage == null ? null : System.Text.Encoding.UTF8.GetString(e.ApplicationMessage);
+
+                    //if (payload != null)
+                    //{
+                    //    listReceivedData.Add(payload);
+                    //    OnApplicationMessageReceived(new Events.ApplicationMessageReceivedEventArgs(payload));
+                    //}
+
+                    Application.Current.Dispatcher.BeginInvoke(() =>
+                    {
+                        ListReceivedMessages.Add(payload);
+                    });
+                    break;
+            }
+
             ClearCommand.RaiseCanExecuteChanged();
         }
 

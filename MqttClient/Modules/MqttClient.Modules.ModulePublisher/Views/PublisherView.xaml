@@ -73,6 +73,7 @@
                         VerticalAlignment="Center"
                         DockPanel.Dock="Left"
                         Text="{Binding SendMessageText, Mode=TwoWay}" />
+                    <Button Content="Publish Image" Command="{Binding PublishImageCommand}"></Button>
                 </DockPanel>
                 <StackPanel
                     Grid.Row="1"

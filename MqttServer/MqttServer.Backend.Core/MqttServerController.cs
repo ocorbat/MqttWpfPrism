@@ -134,6 +134,8 @@ namespace MqttServer.Core
                 .WithPayload(payload)
                 .WithRetainFlag(isRetainModeOn)
                 .WithQualityOfServiceLevel(qualityOfServiceLevel)
+                .WithPayloadFormatIndicator(MqttPayloadFormatIndicator.Unspecified)
+                .WithContentType("text/plain")
                 .Build();
 
             InjectedMqttApplicationMessage injectedMqttApplicationMessage = new InjectedMqttApplicationMessage(applicationMessage);

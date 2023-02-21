@@ -166,10 +166,6 @@
                 <ColumnDefinition />
                 <ColumnDefinition />
                 <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
-                <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <Label
                 Grid.Row="0"
@@ -181,11 +177,16 @@
             <TextBlock
                 Grid.Row="0"
                 Grid.Column="1"
-                Grid.ColumnSpan="7"
+                Grid.ColumnSpan="3"
                 VerticalAlignment="Center"
                 Background="AliceBlue"
                 DockPanel.Dock="Right"
                 Text="{Binding ReceivedMessage}" />
+            <Image
+                Grid.Row="1"
+                MaxWidth="80"
+                MaxHeight="80"
+                Source="{Binding ReceivedImage}" />
         </Grid>
     </Grid>
 </views:ClientViewBase>

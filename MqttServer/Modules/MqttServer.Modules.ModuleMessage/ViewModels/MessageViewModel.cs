@@ -3,25 +3,28 @@ using MqttServer.Core.Interfaces;
 using Prism.Mvvm;
 using System;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Threading;
 using System.Windows;
+using System.Windows.Data;
 
 namespace MqttServer.Modules.ModuleMessage.ViewModels
 {
     public class MessageViewModel : BindableBase, IMqttServerControllerViewModel
     {
         private IMqttServerController mqttServerController;
-        private ObservableCollection<MessageItemViewModel> messages = new();
+        private readonly ObservableCollection<MessageItemViewModel> messages = new();
+        private ICollectionView messagesView;
+
+
+
 
         public MessageViewModel()
         {
-
+            MessagesView = CollectionViewSource.GetDefaultView(messages);
         }
 
-        public ObservableCollection<MessageItemViewModel> Messages
-        {
-            get => messages;
-            set => SetProperty(ref messages, value);
-        }
+
 
         public IMqttServerController MqttServerController
         {
@@ -42,25 +45,40 @@ namespace MqttServer.Modules.ModuleMessage.ViewModels
             }
         }
 
+
+        public ICollectionView MessagesView
+        {
+            get => messagesView;
+            set => SetProperty(ref messagesView, value);
+        }
+
         private void MqttServerController_OutputMessage(object sender, MqttCommon.Events.OutputMessageEventArgs e)
         {
-            Messages.Insert(0, new MessageItemViewModel() { Timestamp = DateTime.UtcNow, Message = e.Message });
+            messages.Add(new MessageItemViewModel() { Timestamp = DateTime.UtcNow, Message = e.Message });
         }
 
         private void MqttServerController_ServerStopped(object sender, EventArgs e)
         {
+            var currentThread = Thread.CurrentThread;
+
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                Messages.Insert(0, new MessageItemViewModel() { Timestamp = DateTime.UtcNow, Message = "Server stopped" });
-            });
+                messages.Add(new MessageItemViewModel() { Timestamp = DateTime.UtcNow, Message = "Server stopped" });
+            }, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            //Application.Current.Dispatcher.Invoke(() => { messages.Add(new MessageItemViewModel() { Timestamp = DateTime.UtcNow, Message = "Server stopped" }); });
         }
 
         private void MqttServerController_ServerStarted(object sender, EventArgs e)
         {
+            var currentThread = Thread.CurrentThread;
+
             Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                Messages.Insert(0, new MessageItemViewModel() { Timestamp = DateTime.UtcNow, Message = "Server started" });
-            });
+                messages.Add(new MessageItemViewModel() { Timestamp = DateTime.UtcNow, Message = "Server started" });
+            }, System.Windows.Threading.DispatcherPriority.ApplicationIdle);
+
+            //Application.Current.Dispatcher.Invoke(() => { messages.Add(new MessageItemViewModel() { Timestamp = DateTime.UtcNow, Message = "Server started" }); });
         }
     }
 }

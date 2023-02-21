@@ -4,6 +4,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="7.0.0" />
+    <PackageReference Include="System.Resources.ResourceManager" Version="4.3.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\..\MqttCommon\MqttCommon.csproj" />
     <ProjectReference Include="..\..\MqttClient.Backend.Events\MqttClient.Backend.Events.csproj" />
     <ProjectReference Include="..\..\MqttClient.Core\MqttClient.Core.csproj" />

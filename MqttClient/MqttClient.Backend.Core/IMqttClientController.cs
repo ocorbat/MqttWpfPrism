@@ -20,6 +20,8 @@ namespace MqttClient.Backend.Core
 
         Task PublishAsync(string topic, string payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel);
 
+        Task PublishImageAsync(string topic, byte[] payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel);
+
         Task PublishEmptyAsync(string topic, bool isRetainModeOn = true);
 
 
@@ -35,6 +37,8 @@ namespace MqttClient.Backend.Core
         event EventHandler<OutputMessageEventArgs> OutputMessage;
 
         bool PublishCommandCanExecute();
+
+        bool PublishImageCommandCanExecute();
 
         bool SubscribeCommandCanExecute();
 

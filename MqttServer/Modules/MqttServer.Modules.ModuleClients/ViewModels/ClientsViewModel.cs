@@ -18,23 +18,37 @@ namespace MqttServer.Modules.ModuleClients.ViewModels
 {
     public class ClientsViewModel : BindableBase, IMqttServerControllerViewModel, INavigationAware, IConfirmNavigationRequest
     {
-        private IEnumerable<MqttClientStatus> connectedClients;
-        private ObservableCollection<ConnectedClientViewModel> subscribedClients;
+        private IMqttServerController mqttServerController;
+        private IEnumerable<MqttClientStatus> connectedClients = new List<MqttClientStatus>();
+        private readonly ObservableCollection<ConnectedClientViewModel> subscribedClients;
         private ICollectionView subscribedClientsView;
 
         public ClientsViewModel(IRegionManager regionManager, IMessageService messageService)
         {
-
-
-            GetConnectedClientsCommand = new DelegateCommand(GetConnectedClientsCommandExecute, GetConnectedClientsCommandCanExecute);
-
             subscribedClients = new ObservableCollection<ConnectedClientViewModel>();
             SubscribedClientsView = CollectionViewSource.GetDefaultView(subscribedClients);
+            GetConnectedClientsCommand = new DelegateCommand(GetConnectedClientsCommandExecute, GetConnectedClientsCommandCanExecute);
         }
 
         public DelegateCommand GetConnectedClientsCommand { get; set; }
 
-
+        public IMqttServerController MqttServerController
+        {
+            get => mqttServerController;
+            set
+            {
+                if (SetProperty(ref mqttServerController, value))
+                {
+                    GetConnectedClientsCommand.RaiseCanExecuteChanged();
+                    MqttServerController.ServerStarted += MqttServerController_ServerStarted;
+                    MqttServerController.ServerStopped += MqttServerController_ServerStopped;
+                    MqttServerController.ClientConnected += MqttServerController_ClientConnected;
+                    MqttServerController.ClientDisconnected += MqttServerController_ClientDisconnected;
+                    MqttServerController.ClientSubscribedTopic += MqttServerController_ClientSubscribedTopic;
+                    MqttServerController.ClientUnsubscribedTopic += MqttServerController_ClientUnsubscribedTopic;
+                }
+            }
+        }
 
         public IEnumerable<MqttClientStatus> ConnectedClients
         {
@@ -46,16 +60,6 @@ namespace MqttServer.Modules.ModuleClients.ViewModels
         {
             get => subscribedClientsView;
             set => SetProperty(ref subscribedClientsView, value);
-        }
-
-        private bool GetConnectedClientsCommandCanExecute()
-        {
-            return MqttServerController == null ? false : MqttServerController.GetConnectedClientsCommandCanExecute();
-        }
-
-        private async void GetConnectedClientsCommandExecute()
-        {
-            ConnectedClients = await MqttServerController.RefreshConnectedClientsAsync();
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
@@ -78,24 +82,14 @@ namespace MqttServer.Modules.ModuleClients.ViewModels
 
         }
 
-        private IMqttServerController mqttServerController;
-
-        public IMqttServerController MqttServerController
+        private bool GetConnectedClientsCommandCanExecute()
         {
-            get => mqttServerController;
-            set
-            {
-                if (SetProperty(ref mqttServerController, value))
-                {
-                    GetConnectedClientsCommand.RaiseCanExecuteChanged();
-                    MqttServerController.ServerStarted += MqttServerController_ServerStarted;
-                    MqttServerController.ServerStopped += MqttServerController_ServerStopped;
-                    MqttServerController.ClientConnected += MqttServerController_ClientConnected;
-                    MqttServerController.ClientDisconnected += MqttServerController_ClientDisconnected;
-                    MqttServerController.ClientSubscribedTopic += MqttServerController_ClientSubscribedTopic;
-                    MqttServerController.ClientUnsubscribedTopic += MqttServerController_ClientUnsubscribedTopic;
-                }
-            }
+            return MqttServerController != null && MqttServerController.GetConnectedClientsCommandCanExecute();
+        }
+
+        private async void GetConnectedClientsCommandExecute()
+        {
+            ConnectedClients = await MqttServerController.RefreshConnectedClientsAsync();
         }
 
         private async void MqttServerController_ClientSubscribedTopic(object sender, Backend.Events.ClientSubscribedTopicEventArgs e)

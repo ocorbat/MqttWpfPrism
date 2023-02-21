@@ -23,11 +23,11 @@
         <Label Grid.Row="0" Content="Output Messages" />
         <DataGrid
             Grid.Row="1"
-            MaxHeight="200"
             AutoGenerateColumns="true"
+            MaxHeight="300"
             Background="#33FF4500"
             FrozenColumnCount="1"
-            ItemsSource="{Binding Messages, Mode=OneWay}"
+            ItemsSource="{Binding MessagesView, Mode=OneWay}"
             ScrollViewer.CanContentScroll="False" />
     </Grid>
 </views:ServerViewBase>
