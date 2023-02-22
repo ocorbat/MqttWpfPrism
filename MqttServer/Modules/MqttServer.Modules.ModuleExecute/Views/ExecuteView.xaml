@@ -50,7 +50,7 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Header="Settings"
-                IsExpanded="{Binding IsExpanded,Mode=TwoWay}">
+                IsExpanded="{Binding IsExpanded, Mode=TwoWay}">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition />
@@ -62,9 +62,9 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     <StackPanel
-                            Grid.Row="0"
-                            Grid.Column="0"
-                            Orientation="Vertical">
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Orientation="Vertical">
                         <CheckBox Content="IsPersistentSession" IsChecked="{Binding IsPersistentSession}" />
                     </StackPanel>
                     <Grid Grid.Row="0" Grid.Column="1">

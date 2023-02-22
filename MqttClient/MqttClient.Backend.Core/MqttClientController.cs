@@ -12,18 +12,17 @@ namespace MqttClient.Backend.Core
 {
     public class MqttClientController : IMqttClientController
     {
-        public IMqttClient MqttClient { get; private set; }
-        public Guid ClientId { get; private set; }
-
-        public int NumberOfInstance { get; set; }
-
-        public MqttFactory MqttFactory { get; } = new MqttFactory();
-
+        private int numberOfInstance;
         private IList<string> listReceivedData = new List<string>();
+
+        public IMqttClient MqttClient { get; private set; }
+        public Guid ClientGuid { get; }
+        public int ClientId { get; private set; }
+        public MqttFactory MqttFactory { get; } = new MqttFactory();
 
         public MqttClientController()
         {
-            ClientId = Guid.NewGuid();
+            ClientGuid = Guid.NewGuid();
             MqttClient = MqttFactory.CreateMqttClient();
 
             MqttClient.ConnectingAsync += MqttClient_ConnectingAsync;
@@ -31,7 +30,6 @@ namespace MqttClient.Backend.Core
             MqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
             MqttClient.ApplicationMessageReceivedAsync += MqttClient_ApplicationMessageReceivedAsync;
         }
-
 
         public async Task ConnectAsync(MqttClientConnectSettings settings)
         {
@@ -71,6 +69,7 @@ namespace MqttClient.Backend.Core
                .WithQualityOfServiceLevel(settings.QoS)
                .WithPayloadFormatIndicator(settings.PayloadFormatIndicator)
                .WithContentType(MimeTypes.TextPlain)
+               .WithResponseTopic(">" + settings.Topic)
                .Build();
 
             await PublishAsync(applicationMessage);
@@ -85,6 +84,7 @@ namespace MqttClient.Backend.Core
                .WithQualityOfServiceLevel(settings.QoS)
                .WithPayloadFormatIndicator(settings.PayloadFormatIndicator)
                .WithContentType(settings.ContentType)
+               .WithResponseTopic(">" + settings.Topic)
                .Build();
 
             await PublishAsync(applicationMessage);
@@ -106,31 +106,17 @@ namespace MqttClient.Backend.Core
             await PublishAsync(applicationMessage);
         }
 
-        private async Task PublishAsync(MqttApplicationMessage mqttApplicationMessage)
+        public int NumberOfInstance
         {
-            try
+            get => numberOfInstance;
+            set
             {
-                MqttClientPublishResult response;
-
-                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientPublishTimeout)))
-                {
-                    response = await MqttClient.PublishAsync(mqttApplicationMessage, timeoutToken.Token);
-                }
-
-                if (response.IsSuccess)
-                {
-                    OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
-                }
-            }
-            catch (OperationCanceledException e)
-            {
-                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
-            }
-            catch (MQTTnet.Exceptions.MqttCommunicationTimedOutException e)
-            {
-                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
+                numberOfInstance = value;
+                ClientId = numberOfInstance;
             }
         }
+
+
 
 
         public async Task SubscribeAsync(MqttClientSubscribeSettings settings)
@@ -206,6 +192,32 @@ namespace MqttClient.Backend.Core
             // Calling _DisconnectAsync_ will send a DISCONNECT packet before closing the connection.
             // Using a reason code requires MQTT version 5.0.0!
             await MqttClient.DisconnectAsync(MqttClientDisconnectReason.NormalDisconnection);
+        }
+
+        private async Task PublishAsync(MqttApplicationMessage mqttApplicationMessage)
+        {
+            try
+            {
+                MqttClientPublishResult response;
+
+                using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientPublishTimeout)))
+                {
+                    response = await MqttClient.PublishAsync(mqttApplicationMessage, timeoutToken.Token);
+                }
+
+                if (response.IsSuccess)
+                {
+                    OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
+                }
+            }
+            catch (OperationCanceledException e)
+            {
+                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
+            }
+            catch (MQTTnet.Exceptions.MqttCommunicationTimedOutException e)
+            {
+                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
+            }
         }
 
         private Task MqttClient_DisconnectedAsync(MqttClientDisconnectedEventArgs arg)

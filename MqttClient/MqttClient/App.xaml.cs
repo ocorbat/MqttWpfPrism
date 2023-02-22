@@ -22,6 +22,7 @@ namespace MqttClient
     {
         private MainWindow mainWindow;
         private IMainWindowDataContext dataContext;
+        private int numberOfInstance;
         private StartupEventArgs startupEventArgs;
         protected override Window CreateShell()
         {
@@ -78,18 +79,17 @@ namespace MqttClient
         protected override void OnStartup(StartupEventArgs e)
         {
             startupEventArgs = e;
+            Process currentProcess = Process.GetCurrentProcess();
+            var runningMqttClientProcesses = Process.GetProcesses().AsEnumerable<Process>().Where(x => x.ProcessName.Equals("MqttClient")).ToArray();
+            numberOfInstance = runningMqttClientProcesses.Except(runningMqttClientProcesses.Where(x => x.Id == currentProcess.Id)).Count() + 1;
             base.OnStartup(e);
         }
 
         protected override void OnInitialized()
         {
             base.OnInitialized();
-            Process currentProcess = Process.GetCurrentProcess();
-            var runningMqttClientProcesses = Process.GetProcesses().AsEnumerable<Process>().Where(x => x.ProcessName.Equals("MqttClient")).ToArray();
-            var numberOfInstance = runningMqttClientProcesses.Except(runningMqttClientProcesses.Where(x => x.Id == currentProcess.Id)).Count() + 1;
-
             dataContext.MqttClientController.NumberOfInstance = numberOfInstance;
-            dataContext.Title += $" ({dataContext.MqttClientController.NumberOfInstance})";
+            dataContext.Title += $" ({dataContext.MqttClientController.ClientId})";
         }
     }
 }

@@ -10,7 +10,8 @@ namespace MqttClient.Backend.Core
         MqttFactory MqttFactory { get; }
         IMqttClient MqttClient { get; }
 
-        Guid ClientId { get; }
+        Guid ClientGuid { get; }
+        int ClientId { get; }
 
         int NumberOfInstance { get; set; }
 

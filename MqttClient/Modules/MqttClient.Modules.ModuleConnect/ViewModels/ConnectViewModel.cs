@@ -17,7 +17,7 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
         private string password = "1234";
         private string status = string.Empty;
         private bool isCleanSessionOn = false;
-        private int keepAlivePeriod = 60;
+        private int keepAlivePeriod = 5;
         private bool isExpanded = false;
         private int portNumber = Constants.Port5004;
         private uint sessionExpiryInterval = 86400;

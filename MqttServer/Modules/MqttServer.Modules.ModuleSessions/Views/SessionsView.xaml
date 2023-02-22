@@ -20,18 +20,21 @@
     mc:Ignorable="d">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition></RowDefinition>
-            <RowDefinition></RowDefinition>
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
-        <Button Grid.Row="0" Content="Get Sessions" Command="{Binding GetSessionsCommand,Mode=OneWay}"></Button>
+        <Button
+            Grid.Row="0"
+            Command="{Binding GetSessionsCommand, Mode=OneWay}"
+            Content="Get Sessions" />
 
         <DataGrid
-                Grid.Row="1"
-                AutoGenerateColumns="true"
-                FrozenColumnCount="1"
-                HorizontalScrollBarVisibility="Auto"
-                ItemsSource="{Binding CurrentSessions}"
-                VerticalScrollBarVisibility="Auto" />
+            Grid.Row="1"
+            AutoGenerateColumns="true"
+            FrozenColumnCount="1"
+            HorizontalScrollBarVisibility="Auto"
+            ItemsSource="{Binding CurrentSessions}"
+            VerticalScrollBarVisibility="Auto" />
 
 
     </Grid>
