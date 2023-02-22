@@ -1,4 +1,5 @@
-﻿using MQTTnet.Protocol;
+﻿using MqttCommon;
+using MQTTnet.Protocol;
 using MqttServer.Backend.Core;
 using MqttServer.Core.Interfaces;
 using Prism.Commands;
@@ -77,7 +78,16 @@ namespace MqttServer.Modules.ModulePublisher.ViewModels
 
         private async void PublishCommandExecute()
         {
-            await MqttServerController.PublishAsync(CurrentTopic, SendMessageText, IsRetainModeOn, QualityOfServiceLevel);
+            var settings = new MqttServerPublishSettings()
+            {
+                Topic = CurrentTopic,
+                ContentType = MimeTypes.TextPlain,
+                IsRetainOn = IsRetainModeOn,
+                QoS = QualityOfServiceLevel,
+                PayloadFormatIndicator = MqttPayloadFormatIndicator.Unspecified
+            };
+
+            await MqttServerController.PublishAsync(SendMessageText, settings);
         }
 
         private bool PublishCommandCanExecute()

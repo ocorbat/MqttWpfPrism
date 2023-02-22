@@ -1,6 +1,5 @@
 ﻿using MqttCommon.Events;
 using MQTTnet;
-using MQTTnet.Protocol;
 using MQTTnet.Server;
 
 namespace MqttServer.Backend.Core
@@ -10,10 +9,13 @@ namespace MqttServer.Backend.Core
         MqttFactory MqttFactory { get; }
         MQTTnet.Server.MqttServer MqttServer { get; }
         IList<MqttClientStatus>? ConnectedClients { get; }
-        MQTTnet.Server.MqttServer? CreateServer(int portNumber);
+
+        MQTTnet.Server.MqttServer? CreateServer(MqttServerCreateSettings settings);
+
+
         Task<IList<MqttClientStatus>> RefreshConnectedClientsAsync();
 
-        Task PublishAsync(string topic, string payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel);
+        Task PublishAsync(string payload, MqttServerPublishSettings settings);
 
         Task DeleteRetainedMessagesAsync();
 

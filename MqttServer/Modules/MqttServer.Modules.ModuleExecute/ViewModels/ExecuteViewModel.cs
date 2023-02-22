@@ -32,7 +32,12 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
 
         private async void StartServerCommandExecute()
         {
-            var mqttServer = MqttServerController?.CreateServer(PortNumber);
+            var settings = new MqttServerCreateSettings()
+            {
+                PortNumber = PortNumber
+            };
+
+            var mqttServer = MqttServerController?.CreateServer(settings);
 
             if (mqttServer != null)
             {

@@ -1,9 +1,7 @@
-﻿using MqttCommon;
-using MqttCommon.Events;
+﻿using MqttCommon.Events;
 using MqttCommon.Extensions;
 using MQTTnet;
 using MQTTnet.Packets;
-using MQTTnet.Protocol;
 using MQTTnet.Server;
 using MqttServer.Backend.Core;
 using MqttServer.Backend.Core.Model;
@@ -97,7 +95,7 @@ namespace MqttServer.Core
             await MqttServer.StartAsync();
         }
 
-        public MQTTnet.Server.MqttServer? CreateServer(int portNumber)
+        public MQTTnet.Server.MqttServer? CreateServer(MqttServerCreateSettings settings)
         {
             // Start server
             // The port for the default endpoint is 1883.
@@ -105,7 +103,7 @@ namespace MqttServer.Core
             // Use the builder classes where possible.
             var mqttServerOptions = MqttFactory.CreateServerOptionsBuilder()
                 .WithDefaultEndpoint()
-                .WithDefaultEndpointPort(portNumber)
+                .WithDefaultEndpointPort(settings.PortNumber)
                 .Build();
 
             MqttServer = MqttFactory.CreateMqttServer(mqttServerOptions);
@@ -129,15 +127,15 @@ namespace MqttServer.Core
             return MqttServer;
         }
 
-        public async Task PublishAsync(string topic, string payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel)
+        public async Task PublishAsync(string payload, MqttServerPublishSettings settings)
         {
             var applicationMessage = new MqttApplicationMessageBuilder()
-                .WithTopic(topic)
+                .WithTopic(settings.Topic)
                 .WithPayload(payload)
-                .WithRetainFlag(isRetainModeOn)
-                .WithQualityOfServiceLevel(qualityOfServiceLevel)
-                .WithPayloadFormatIndicator(MqttPayloadFormatIndicator.Unspecified)
-                .WithContentType(MimeTypes.TextPlain)
+                .WithRetainFlag(settings.IsRetainOn)
+                .WithQualityOfServiceLevel(settings.QoS)
+                .WithPayloadFormatIndicator(settings.PayloadFormatIndicator)
+                .WithContentType(settings.ContentType)
                 .Build();
 
             InjectedMqttApplicationMessage injectedMqttApplicationMessage = new InjectedMqttApplicationMessage(applicationMessage);
