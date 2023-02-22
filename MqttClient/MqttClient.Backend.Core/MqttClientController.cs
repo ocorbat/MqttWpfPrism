@@ -29,7 +29,9 @@ namespace MqttClient.Backend.Core
             MqttClient.ConnectedAsync += MqttClient_ConnectedAsync;
             MqttClient.DisconnectedAsync += MqttClient_DisconnectedAsync;
             MqttClient.ApplicationMessageReceivedAsync += MqttClient_ApplicationMessageReceivedAsync;
+            MqttClient.InspectPackage += MqttClient_InspectPackage;
         }
+
 
         public async Task ConnectAsync(MqttClientConnectSettings settings)
         {
@@ -156,6 +158,10 @@ namespace MqttClient.Backend.Core
             {
                 OnOutputMessage(new OutputMessageEventArgs($"({e})"));
             }
+            catch (MqttClientUnexpectedDisconnectReceivedException e)
+            {
+                OnOutputMessage(new OutputMessageEventArgs($"({e})"));
+            }
         }
 
         public async Task UnsubscribeAsync(MqttClientUnsubscribeSettings settings)
@@ -243,6 +249,12 @@ namespace MqttClient.Backend.Core
             OnApplicationMessageReceived(new Events.ApplicationMessageReceivedEventArgs(arg.ApplicationMessage.Payload, arg.ApplicationMessage.ContentType));
             return Task.CompletedTask;
         }
+
+        private Task MqttClient_InspectPackage(MQTTnet.Diagnostics.InspectMqttPacketEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
 
         public event EventHandler<Events.MqttClientConnectingEventArgs> ClientConnecting = default!;
 

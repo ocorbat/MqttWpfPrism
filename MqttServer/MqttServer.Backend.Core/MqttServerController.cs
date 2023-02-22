@@ -63,6 +63,7 @@ namespace MqttServer.Core
             {
                 Sessions = await MqttServer.GetSessionsAsync();
             }
+
             return Sessions;
         }
 
@@ -132,26 +133,22 @@ namespace MqttServer.Core
                 MqttServer.ClientUnsubscribedTopicAsync += MqttServer_ClientUnsubscribedTopicAsync;
                 MqttServer.ValidatingConnectionAsync += MqttServer_ValidatingConnectionAsync;
                 MqttServer.InterceptingSubscriptionAsync += MqttServer_InterceptingSubscriptionAsync;
+                MqttServer.InterceptingUnsubscriptionAsync += MqttServer_InterceptingUnsubscriptionAsync;
                 MqttServer.InterceptingPublishAsync += MqttServer_InterceptingPublishAsync;
                 MqttServer.LoadingRetainedMessageAsync += MqttServer_LoadingRetainedMessageAsync;
                 MqttServer.RetainedMessageChangedAsync += MqttServer_RetainedMessageChangedAsync;
                 MqttServer.RetainedMessagesClearedAsync += MqttServer_RetainedMessagesClearedAsync;
+
+                MqttServer.ApplicationMessageNotConsumedAsync += MqttServer_ApplicationMessageNotConsumedAsync;
+                MqttServer.ClientAcknowledgedPublishPacketAsync += MqttServer_ClientAcknowledgedPublishPacketAsync;
+                MqttServer.InterceptingInboundPacketAsync += MqttServer_InterceptingInboundPacketAsync;
+                MqttServer.InterceptingOutboundPacketAsync += MqttServer_InterceptingOutboundPacketAsync;
 
                 MqttServer.PreparingSessionAsync += MqttServer_PreparingSessionAsync;
                 MqttServer.SessionDeletedAsync += MqttServer_SessionDeletedAsync;
             }
 
             return MqttServer;
-        }
-
-        private Task MqttServer_SessionDeletedAsync(SessionDeletedEventArgs arg)
-        {
-            return Task.CompletedTask;
-        }
-
-        private Task MqttServer_PreparingSessionAsync(EventArgs arg)
-        {
-            return Task.CompletedTask;
         }
 
         public async Task PublishAsync(string payload, MqttServerPublishSettings settings)
@@ -361,6 +358,41 @@ namespace MqttServer.Core
             return Task.CompletedTask;
         }
 
+        private Task MqttServer_InterceptingUnsubscriptionAsync(InterceptingUnsubscriptionEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task MqttServer_InterceptingOutboundPacketAsync(InterceptingPacketEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task MqttServer_InterceptingInboundPacketAsync(InterceptingPacketEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task MqttServer_ClientAcknowledgedPublishPacketAsync(ClientAcknowledgedPublishPacketEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task MqttServer_ApplicationMessageNotConsumedAsync(ApplicationMessageNotConsumedEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task MqttServer_SessionDeletedAsync(SessionDeletedEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task MqttServer_PreparingSessionAsync(EventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
         private void OnServerStarted(EventArgs e)
         {
             ServerStarted?.Invoke(this, e);
@@ -404,7 +436,5 @@ namespace MqttServer.Core
         {
             ClientUnsubscribedTopic?.Invoke(this, e);
         }
-
-
     }
 }
