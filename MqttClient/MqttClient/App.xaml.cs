@@ -9,6 +9,7 @@ using MqttClient.ViewModels;
 using MqttClient.Views;
 using Prism.Ioc;
 using Prism.Modularity;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 
@@ -78,6 +79,17 @@ namespace MqttClient
         {
             startupEventArgs = e;
             base.OnStartup(e);
+        }
+
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            Process currentProcess = Process.GetCurrentProcess();
+            var runningMqttClientProcesses = Process.GetProcesses().AsEnumerable<Process>().Where(x => x.ProcessName.Equals("MqttClient")).ToArray();
+            var numberOfInstance = runningMqttClientProcesses.Except(runningMqttClientProcesses.Where(x => x.Id == currentProcess.Id)).Count() + 1;
+
+            dataContext.MqttClientController.NumberOfInstance = numberOfInstance;
+            dataContext.Title += $" ({dataContext.MqttClientController.NumberOfInstance})";
         }
     }
 }

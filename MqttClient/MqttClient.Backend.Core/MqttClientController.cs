@@ -15,6 +15,8 @@ namespace MqttClient.Backend.Core
         public IMqttClient MqttClient { get; private set; }
         public Guid ClientId { get; private set; }
 
+        public int NumberOfInstance { get; set; }
+
         public MqttFactory MqttFactory { get; } = new MqttFactory();
 
         private IList<string> listReceivedData = new List<string>();

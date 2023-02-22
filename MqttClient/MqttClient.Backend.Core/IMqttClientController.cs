@@ -12,6 +12,8 @@ namespace MqttClient.Backend.Core
 
         Guid ClientId { get; }
 
+        int NumberOfInstance { get; set; }
+
         Task ConnectAsync(MqttClientConnectSettings settings);
 
         Task DisconnectAsync();
