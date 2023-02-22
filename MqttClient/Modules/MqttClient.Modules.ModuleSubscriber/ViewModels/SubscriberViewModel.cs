@@ -10,7 +10,7 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
     public class SubscriberViewModel : BindableBase, IClientViewModelBase
     {
         private IMqttClientController mqttClientController;
-        private MqttQualityOfServiceLevel qualityOfServiceLevel = MqttQualityOfServiceLevel.AtMostOnce;
+        private MqttQualityOfServiceLevel qualityOfServiceLevel = MqttQualityOfServiceLevel.AtLeastOnce;
         private MqttRetainHandling retainHandling = MqttRetainHandling.SendAtSubscribe;
         private string currentTopic = "Topic1";
         private bool isNoLocalOn = true;

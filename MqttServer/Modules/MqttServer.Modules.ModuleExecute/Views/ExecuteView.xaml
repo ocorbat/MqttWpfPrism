@@ -61,8 +61,15 @@
                         <ColumnDefinition />
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
-                    <Grid Grid.Row="0" Grid.Column="0">
+                    <StackPanel
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Orientation="Vertical">
+                        <CheckBox Content="IsPersistentSession" IsChecked="{Binding IsPersistentSession}" />
+                    </StackPanel>
+                    <Grid Grid.Row="0" Grid.Column="1">
                         <Grid.RowDefinitions>
+                            <RowDefinition />
                             <RowDefinition />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
@@ -77,6 +84,14 @@
                             Grid.Row="0"
                             Grid.Column="1"
                             Text="{Binding PortNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <Label
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Content="MaxPendingMessagesPerClient" />
+                        <TextBox
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Text="{Binding MaxPendingMessagesPerClient, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
                 </Grid>
             </Expander>

@@ -16,6 +16,9 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
 
         private IMqttServerController mqttServerController;
         private string status = string.Empty;
+        private int maxPendingMessagesPerClient = 10;
+        private bool isExpanded = false;
+        private bool isPersistentSession = true;
 
         public ExecuteViewModel()
         {
@@ -36,7 +39,8 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
             var settings = new MqttServerCreateSettings()
             {
                 PortNumber = PortNumber,
-                IsPersistentSessions = true
+                IsPersistentSessions = IsPersistentSession,
+                MaxPendingMessagesPerClient = MaxPendingMessagesPerClient
             };
 
             var mqttServer = MqttServerController?.CreateServer(settings);
@@ -142,8 +146,16 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
             });
         }
 
-        private bool isExpanded = false;
+
 
         public bool IsExpanded { get => isExpanded; set => SetProperty(ref isExpanded, value); }
+
+
+
+        public int MaxPendingMessagesPerClient { get => maxPendingMessagesPerClient; set => SetProperty(ref maxPendingMessagesPerClient, value); }
+
+
+
+        public bool IsPersistentSession { get => isPersistentSession; set => SetProperty(ref isPersistentSession, value); }
     }
 }

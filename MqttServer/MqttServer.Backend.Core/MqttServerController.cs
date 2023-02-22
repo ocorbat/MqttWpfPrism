@@ -117,6 +117,7 @@ namespace MqttServer.Core
                 .WithDefaultEndpoint()
                 .WithDefaultEndpointPort(settings.PortNumber)
                 .WithPersistentSessions(settings.IsPersistentSessions)
+                .WithMaxPendingMessagesPerClient(settings.MaxPendingMessagesPerClient)
                 .Build();
 
             MqttServer = MqttFactory.CreateMqttServer(mqttServerOptions);
