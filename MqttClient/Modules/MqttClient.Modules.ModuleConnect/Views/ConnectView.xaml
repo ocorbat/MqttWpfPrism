@@ -127,6 +127,7 @@
                         <Grid Grid.Row="0" Grid.Column="2">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -140,8 +141,15 @@
                                 Grid.Row="0"
                                 Grid.Column="1"
                                 Text="{Binding PortNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Label
+                                Grid.Row="1"
+                                Grid.Column="0"
+                                Content="KeppAlive [s]" />
+                            <TextBox
+                                Grid.Row="1"
+                                Grid.Column="1"
+                                Text="{Binding KeepAlivePeriod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
-
                     </Grid>
                 </Expander>
             </Grid>

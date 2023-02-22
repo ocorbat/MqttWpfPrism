@@ -82,7 +82,17 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
 
         private async void SubscribeCommandExecute()
         {
-            await MqttClientController.SubscribeAsync(CurrentTopic, QualityOfServiceLevel, IsNoLocalOn, isRetainAsPublishedOn, retainHandling);
+            var settings = new MqttClientSubscribeSettings()
+            {
+                Topic = CurrentTopic,
+                QoS = QualityOfServiceLevel,
+                NoLocalOn = IsNoLocalOn,
+                RetainAsPublishedOn = IsRetainAsPublishedOn,
+                RetainHandling = RetainHandling
+            };
+
+
+            await MqttClientController.SubscribeAsync(settings);
         }
 
         private bool SubscribeCommandCanExecute()
@@ -97,7 +107,12 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
 
         private async void UnsubscribeCommandExecute()
         {
-            await MqttClientController.UnsubscribeAsync(CurrentTopic);
+            var settings = new MqttClientUnsubscribeSettings()
+            {
+                Topic = CurrentTopic,
+            };
+
+            await MqttClientController.UnsubscribeAsync(settings);
         }
 
         private async void DeleteRetainedMessagesCommandExecute()

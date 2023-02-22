@@ -78,7 +78,16 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
 
         private async void PublishCommandExecute()
         {
-            await MqttClientController.PublishAsync(CurrentTopic, MessageText, IsRetainModeOn, QualityOfServiceLevel);
+            var settings = new MqttClientPublishSettings()
+            {
+                Topic = CurrentTopic,
+                ContentType = MimeTypes.TextPlain,
+                IsRetainOn = IsRetainModeOn,
+                QoS = QualityOfServiceLevel,
+                PayloadFormatIndicator = MqttPayloadFormatIndicator.Unspecified
+            };
+
+            await MqttClientController.PublishAsync(MessageText, settings);
         }
 
         private bool PublishCommandCanExecute()
@@ -100,7 +109,16 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             await streamResourceInfo.Stream.CopyToAsync(memoryStream);
             byte[] bytes = memoryStream.ToArray();
 
-            await MqttClientController.PublishAsync(CurrentTopic, bytes, MimeTypes.ImageJpeg, IsRetainModeOn, QualityOfServiceLevel);
+            var settings = new MqttClientPublishSettings()
+            {
+                Topic = CurrentTopic,
+                ContentType = MimeTypes.ImageJpeg,
+                IsRetainOn = IsRetainModeOn,
+                QoS = QualityOfServiceLevel,
+                PayloadFormatIndicator = MqttPayloadFormatIndicator.Unspecified
+            };
+
+            await MqttClientController.PublishAsync(bytes, settings);
         }
 
         private bool PublishImageCommandCanExecute()

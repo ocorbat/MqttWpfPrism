@@ -29,15 +29,16 @@ namespace MqttClient.Backend.Core
             MqttClient.ApplicationMessageReceivedAsync += MqttClient_ApplicationMessageReceivedAsync;
         }
 
-        public async Task ConnectAsync(int portNumber, bool isCleanSessionOn, MqttProtocolVersion protocolVersion, string username, string password)
+
+        public async Task ConnectAsync(MqttClientConnectSettings settings)
         {
             var mqttClientOptions = MqttFactory.CreateClientOptionsBuilder()
                 .WithClientId(ClientId.ToString())
-                .WithTcpServer(MqttCommon.Constants.Localhost, portNumber)
-                .WithCleanSession(isCleanSessionOn)
-                .WithKeepAlivePeriod(new TimeSpan(0, 1, 0))
-                .WithProtocolVersion(protocolVersion)
-                .WithCredentials(username, password)
+                .WithTcpServer(MqttCommon.Constants.Localhost, settings.PortNumber)
+                .WithCleanSession(settings.IsCleanSession)
+                .WithKeepAlivePeriod(settings.KeepAlivePeriod)
+                .WithProtocolVersion(settings.ProtocolVersion)
+                .WithCredentials(settings.Username, settings.Password)
                 .Build();
 
             try
@@ -57,34 +58,40 @@ namespace MqttClient.Backend.Core
         }
 
 
-        public async Task PublishAsync(string topic, string payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel)
+        public async Task PublishAsync(string payload, MqttClientPublishSettings settings)
         {
             var applicationMessage = new MqttApplicationMessageBuilder()
-               .WithTopic(topic)
+               .WithTopic(settings.Topic)
                .WithPayload(payload)
-               .WithRetainFlag(isRetainModeOn)
-               .WithQualityOfServiceLevel(qualityOfServiceLevel)
-               .WithPayloadFormatIndicator(MqttPayloadFormatIndicator.Unspecified)
+               .WithRetainFlag(settings.IsRetainOn)
+               .WithQualityOfServiceLevel(settings.QoS)
+               .WithPayloadFormatIndicator(settings.PayloadFormatIndicator)
                .WithContentType(MimeTypes.TextPlain)
                .Build();
 
             await PublishAsync(applicationMessage);
         }
 
-        public async Task PublishAsync(string topic, byte[] payload, string contentType, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel)
+        public async Task PublishAsync(byte[] payload, MqttClientPublishSettings settings)
         {
             var applicationMessage = new MqttApplicationMessageBuilder()
-               .WithTopic(topic)
+               .WithTopic(settings.Topic)
                .WithPayload(payload)
-               .WithRetainFlag(isRetainModeOn)
-               .WithQualityOfServiceLevel(qualityOfServiceLevel)
-               .WithPayloadFormatIndicator(MqttPayloadFormatIndicator.Unspecified)
-               .WithContentType(contentType)
+               .WithRetainFlag(settings.IsRetainOn)
+               .WithQualityOfServiceLevel(settings.QoS)
+               .WithPayloadFormatIndicator(settings.PayloadFormatIndicator)
+               .WithContentType(settings.ContentType)
                .Build();
 
             await PublishAsync(applicationMessage);
         }
 
+        /// <summary>
+        /// Publishes an empty payload for deleting the retained message to the specified topic
+        /// </summary>
+        /// <param name="topic"></param>
+        /// <param name="isRetainModeOn"></param>
+        /// <returns></returns>
         public async Task PublishEmptyAsync(string topic, bool isRetainModeOn = true)
         {
             var applicationMessage = new MqttApplicationMessageBuilder()
@@ -121,7 +128,8 @@ namespace MqttClient.Backend.Core
             }
         }
 
-        public async Task SubscribeAsync(string topic, MqttQualityOfServiceLevel qualityOfServiceLevel, bool isNoLocalOn, bool isRetainAsPublishedOn, MqttRetainHandling retainHandling)
+
+        public async Task SubscribeAsync(MqttClientSubscribeSettings settings)
         {
             MqttClientSubscribeOptions mqttSubscribeOptions;
 
@@ -129,11 +137,11 @@ namespace MqttClient.Backend.Core
                .WithTopicFilter(
                    f =>
                    {
-                       f.WithTopic(topic).WithAtMostOnceQoS();
-                       f.WithQualityOfServiceLevel(qualityOfServiceLevel);
-                       f.WithNoLocal(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && isNoLocalOn);
-                       f.WithRetainAsPublished(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && isRetainAsPublishedOn);
-                       f.WithRetainHandling(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 ? retainHandling : MqttRetainHandling.SendAtSubscribe);
+                       f.WithTopic(settings.Topic).WithAtMostOnceQoS();
+                       f.WithQualityOfServiceLevel(settings.QoS);
+                       f.WithNoLocal(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.NoLocalOn);
+                       f.WithRetainAsPublished(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.RetainAsPublishedOn);
+                       f.WithRetainHandling(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 ? settings.RetainHandling : MqttRetainHandling.SendAtSubscribe);
                    })
                .Build();
 
@@ -146,7 +154,7 @@ namespace MqttClient.Backend.Core
                     response = await MqttClient.SubscribeAsync(mqttSubscribeOptions, timeoutToken.Token);
                 }
 
-                Debug.WriteLine($"MQTT client {MqttClient.Options.ClientId} subscribed to topic '{topic}'.");
+                Debug.WriteLine($"MQTT client {MqttClient.Options.ClientId} subscribed to topic '{settings.Topic}'.");
                 // The response contains additional data sent by the server after subscribing.
                 OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
             }
@@ -160,11 +168,10 @@ namespace MqttClient.Backend.Core
             }
         }
 
-
-        public async Task UnsubscribeAsync(string topic)
+        public async Task UnsubscribeAsync(MqttClientUnsubscribeSettings settings)
         {
             var mqttUnsubscribeOptions = MqttFactory.CreateUnsubscribeOptionsBuilder()
-                .WithTopicFilter(topic)
+                .WithTopicFilter(settings.Topic)
                 .Build();
 
             try
@@ -176,7 +183,7 @@ namespace MqttClient.Backend.Core
                     response = await MqttClient.UnsubscribeAsync(mqttUnsubscribeOptions, timeoutToken.Token);
                 }
 
-                Debug.WriteLine($"MQTT client {MqttClient.Options.ClientId} unsubscribed to topic '{topic}'.");
+                Debug.WriteLine($"MQTT client {MqttClient.Options.ClientId} unsubscribed to topic '{settings.Topic}'.");
                 // The response contains additional data sent by the server after subscribing.
                 OnOutputMessage(new OutputMessageEventArgs(response.DumpToString()));
             }

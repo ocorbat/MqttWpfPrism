@@ -1,8 +1,6 @@
 ﻿using MqttCommon.Events;
 using MQTTnet;
 using MQTTnet.Client;
-using MQTTnet.Formatter;
-using MQTTnet.Protocol;
 
 namespace MqttClient.Backend.Core
 {
@@ -13,21 +11,21 @@ namespace MqttClient.Backend.Core
 
         Guid ClientId { get; }
 
-        Task ConnectAsync(int portNumber, bool isCleanSessionOn, MqttProtocolVersion protocolVersion, string username, string password);
+        Task ConnectAsync(MqttClientConnectSettings settings);
 
         Task DisconnectAsync();
 
 
-        Task PublishAsync(string topic, string payload, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel);
+        Task PublishAsync(string payload, MqttClientPublishSettings settings);
 
-        Task PublishAsync(string topic, byte[] payload, string contentType, bool isRetainModeOn, MqttQualityOfServiceLevel qualityOfServiceLevel);
+        Task PublishAsync(byte[] payload, MqttClientPublishSettings settings);
 
         Task PublishEmptyAsync(string topic, bool isRetainModeOn = true);
 
 
-        Task SubscribeAsync(string topic, MqttQualityOfServiceLevel qualityOfServiceLevel, bool isNoLocalOn, bool isRetainAsPublishedOn, MqttRetainHandling retainHandling);
-        Task UnsubscribeAsync(string topic);
+        Task SubscribeAsync(MqttClientSubscribeSettings settings);
 
+        Task UnsubscribeAsync(MqttClientUnsubscribeSettings settings);
 
         event EventHandler<Events.MqttClientConnectingEventArgs> ClientConnecting;
         event EventHandler<Events.MqttClientConnectedEventArgs> ClientConnected;

@@ -59,7 +59,17 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
 
         private async void ConnectCommandExecute()
         {
-            await MqttClientController.ConnectAsync(PortNumber, IsCleanSessionOn, ProtocolVersion, Username, Password);
+            var settings = new MqttClientConnectSettings()
+            {
+                PortNumber = PortNumber,
+                IsCleanSession = IsCleanSessionOn,
+                ProtocolVersion = ProtocolVersion,
+                KeepAlivePeriod = TimeSpan.FromSeconds(KeepAlivePeriod),
+                Username = Username,
+                Password = Password
+            };
+
+            await MqttClientController.ConnectAsync(settings);
         }
 
         private bool ConnectCommandCanExecute()
@@ -170,6 +180,10 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
         private byte[] receivedImage;
 
         public byte[] ReceivedImage { get => receivedImage; set => SetProperty(ref receivedImage, value); }
+
+        private int keepAlivePeriod = 60;
+
+        public int KeepAlivePeriod { get => keepAlivePeriod; set => SetProperty(ref keepAlivePeriod, value); }
 
 
     }
