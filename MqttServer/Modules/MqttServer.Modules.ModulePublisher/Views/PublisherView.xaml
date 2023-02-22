@@ -86,7 +86,8 @@
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
                     ExpandDirection="Down"
-                    Header="Options">
+                    Header="Options"
+                    IsExpanded="{Binding IsExpanded, Mode=TwoWay}">
                     <GroupBox Header="Quality Of Service Level">
                         <StackPanel Orientation="Vertical">
                             <RadioButton

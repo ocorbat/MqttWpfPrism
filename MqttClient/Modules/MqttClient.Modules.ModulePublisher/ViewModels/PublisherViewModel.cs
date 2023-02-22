@@ -1,4 +1,5 @@
 ﻿using MqttClient.Backend.Core;
+using MqttClient.Backend.Core.Settings;
 using MqttClient.Core.ViewModels;
 using MqttCommon;
 using MQTTnet.Protocol;
@@ -88,6 +89,7 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             };
 
             await MqttClientController.PublishAsync(MessageText, settings);
+            IsExpanded = false;
         }
 
         private bool PublishCommandCanExecute()
@@ -119,6 +121,7 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             };
 
             await MqttClientController.PublishAsync(bytes, settings);
+            IsExpanded = false;
         }
 
         private bool PublishImageCommandCanExecute()
@@ -131,6 +134,7 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             PublishCommand.RaiseCanExecuteChanged();
             PublishImageCommand.RaiseCanExecuteChanged();
             IsEnabled = PublishCommandCanExecute();
+            IsExpanded = false;
         }
 
         private void MqttClientController_ClientDisconnected(object sender, Backend.Events.MqttClientDisconnectedEventArgs e)
@@ -138,6 +142,7 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             PublishCommand.RaiseCanExecuteChanged();
             PublishImageCommand.RaiseCanExecuteChanged();
             IsEnabled = PublishCommandCanExecute();
+            IsExpanded = false;
         }
 
         private void MqttClientController_ClientConnected(object sender, Backend.Events.MqttClientConnectedEventArgs e)
@@ -145,6 +150,11 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             PublishCommand.RaiseCanExecuteChanged();
             PublishImageCommand.RaiseCanExecuteChanged();
             IsEnabled = PublishCommandCanExecute();
+            IsExpanded = false;
         }
+
+        private bool isExpanded = false;
+
+        public bool IsExpanded { get => isExpanded; set => SetProperty(ref isExpanded, value); }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace MqttClient.Backend.Core
+﻿namespace MqttClient.Backend.Core.Settings
 {
     public class MqttClientUnsubscribeSettings
     {

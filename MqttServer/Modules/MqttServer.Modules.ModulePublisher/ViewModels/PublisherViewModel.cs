@@ -1,6 +1,7 @@
 ﻿using MqttCommon;
 using MQTTnet.Protocol;
 using MqttServer.Backend.Core;
+using MqttServer.Backend.Core.Settings;
 using MqttServer.Core.Interfaces;
 using Prism.Commands;
 using Prism.Mvvm;
@@ -88,6 +89,7 @@ namespace MqttServer.Modules.ModulePublisher.ViewModels
             };
 
             await MqttServerController.PublishAsync(SendMessageText, settings);
+            IsExpanded = false;
         }
 
         private bool PublishCommandCanExecute()
@@ -110,6 +112,7 @@ namespace MqttServer.Modules.ModulePublisher.ViewModels
             IsEnabled = false;
             PublishCommand.RaiseCanExecuteChanged();
             DeleteRetainedMessagesCommand.RaiseCanExecuteChanged();
+            IsExpanded = false;
         }
 
         private void MqttServerController_ServerStarted(object sender, System.EventArgs e)
@@ -117,6 +120,11 @@ namespace MqttServer.Modules.ModulePublisher.ViewModels
             IsEnabled = true;
             PublishCommand.RaiseCanExecuteChanged();
             DeleteRetainedMessagesCommand.RaiseCanExecuteChanged();
+            IsExpanded = false;
         }
+
+        private bool isExpanded = false;
+
+        public bool IsExpanded { get => isExpanded; set => SetProperty(ref isExpanded, value); }
     }
 }

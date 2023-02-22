@@ -1,4 +1,5 @@
 ﻿using MqttClient.Backend.Core;
+using MqttClient.Backend.Core.Settings;
 using MqttClient.Core.ViewModels;
 using MQTTnet.Protocol;
 using Prism.Commands;
@@ -93,6 +94,7 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
 
 
             await MqttClientController.SubscribeAsync(settings);
+            IsExpanded = false;
         }
 
         private bool SubscribeCommandCanExecute()
@@ -113,6 +115,7 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
             };
 
             await MqttClientController.UnsubscribeAsync(settings);
+            IsExpanded = false;
         }
 
         private async void DeleteRetainedMessagesCommandExecute()
@@ -131,6 +134,7 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
             UnsubscribeCommand.RaiseCanExecuteChanged();
             DeleteRetainedMessagesCommand.RaiseCanExecuteChanged();
             IsEnabled = SubscribeCommandCanExecute();
+            IsExpanded = false;
         }
 
         private void MqttClientController_ClientDisconnected(object sender, Backend.Events.MqttClientDisconnectedEventArgs e)
@@ -139,6 +143,7 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
             UnsubscribeCommand.RaiseCanExecuteChanged();
             DeleteRetainedMessagesCommand.RaiseCanExecuteChanged();
             IsEnabled = SubscribeCommandCanExecute();
+            IsExpanded = false;
         }
 
         private void MqttClientController_ClientConnected(object sender, Backend.Events.MqttClientConnectedEventArgs e)
@@ -147,6 +152,11 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
             UnsubscribeCommand.RaiseCanExecuteChanged();
             DeleteRetainedMessagesCommand.RaiseCanExecuteChanged();
             IsEnabled = SubscribeCommandCanExecute();
+            IsExpanded = false;
         }
+
+        private bool isExpanded = false;
+
+        public bool IsExpanded { get => isExpanded; set => SetProperty(ref isExpanded, value); }
     }
 }

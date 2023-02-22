@@ -1,6 +1,7 @@
 ﻿using MqttCommon.Events;
 using MQTTnet;
 using MQTTnet.Server;
+using MqttServer.Backend.Core.Settings;
 
 namespace MqttServer.Backend.Core
 {
@@ -14,6 +15,8 @@ namespace MqttServer.Backend.Core
 
 
         Task<IList<MqttClientStatus>> RefreshConnectedClientsAsync();
+
+        Task<IList<MqttSessionStatus>> GetSessionsAsync();
 
         Task PublishAsync(string payload, MqttServerPublishSettings settings);
 

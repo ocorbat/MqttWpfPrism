@@ -1,6 +1,6 @@
 ﻿using MQTTnet.Protocol;
 
-namespace MqttClient.Backend.Core
+namespace MqttClient.Backend.Core.Settings
 {
     public class MqttClientSubscribeSettings
     {
@@ -8,12 +8,12 @@ namespace MqttClient.Backend.Core
 
         public string Topic { get; set; } = default!;
 
-        public MqttQualityOfServiceLevel QoS { get; set; } = MQTTnet.Protocol.MqttQualityOfServiceLevel.AtMostOnce;
+        public MqttQualityOfServiceLevel QoS { get; set; } = MqttQualityOfServiceLevel.AtMostOnce;
 
         public bool NoLocalOn { get; set; } = false;
 
         public bool RetainAsPublishedOn { get; set; } = false;
-        public MqttRetainHandling RetainHandling { get; set; } = MQTTnet.Protocol.MqttRetainHandling.SendAtSubscribe;
+        public MqttRetainHandling RetainHandling { get; set; } = MqttRetainHandling.SendAtSubscribe;
     }
 }
 

@@ -1,4 +1,5 @@
-﻿using MqttCommon.Events;
+﻿using MqttClient.Backend.Core.Settings;
+using MqttCommon.Events;
 using MQTTnet;
 using MQTTnet.Client;
 

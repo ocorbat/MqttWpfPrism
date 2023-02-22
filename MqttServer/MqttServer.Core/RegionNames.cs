@@ -6,5 +6,6 @@
         public static string ExecuteRegion { get; } = nameof(ExecuteRegion);
         public static string MessageRegion { get; } = nameof(MessageRegion);
         public static string PublisherRegion { get; } = nameof(PublisherRegion);
+        public static string SessionsRegion { get; } = nameof(SessionsRegion);
     }
 }

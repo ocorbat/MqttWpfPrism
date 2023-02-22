@@ -24,7 +24,8 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
@@ -42,9 +43,13 @@
                 Grid.Column="0"
                 prism:RegionManager.RegionName="{x:Static core:RegionNames.ClientsRegion}" />
             <ContentControl
-                Grid.Row="3"
+                Grid.Row="4"
                 Grid.Column="0"
                 prism:RegionManager.RegionName="{x:Static core:RegionNames.MessageRegion}" />
+            <ContentControl
+                Grid.Row="3"
+                Grid.Column="0"
+                prism:RegionManager.RegionName="{x:Static core:RegionNames.SessionsRegion}" />
         </Grid>
     </ScrollViewer>
 </Window>

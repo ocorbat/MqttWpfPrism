@@ -1,13 +1,12 @@
 ﻿using MQTTnet.Formatter;
 
-namespace MqttClient.Backend.Core
+namespace MqttClient.Backend.Core.Settings
 {
     public class MqttClientConnectSettings
     {
         public MqttClientConnectSettings() { }
 
-
-        public int PortNumber { get; set; } = 1883;
+        public int PortNumber { get; set; } = MqttCommon.Constants.PortNumber;
 
         public bool IsCleanSession { get; set; } = true;
 
@@ -18,6 +17,8 @@ namespace MqttClient.Backend.Core
         public string Username { get; set; } = default!;
 
         public string Password { get; set; } = default!;
+
+        public uint SessionExpiryInterval { get; set; } = default!;
     }
 }
 

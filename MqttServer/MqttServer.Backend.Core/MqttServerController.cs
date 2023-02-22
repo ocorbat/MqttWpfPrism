@@ -5,6 +5,7 @@ using MQTTnet.Packets;
 using MQTTnet.Server;
 using MqttServer.Backend.Core;
 using MqttServer.Backend.Core.Model;
+using MqttServer.Backend.Core.Settings;
 using System.Collections;
 using System.Collections.ObjectModel;
 using System.Text.Json;
@@ -17,7 +18,8 @@ namespace MqttServer.Core
         public MqttFactory MqttFactory { get; } = new MqttFactory();
         public MQTTnet.Server.MqttServer MqttServer { get; private set; } = default!;
         public ObservableCollection<ClientSubscribedItem> ClientSubscribedItems { get; }
-        public IList<MqttClientStatus>? ConnectedClients { get; private set; }
+        public IList<MqttClientStatus> ConnectedClients { get; private set; } = default!;
+        public IList<MqttSessionStatus> Sessions { get; private set; } = default!;
 
         private readonly string storePath;
 
@@ -54,6 +56,16 @@ namespace MqttServer.Core
             }
             return ConnectedClients;
         }
+
+        public async Task<IList<MqttSessionStatus>> GetSessionsAsync()
+        {
+            if (MqttServer != null)
+            {
+                Sessions = await MqttServer.GetSessionsAsync();
+            }
+            return Sessions;
+        }
+
 
         public bool GetConnectedClientsCommandCanExecute()
         {
@@ -104,6 +116,7 @@ namespace MqttServer.Core
             var mqttServerOptions = MqttFactory.CreateServerOptionsBuilder()
                 .WithDefaultEndpoint()
                 .WithDefaultEndpointPort(settings.PortNumber)
+                .WithPersistentSessions(settings.IsPersistentSessions)
                 .Build();
 
             MqttServer = MqttFactory.CreateMqttServer(mqttServerOptions);
@@ -122,9 +135,22 @@ namespace MqttServer.Core
                 MqttServer.LoadingRetainedMessageAsync += MqttServer_LoadingRetainedMessageAsync;
                 MqttServer.RetainedMessageChangedAsync += MqttServer_RetainedMessageChangedAsync;
                 MqttServer.RetainedMessagesClearedAsync += MqttServer_RetainedMessagesClearedAsync;
+
+                MqttServer.PreparingSessionAsync += MqttServer_PreparingSessionAsync;
+                MqttServer.SessionDeletedAsync += MqttServer_SessionDeletedAsync;
             }
 
             return MqttServer;
+        }
+
+        private Task MqttServer_SessionDeletedAsync(SessionDeletedEventArgs arg)
+        {
+            return Task.CompletedTask;
+        }
+
+        private Task MqttServer_PreparingSessionAsync(EventArgs arg)
+        {
+            return Task.CompletedTask;
         }
 
         public async Task PublishAsync(string payload, MqttServerPublishSettings settings)

@@ -1,4 +1,5 @@
 ﻿using MqttClient.Backend.Core;
+using MqttClient.Backend.Core.Settings;
 using MqttClient.Core.ViewModels;
 using MqttCommon;
 using MQTTnet.Formatter;
@@ -15,7 +16,11 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
         private string username = "admin";
         private string password = "1234";
         private string status = string.Empty;
-        private bool isCleanSessionOn = true;
+        private bool isCleanSessionOn = false;
+        private int keepAlivePeriod = 60;
+        private bool isExpanded = false;
+        private int portNumber = Constants.Port5004;
+        private uint sessionExpiryInterval = 86400;
         private MqttProtocolVersion protocolVersion = MqttProtocolVersion.V500;
 
         public ConnectViewModel()
@@ -66,10 +71,12 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
                 ProtocolVersion = ProtocolVersion,
                 KeepAlivePeriod = TimeSpan.FromSeconds(KeepAlivePeriod),
                 Username = Username,
-                Password = Password
+                Password = Password,
+                SessionExpiryInterval = SessionExpiryInterval
             };
 
             await MqttClientController.ConnectAsync(settings);
+            IsExpanded = false;
         }
 
         private bool ConnectCommandCanExecute()
@@ -157,6 +164,7 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
             Status = $"Client {MqttClientController.ClientId} is disconnected";
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
+            IsExpanded = false;
         }
 
         private void MqttClientController_ClientConnected(object sender, Backend.Events.MqttClientConnectedEventArgs e)
@@ -164,6 +172,7 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
             Status = $"Client {MqttClientController.ClientId} is connected";
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
+            IsExpanded = false;
         }
 
         private void MqttClientController_ClientConnecting(object sender, Backend.Events.MqttClientConnectingEventArgs e)
@@ -171,9 +180,10 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
             Status = $"Client {MqttClientController.ClientId} is connecting";
             ConnectCommand.RaiseCanExecuteChanged();
             DisconnectCommand.RaiseCanExecuteChanged();
+            IsExpanded = false;
         }
 
-        private int portNumber = Constants.Port5004;
+
 
         public int PortNumber { get => portNumber; set => SetProperty(ref portNumber, value); }
 
@@ -181,9 +191,17 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
 
         public byte[] ReceivedImage { get => receivedImage; set => SetProperty(ref receivedImage, value); }
 
-        private int keepAlivePeriod = 60;
+
 
         public int KeepAlivePeriod { get => keepAlivePeriod; set => SetProperty(ref keepAlivePeriod, value); }
+
+
+
+        public bool IsExpanded { get => isExpanded; set => SetProperty(ref isExpanded, value); }
+
+
+
+        public uint SessionExpiryInterval { get => sessionExpiryInterval; set => SetProperty(ref sessionExpiryInterval, value); }
 
 
     }

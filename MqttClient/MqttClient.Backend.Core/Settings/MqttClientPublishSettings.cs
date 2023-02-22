@@ -1,6 +1,6 @@
 ﻿using MQTTnet.Protocol;
 
-namespace MqttClient.Backend.Core
+namespace MqttClient.Backend.Core.Settings
 {
     public class MqttClientPublishSettings
     {

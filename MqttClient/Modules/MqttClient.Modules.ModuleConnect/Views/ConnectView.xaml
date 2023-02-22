@@ -88,7 +88,8 @@
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
                     ExpandDirection="Down"
-                    Header="Options">
+                    Header="Options"
+                    IsExpanded="{Binding IsExpanded, Mode=TwoWay}">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition />
@@ -128,6 +129,7 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="*" />
@@ -149,6 +151,14 @@
                                 Grid.Row="1"
                                 Grid.Column="1"
                                 Text="{Binding KeepAlivePeriod, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Label
+                                Grid.Row="2"
+                                Grid.Column="0"
+                                Content="SessionExpiryInterval [s]" />
+                            <TextBox
+                                Grid.Row="2"
+                                Grid.Column="1"
+                                Text="{Binding SessionExpiryInterval, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
                     </Grid>
                 </Expander>

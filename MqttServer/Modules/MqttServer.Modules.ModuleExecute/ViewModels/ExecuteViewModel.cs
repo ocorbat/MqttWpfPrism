@@ -1,4 +1,5 @@
 ﻿using MqttServer.Backend.Core;
+using MqttServer.Backend.Core.Settings;
 using MqttServer.Core.Dispose;
 using MqttServer.Core.Interfaces;
 using Prism.Commands;
@@ -34,7 +35,8 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
         {
             var settings = new MqttServerCreateSettings()
             {
-                PortNumber = PortNumber
+                PortNumber = PortNumber,
+                IsPersistentSessions = true
             };
 
             var mqttServer = MqttServerController?.CreateServer(settings);
@@ -43,6 +45,7 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
             {
                 await MqttServerController.StartAsync();
             }
+            IsExpanded = false;
         }
 
         private bool StopServerCommandCanExecute()
@@ -138,5 +141,9 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
                 //textBlock_ServerConnected.Text = arg.ClientId.ToString();
             });
         }
+
+        private bool isExpanded = false;
+
+        public bool IsExpanded { get => isExpanded; set => SetProperty(ref isExpanded, value); }
     }
 }

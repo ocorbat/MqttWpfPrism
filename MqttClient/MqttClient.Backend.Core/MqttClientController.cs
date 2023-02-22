@@ -1,4 +1,5 @@
-﻿using MqttCommon;
+﻿using MqttClient.Backend.Core.Settings;
+using MqttCommon;
 using MqttCommon.Events;
 using MqttCommon.Extensions;
 using MQTTnet;
@@ -36,6 +37,7 @@ namespace MqttClient.Backend.Core
                 .WithClientId(ClientId.ToString())
                 .WithTcpServer(MqttCommon.Constants.Localhost, settings.PortNumber)
                 .WithCleanSession(settings.IsCleanSession)
+                .WithSessionExpiryInterval(settings.SessionExpiryInterval)
                 .WithKeepAlivePeriod(settings.KeepAlivePeriod)
                 .WithProtocolVersion(settings.ProtocolVersion)
                 .WithCredentials(settings.Username, settings.Password)
