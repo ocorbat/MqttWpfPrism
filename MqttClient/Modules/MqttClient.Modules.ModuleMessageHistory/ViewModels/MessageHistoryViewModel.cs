@@ -51,7 +51,7 @@ namespace MqttClient.Modules.ModuleMessageHistory.ViewModels
             }
         }
 
-        private void MqttClientController_ApplicationMessageReceived(object sender, Backend.Events.ApplicationMessageReceivedEventArgs e)
+        private void MqttClientController_ApplicationMessageReceived(object sender, Backend.Events.MqttApplicationMessageReceivedEventArgs e)
         {
             switch (e.ContentType)
             {
@@ -64,10 +64,10 @@ namespace MqttClient.Modules.ModuleMessageHistory.ViewModels
                     //ReceivedImage = e.ApplicationMessage;
                     break;
                 case MimeTypes.TextPlain:
-                    var payloadString = Convert.ToString(e.ApplicationMessage);
+                    var payloadString = Convert.ToString(e.Payload);
 
                     // Convert Payload to string
-                    var payload = e.ApplicationMessage == null ? null : System.Text.Encoding.UTF8.GetString(e.ApplicationMessage);
+                    var payload = e.Payload == null ? null : System.Text.Encoding.UTF8.GetString(e.Payload);
 
                     //if (payload != null)
                     //{

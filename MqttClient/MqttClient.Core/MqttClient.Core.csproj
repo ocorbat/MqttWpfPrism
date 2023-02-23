@@ -11,4 +11,17 @@
     <ProjectReference Include="..\..\MqttResources\MqttResources.csproj" />
     <ProjectReference Include="..\MqttClient.Backend.Core\MqttClient.Backend.Core.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Resources\EnumResources.Designer.cs">
+      <DependentUpon>EnumResources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\EnumResources.resx">
+      <LastGenOutput>EnumResources.Designer.cs</LastGenOutput>
+      <Generator>ResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

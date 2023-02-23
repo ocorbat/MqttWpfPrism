@@ -1,10 +1,10 @@
-﻿using MqttClient.Modules.ModulePublisher.Resources;
+﻿using MqttClient.Core.Resources;
 using MqttCommon;
 using MqttHelpers.Attributes;
 using MqttHelpers.Converters;
 using System.ComponentModel;
 
-namespace MqttClient.Modules.ModulePublisher.Enums
+namespace MqttClient.Core.Enums
 {
     [TypeConverter(typeof(EnumDescriptionTypeConverter))]
     public enum ContentTypeEnum

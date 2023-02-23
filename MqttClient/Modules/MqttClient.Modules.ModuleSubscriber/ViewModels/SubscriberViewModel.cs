@@ -1,7 +1,9 @@
 ﻿using MqttClient.Backend.Core;
 using MqttClient.Backend.Core.Settings;
+using MqttClient.Core.Enums;
+using MqttClient.Core.Extensions;
 using MqttClient.Core.ViewModels;
-using MQTTnet.Protocol;
+
 using Prism.Commands;
 using Prism.Mvvm;
 
@@ -86,10 +88,10 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
             var settings = new MqttClientSubscribeSettings()
             {
                 Topic = CurrentTopic,
-                QoS = QualityOfServiceLevel,
+                QoS = QualityOfServiceLevel.ToMqttQualityOfServiceLevel(),
                 NoLocalOn = IsNoLocalOn,
                 RetainAsPublishedOn = IsRetainAsPublishedOn,
-                RetainHandling = RetainHandling
+                RetainHandling = RetainHandling.ToMqttRetainHandling()
             };
 
 

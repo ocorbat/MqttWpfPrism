@@ -12,17 +12,4 @@
     <ProjectReference Include="..\..\MqttClient.Backend.Events\MqttClient.Backend.Events.csproj" />
     <ProjectReference Include="..\..\MqttClient.Core\MqttClient.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Update="Resources\EnumResources.Designer.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>EnumResources.resx</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Update="Resources\EnumResources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>EnumResources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-  </ItemGroup>
 </Project>

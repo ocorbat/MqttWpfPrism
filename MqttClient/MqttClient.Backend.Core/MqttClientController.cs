@@ -254,13 +254,7 @@ namespace MqttClient.Backend.Core
 
         private Task MqttClient_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
         {
-            var applicationMessage = arg.ApplicationMessage;
-
-
-
-
-
-            OnApplicationMessageReceived(new Events.ApplicationMessageReceivedEventArgs(arg.ClientId, arg.ApplicationMessage.Payload, arg.ApplicationMessage.ContentType, arg.ApplicationMessage.CorrelationData, arg.ApplicationMessage.ResponseTopic));
+            OnApplicationMessageReceived(new Events.MqttApplicationMessageReceivedEventArgs(arg));
             return Task.CompletedTask;
         }
 
@@ -276,7 +270,7 @@ namespace MqttClient.Backend.Core
 
         public event EventHandler<Events.MqttClientDisconnectedEventArgs> ClientDisconnected = default!;
 
-        public event EventHandler<Events.ApplicationMessageReceivedEventArgs> ApplicationMessageReceived = default!;
+        public event EventHandler<Events.MqttApplicationMessageReceivedEventArgs> ApplicationMessageReceived = default!;
 
         public event EventHandler<OutputMessageEventArgs> OutputMessage = default!;
 
@@ -295,7 +289,7 @@ namespace MqttClient.Backend.Core
             ClientDisconnected?.Invoke(this, e);
         }
 
-        private void OnApplicationMessageReceived(Events.ApplicationMessageReceivedEventArgs e)
+        private void OnApplicationMessageReceived(Events.MqttApplicationMessageReceivedEventArgs e)
         {
             ApplicationMessageReceived?.Invoke(this, e);
         }

@@ -1,8 +1,9 @@
 ﻿using MqttClient.Backend.Core;
 using MqttClient.Backend.Core.Settings;
+using MqttClient.Core.Enums;
+using MqttClient.Core.Extensions;
 using MqttClient.Core.ViewModels;
 using MqttCommon;
-using MQTTnet.Formatter;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -68,7 +69,7 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
             {
                 PortNumber = PortNumber,
                 IsCleanSession = IsCleanSessionOn,
-                ProtocolVersion = ProtocolVersion,
+                ProtocolVersion = ProtocolVersion.ToMqttProtocolVersion(),
                 KeepAlivePeriod = TimeSpan.FromSeconds(KeepAlivePeriod),
                 Username = Username,
                 Password = Password,
@@ -124,24 +125,24 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
             }
         }
 
-        private void MqttClientController_ApplicationMessageReceived(object sender, Backend.Events.ApplicationMessageReceivedEventArgs e)
+        private void MqttClientController_ApplicationMessageReceived(object sender, Backend.Events.MqttApplicationMessageReceivedEventArgs e)
         {
 
             switch (e.ContentType)
             {
                 case MimeTypes.ImagePng:
                 case MimeTypes.ImageJpeg:
-                    MemoryStream memoryStream = new(e.ApplicationMessage);
+                    MemoryStream memoryStream = new(e.Payload);
                     //Bitmap image = new(memoryStream);
                     //string filePath = Guid.NewGuid().ToString() + ".png";
                     //image.Save(filePath, System.Drawing.Imaging.ImageFormat.Png);
-                    ReceivedImage = e.ApplicationMessage;
+                    ReceivedImage = e.Payload;
                     break;
                 case MimeTypes.TextPlain:
-                    var payloadString = Convert.ToString(e.ApplicationMessage);
+                    var payloadString = Convert.ToString(e.Payload);
 
                     // Convert Payload to string
-                    var payload = e.ApplicationMessage == null ? null : System.Text.Encoding.UTF8.GetString(e.ApplicationMessage);
+                    var payload = e.Payload == null ? null : System.Text.Encoding.UTF8.GetString(e.Payload);
 
                     //if (payload != null)
                     //{

@@ -1,9 +1,9 @@
 ﻿using MqttClient.Backend.Core;
 using MqttClient.Backend.Core.Settings;
+using MqttClient.Core.Enums;
+using MqttClient.Core.Extensions;
 using MqttClient.Core.ViewModels;
-using MqttClient.Modules.ModulePublisher.Enums;
 using MqttCommon;
-using MQTTnet.Protocol;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;
@@ -25,7 +25,7 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
         private bool isEnabled;
         private bool isExpanded = false;
         private uint messageExpiryInterval = 86400;
-        private ContentTypeEnum currentContentType = Enums.ContentTypeEnum.PlainText;
+        private ContentTypeEnum currentContentType = ContentTypeEnum.PlainText;
 
 
         public PublisherViewModel()
@@ -113,17 +113,16 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
 
         private async void PublishCommandExecute()
         {
-            MqttClientPublishSettings settings = default!;
             string resourcePath;
-            byte[] bytes = default!;
+            byte[] bytes;
 
-            settings = new MqttClientPublishSettings()
+            MqttClientPublishSettings settings = new()
             {
                 Topic = CurrentTopic,
                 ResponseTopic = ResponseTopic,
                 IsRetainOn = IsRetainModeOn,
-                QoS = QualityOfServiceLevel,
-                PayloadFormatIndicator = MqttPayloadFormatIndicator.Unspecified,
+                QoS = QualityOfServiceLevel.ToMqttQualityOfServiceLevel(),
+                PayloadFormatIndicator = MqttPayloadFormatIndicator.Unspecified.ToMqttPayloadFormatIndicator(),
                 MessageExpiryInterval = MessageExpiryInterval
             };
 
@@ -135,13 +134,13 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
                     break;
                 case ContentTypeEnum.ImageJpeg:
                     resourcePath = "pack://application:,,,/MqttResources;component/Resources/th.jpeg";
-                    bytes = await GetBytesAsync(resourcePath);
+                    bytes = await GetBytesFromResourceAsync(resourcePath);
                     settings.ContentType = MimeTypes.ImageJpeg;
                     await MqttClientController.PublishAsync(bytes, settings);
                     break;
                 case ContentTypeEnum.ImagePng:
                     resourcePath = "pack://application:,,,/MqttResources;component/Resources/icon_det_256.png";
-                    bytes = await GetBytesAsync(resourcePath);
+                    bytes = await GetBytesFromResourceAsync(resourcePath);
                     settings.ContentType = MimeTypes.ImagePng;
                     await MqttClientController.PublishAsync(bytes, settings);
                     break;
@@ -150,7 +149,7 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             IsExpanded = false;
         }
 
-        private static async Task<byte[]> GetBytesAsync(string resourcePath)
+        private static async Task<byte[]> GetBytesFromResourceAsync(string resourcePath)
         {
             var streamResourceInfo = Application.GetResourceStream(new System.Uri(resourcePath));
             if (streamResourceInfo == null)
@@ -189,7 +188,7 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
             IsExpanded = false;
         }
 
-        private async void MqttClientController_ApplicationMessageReceived(object sender, Backend.Events.ApplicationMessageReceivedEventArgs e)
+        private async void MqttClientController_ApplicationMessageReceived(object sender, Backend.Events.MqttApplicationMessageReceivedEventArgs e)
         {
             if (!string.IsNullOrEmpty(e.ResponseTopic))
             {
@@ -199,8 +198,8 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
                     Topic = e.ResponseTopic,
                     ContentType = MimeTypes.TextPlain,
                     IsRetainOn = IsRetainModeOn,
-                    QoS = QualityOfServiceLevel,
-                    PayloadFormatIndicator = MqttPayloadFormatIndicator.Unspecified,
+                    QoS = QualityOfServiceLevel.ToMqttQualityOfServiceLevel(),
+                    PayloadFormatIndicator = MqttPayloadFormatIndicator.Unspecified.ToMqttPayloadFormatIndicator(),
                     MessageExpiryInterval = MessageExpiryInterval,
                     CorrelationData = e.CorrelationData
                 };

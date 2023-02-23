@@ -126,4 +126,40 @@
   <data name="ImagePng" xml:space="preserve">
     <value>image/png</value>
   </data>
+  <data name="MqttProtocolVersion.Unknown" xml:space="preserve">
+    <value>Unknown</value>
+  </data>
+  <data name="MqttProtocolVersion.V310" xml:space="preserve">
+    <value>V310</value>
+  </data>
+  <data name="MqttProtocolVersion.V311" xml:space="preserve">
+    <value>V311</value>
+  </data>
+  <data name="MqttProtocolVersion.V500" xml:space="preserve">
+    <value>V500</value>
+  </data>
+  <data name="MqttQualityOfServiceLevel.AtMostOnce" xml:space="preserve">
+    <value>QoS 1</value>
+  </data>
+  <data name="MqttQualityOfServiceLevel.AtLeastOnce" xml:space="preserve">
+    <value>QoS 0</value>
+  </data>
+  <data name="MqttQualityOfServiceLevel.ExactlyOnce" xml:space="preserve">
+    <value>QoS 2</value>
+  </data>
+  <data name="MqttPayloadFormatIndicator.Unspecified" xml:space="preserve">
+    <value>Unspecified</value>
+  </data>
+  <data name="MqttPayloadFormatIndicator.CharacterData" xml:space="preserve">
+    <value>CharacterData</value>
+  </data>
+  <data name="MqttRetainHandling.SendAtSubscribe" xml:space="preserve">
+    <value>SendAtSubscribe</value>
+  </data>
+  <data name="MqttRetainHandling.SendAtSubscribeIfNewSubscriptionOnly" xml:space="preserve">
+    <value>SendAtSubscribeIfNewSubscriptionOnly</value>
+  </data>
+  <data name="MqttRetainHandling.DoNotSendOnSubscribe" xml:space="preserve">
+    <value>DoNotSendOnSubscribe</value>
+  </data>
 </root>

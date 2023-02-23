@@ -5,11 +5,10 @@
     xmlns:converters="clr-namespace:MqttHelpers.Converters;assembly=MqttHelpers"
     xmlns:core="clr-namespace:MqttClient.Core;assembly=MqttClient.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:enums="clr-namespace:MqttClient.Modules.ModulePublisher.Enums"
+    xmlns:enums="clr-namespace:MqttClient.Core.Enums;assembly=MqttClient.Core"
     xmlns:local="clr-namespace:MqttClient.Modules.ModulePublisher.Views"
     xmlns:markup="clr-namespace:MqttHelpers.MarkupExtensions;assembly=MqttHelpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:mqtt="clr-namespace:MQTTnet.Protocol;assembly=MQTTnet"
     xmlns:prism="http://prismlibrary.com/"
     xmlns:viewmodels="clr-namespace:MqttClient.Modules.ModulePublisher.ViewModels"
     xmlns:views="clr-namespace:MqttClient.Core.Views;assembly=MqttClient.Core"
@@ -142,17 +141,17 @@
                             Header="Quality Of Service Level">
                             <StackPanel Orientation="Vertical">
                                 <RadioButton
-                                    Content="0: At Most Once"
+                                    Content="QoS 0"
                                     GroupName="MqttClient.Modules.ModulePublisher.Views.PublisherView.QualityOfServiceLevel"
-                                    IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttQualityOfServiceLevel.AtMostOnce}}" />
+                                    IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MqttQualityOfServiceLevel.AtMostOnce}}" />
                                 <RadioButton
-                                    Content="1: At Least Once"
+                                    Content="QoS 1"
                                     GroupName="MqttClient.Modules.ModulePublisher.Views.PublisherView.QualityOfServiceLevel"
-                                    IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttQualityOfServiceLevel.AtLeastOnce}}" />
+                                    IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MqttQualityOfServiceLevel.AtLeastOnce}}" />
                                 <RadioButton
-                                    Content="2: Exactly Once"
+                                    Content="QoS 2"
                                     GroupName="MqttClient.Modules.ModulePublisher.Views.PublisherView.QualityOfServiceLevel"
-                                    IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static mqtt:MqttQualityOfServiceLevel.ExactlyOnce}}" />
+                                    IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MqttQualityOfServiceLevel.ExactlyOnce}}" />
                             </StackPanel>
                         </GroupBox>
                         <Grid Grid.Row="0" Grid.Column="2">

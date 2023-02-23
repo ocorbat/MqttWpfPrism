@@ -34,7 +34,7 @@ namespace MqttClient.Backend.Core
         event EventHandler<Events.MqttClientConnectingEventArgs> ClientConnecting;
         event EventHandler<Events.MqttClientConnectedEventArgs> ClientConnected;
         event EventHandler<Events.MqttClientDisconnectedEventArgs> ClientDisconnected;
-        event EventHandler<Events.ApplicationMessageReceivedEventArgs> ApplicationMessageReceived;
+        event EventHandler<Events.MqttApplicationMessageReceivedEventArgs> ApplicationMessageReceived;
 
         event EventHandler<OutputMessageEventArgs> OutputMessage;
 
