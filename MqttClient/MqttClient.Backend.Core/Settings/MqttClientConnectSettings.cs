@@ -18,7 +18,11 @@ namespace MqttClient.Backend.Core.Settings
 
         public string Password { get; set; } = default!;
 
-        public uint SessionExpiryInterval { get; set; } = default!;
+        public uint SessionExpiryInterval { get; set; } = 86400;
+
+        public bool RequestResponseInformation { get; set; } = true;
+
+        public bool RequestProblemInformation { get; set; } = true;
     }
 }
 

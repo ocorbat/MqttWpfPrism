@@ -12,7 +12,7 @@
     xmlns:views="clr-namespace:MqttClient.Views"
     Title="{Binding Title}"
     Width="800"
-    Height="600"
+    Height="1000"
     core:AttachedProperties.MqttClientController="{Binding MqttClientController, Mode=OneWay}"
     d:DataContext="{d:DesignInstance viewmodels:MainWindowViewModel}"
     prism:ViewModelLocator.AutoWireViewModel="True"

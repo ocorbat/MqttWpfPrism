@@ -43,6 +43,8 @@ namespace MqttClient.Backend.Core
                 .WithKeepAlivePeriod(settings.KeepAlivePeriod)
                 .WithProtocolVersion(settings.ProtocolVersion)
                 .WithCredentials(settings.Username, settings.Password)
+                .WithRequestResponseInformation(settings.ProtocolVersion == MqttProtocolVersion.V500 && settings.RequestResponseInformation)
+                .WithRequestProblemInformation(settings.ProtocolVersion == MqttProtocolVersion.V500 && settings.RequestResponseInformation)
                 .Build();
 
             try
@@ -71,7 +73,10 @@ namespace MqttClient.Backend.Core
                .WithQualityOfServiceLevel(settings.QoS)
                .WithPayloadFormatIndicator(settings.PayloadFormatIndicator)
                .WithContentType(MimeTypes.TextPlain)
-               .WithResponseTopic(">" + settings.Topic)
+               .WithResponseTopic(MqttClient.Options?.ProtocolVersion == MqttProtocolVersion.V500 ? settings.ResponseTopic : default!)
+               .WithCorrelationData(MqttClient.Options?.ProtocolVersion == MqttProtocolVersion.V500 ? settings.CorrelationData : default!)
+               .WithUserProperty(MqttClient.Options?.ProtocolVersion == MqttProtocolVersion.V500 ? settings.UserProperty.Name : default!, MqttClient.Options?.ProtocolVersion == MqttProtocolVersion.V500 ? settings.UserProperty.Value : default!)
+               .WithMessageExpiryInterval(MqttClient.Options?.ProtocolVersion == MqttProtocolVersion.V500 ? settings.MessageExpiryInterval : default!)
                .Build();
 
             await PublishAsync(applicationMessage);
@@ -86,7 +91,10 @@ namespace MqttClient.Backend.Core
                .WithQualityOfServiceLevel(settings.QoS)
                .WithPayloadFormatIndicator(settings.PayloadFormatIndicator)
                .WithContentType(settings.ContentType)
-               .WithResponseTopic(">" + settings.Topic)
+               .WithResponseTopic(MqttClient.Options?.ProtocolVersion == MqttProtocolVersion.V500 ? settings.ResponseTopic : default!)
+               .WithCorrelationData(MqttClient.Options?.ProtocolVersion == MqttProtocolVersion.V500 ? settings.CorrelationData : default!)
+               .WithUserProperty(MqttClient.Options?.ProtocolVersion == MqttProtocolVersion.V500 ? settings.UserProperty.Name : default!, MqttClient.Options?.ProtocolVersion == MqttProtocolVersion.V500 ? settings.UserProperty.Value : default!)
+               .WithMessageExpiryInterval(MqttClient.Options?.ProtocolVersion == MqttProtocolVersion.V500 ? settings.MessageExpiryInterval : default!)
                .Build();
 
             await PublishAsync(applicationMessage);
@@ -129,7 +137,7 @@ namespace MqttClient.Backend.Core
                .WithTopicFilter(
                    f =>
                    {
-                       f.WithTopic(settings.Topic).WithAtMostOnceQoS();
+                       f.WithTopic(settings.Topic);
                        f.WithQualityOfServiceLevel(settings.QoS);
                        f.WithNoLocal(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.NoLocalOn);
                        f.WithRetainAsPublished(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.RetainAsPublishedOn);
@@ -246,7 +254,13 @@ namespace MqttClient.Backend.Core
 
         private Task MqttClient_ApplicationMessageReceivedAsync(MqttApplicationMessageReceivedEventArgs arg)
         {
-            OnApplicationMessageReceived(new Events.ApplicationMessageReceivedEventArgs(arg.ApplicationMessage.Payload, arg.ApplicationMessage.ContentType));
+            var applicationMessage = arg.ApplicationMessage;
+
+
+
+
+
+            OnApplicationMessageReceived(new Events.ApplicationMessageReceivedEventArgs(arg.ClientId, arg.ApplicationMessage.Payload, arg.ApplicationMessage.ContentType, arg.ApplicationMessage.CorrelationData, arg.ApplicationMessage.ResponseTopic));
             return Task.CompletedTask;
         }
 
@@ -302,11 +316,6 @@ namespace MqttClient.Backend.Core
         }
 
         public bool PublishCommandCanExecute()
-        {
-            return MqttClient != null && MqttClient.IsConnected;
-        }
-
-        public bool PublishImageCommandCanExecute()
         {
             return MqttClient != null && MqttClient.IsConnected;
         }

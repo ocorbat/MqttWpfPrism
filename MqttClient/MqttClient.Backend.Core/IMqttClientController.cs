@@ -40,8 +40,6 @@ namespace MqttClient.Backend.Core
 
         bool PublishCommandCanExecute();
 
-        bool PublishImageCommandCanExecute();
-
         bool SubscribeCommandCanExecute();
 
         bool UnsubscribeCommandCanExecute();

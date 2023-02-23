@@ -7,6 +7,5 @@
         public const string ImageJpeg = "image/jpeg";
 
         public const string ImagePng = "image/png";
-
     }
 }
