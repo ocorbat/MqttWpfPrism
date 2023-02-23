@@ -5,7 +5,7 @@
     xmlns:converters="clr-namespace:MqttHelpers.Converters;assembly=MqttHelpers"
     xmlns:core="clr-namespace:MqttClient.Core;assembly=MqttClient.Core"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:enums="clr-namespace:MqttClient.Core.Enums;assembly=MqttClient.Core"
+    xmlns:enums="clr-namespace:MqttCore.Enums;assembly=MqttCore"
     xmlns:local="clr-namespace:MqttClient.Modules.ModulePublisher.Views"
     xmlns:markup="clr-namespace:MqttHelpers.MarkupExtensions;assembly=MqttHelpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
