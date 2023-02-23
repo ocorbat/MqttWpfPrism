@@ -1,6 +1,5 @@
 ﻿using MQTTnet.Packets;
 using MQTTnet.Protocol;
-using System.Text;
 
 namespace MqttClient.Backend.Core.Settings
 {
@@ -20,7 +19,7 @@ namespace MqttClient.Backend.Core.Settings
 
         public string ResponseTopic { get; set; } = default!;
 
-        public byte[] CorrelationData { get; set; } = Encoding.ASCII.GetBytes("1234");
+        public byte[] CorrelationData { get; set; } = default!;
 
         public MqttUserProperty UserProperty { get; set; } = new MqttUserProperty("Name", "Value");
 

@@ -8,6 +8,7 @@ using Prism.Commands;
 using Prism.Mvvm;
 using System;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -20,6 +21,7 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
         private bool isRetainModeOn = true;
         private string currentTopic = "Topic1";
         private string responseTopic = "response/Topic1";
+        private string correlationData;
         private MqttQualityOfServiceLevel qualityOfServiceLevel = MqttQualityOfServiceLevel.AtLeastOnce;
         private bool isCleanSessionOn = true;
         private bool isEnabled;
@@ -123,7 +125,8 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
                 IsRetainOn = IsRetainModeOn,
                 QoS = QualityOfServiceLevel.ToMqttQualityOfServiceLevel(),
                 PayloadFormatIndicator = MqttPayloadFormatIndicator.Unspecified.ToMqttPayloadFormatIndicator(),
-                MessageExpiryInterval = MessageExpiryInterval
+                MessageExpiryInterval = MessageExpiryInterval,
+                CorrelationData = string.IsNullOrEmpty(CorrelationData) ? null : Encoding.ASCII.GetBytes(CorrelationData)
             };
 
             switch (CurrentContentType)
@@ -217,6 +220,9 @@ namespace MqttClient.Modules.ModulePublisher.ViewModels
 
 
         public string ResponseTopic { get => responseTopic; set => SetProperty(ref responseTopic, value); }
+
+
+        public string CorrelationData { get => correlationData; set => SetProperty(ref correlationData, value); }
 
 
         public ContentTypeEnum CurrentContentType { get => currentContentType; set => SetProperty(ref currentContentType, value); }
