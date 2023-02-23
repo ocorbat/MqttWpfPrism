@@ -65,7 +65,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttClient.Modules.ModuleMe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Modules.ModulePublisher", "MqttServer\Modules\MqttServer.Modules.ModulePublisher\MqttServer.Modules.ModulePublisher.csproj", "{0A36B383-8397-4EFF-8732-600480D7A8AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttServer.Modules.ModuleSessions", "MqttServer\Modules\MqttServer.Modules.ModuleSessions\MqttServer.Modules.ModuleSessions.csproj", "{1D647732-B3C7-47DC-B84B-07C183886696}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MqttServer.Modules.ModuleSessions", "MqttServer\Modules\MqttServer.Modules.ModuleSessions\MqttServer.Modules.ModuleSessions.csproj", "{1D647732-B3C7-47DC-B84B-07C183886696}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MqttCore", "MqttCore\MqttCore.csproj", "{D9EA39C6-E0EE-45F5-A05D-738EAC41EF75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -173,6 +175,10 @@ Global
 		{1D647732-B3C7-47DC-B84B-07C183886696}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1D647732-B3C7-47DC-B84B-07C183886696}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1D647732-B3C7-47DC-B84B-07C183886696}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9EA39C6-E0EE-45F5-A05D-738EAC41EF75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9EA39C6-E0EE-45F5-A05D-738EAC41EF75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9EA39C6-E0EE-45F5-A05D-738EAC41EF75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9EA39C6-E0EE-45F5-A05D-738EAC41EF75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -207,6 +213,7 @@ Global
 		{9945ED95-0916-414E-8824-CFB5954A3F77} = {EB7A588B-2839-418D-A4C2-CF467759EB37}
 		{0A36B383-8397-4EFF-8732-600480D7A8AB} = {2D3274F9-9D33-4CE4-AD42-4E2F4AFB760B}
 		{1D647732-B3C7-47DC-B84B-07C183886696} = {2D3274F9-9D33-4CE4-AD42-4E2F4AFB760B}
+		{D9EA39C6-E0EE-45F5-A05D-738EAC41EF75} = {C121C119-96E6-420B-B2EA-3635E14F6481}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {815F87A5-1F23-4A6F-BCC1-8C98C8EE135E}
