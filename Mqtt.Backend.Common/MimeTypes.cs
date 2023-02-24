@@ -1,4 +1,4 @@
-﻿namespace MqttCommon
+﻿namespace Mqtt.Backend.Common
 {
     public static class MimeTypes
     {

@@ -4,7 +4,6 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\MqttCommon\MqttCommon.csproj" />
     <ProjectReference Include="..\..\..\MqttCore\MqttCore.csproj" />
     <ProjectReference Include="..\..\MqttClient.Backend.Events\MqttClient.Backend.Events.csproj" />
     <ProjectReference Include="..\..\MqttClient.Core\MqttClient.Core.csproj" />

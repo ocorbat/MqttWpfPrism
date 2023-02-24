@@ -126,7 +126,7 @@
                         Grid.ColumnSpan="2"
                         Command="{Binding DeleteResponseTopicCommand, Mode=OneWay}"
                         Content="Delete" />-->
-                    
+
                 </Grid>
                 <Expander
                     Grid.Row="1"

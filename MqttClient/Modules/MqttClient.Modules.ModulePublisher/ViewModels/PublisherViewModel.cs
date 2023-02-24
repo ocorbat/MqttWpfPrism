@@ -1,7 +1,7 @@
-﻿using MqttClient.Backend.Core;
+﻿using Mqtt.Backend.Common;
+using MqttClient.Backend.Core;
 using MqttClient.Backend.Core.Settings;
 using MqttClient.Core.ViewModels;
-using MqttCommon;
 using MqttCore.Enums;
 using MqttCore.Extensions;
 using Prism.Commands;

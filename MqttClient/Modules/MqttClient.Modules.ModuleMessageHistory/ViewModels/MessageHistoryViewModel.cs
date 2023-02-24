@@ -1,6 +1,6 @@
-﻿using MqttClient.Backend.Core;
+﻿using Mqtt.Backend.Common;
+using MqttClient.Backend.Core;
 using MqttClient.Core.ViewModels;
-using MqttCommon;
 using Prism.Commands;
 using Prism.Mvvm;
 using System;

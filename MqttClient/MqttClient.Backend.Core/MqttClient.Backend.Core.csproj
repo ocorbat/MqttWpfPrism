@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\MqttCommon\MqttCommon.csproj" />
+    <ProjectReference Include="..\..\Mqtt.Backend.Common\Mqtt.Backend.Common.csproj" />
     <ProjectReference Include="..\MqttClient.Backend.Events\MqttClient.Backend.Events.csproj" />
   </ItemGroup>
 

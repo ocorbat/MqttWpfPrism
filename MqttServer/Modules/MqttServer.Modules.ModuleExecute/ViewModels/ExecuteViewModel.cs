@@ -70,7 +70,7 @@ namespace MqttServer.Modules.ModuleExecute.ViewModels
 
 
 
-        private int portNumber = MqttCommon.Constants.Port5004;
+        private int portNumber = Mqtt.Backend.Common.Constants.Port5004;
         public int PortNumber
         {
             get => portNumber;

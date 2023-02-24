@@ -1,4 +1,4 @@
-﻿namespace MqttCommon.Events
+﻿namespace Mqtt.Backend.Common.Events
 {
     public class OutputMessageEventArgs : EventArgs
     {

@@ -6,7 +6,7 @@ namespace MqttClient.Backend.Core.Settings
     {
         public MqttClientConnectSettings() { }
 
-        public int PortNumber { get; set; } = MqttCommon.Constants.PortNumber;
+        public int PortNumber { get; set; } = Mqtt.Backend.Common.Constants.PortNumber;
 
         public bool IsCleanSession { get; set; } = true;
 

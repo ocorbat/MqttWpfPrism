@@ -4,7 +4,7 @@
     {
         public MqttServerCreateSettings() { }
 
-        public int PortNumber { get; set; } = MqttCommon.Constants.PortNumber;
+        public int PortNumber { get; set; } = Mqtt.Backend.Common.Constants.PortNumber;
 
         public bool IsPersistentSessions { get; set; } = true;
 

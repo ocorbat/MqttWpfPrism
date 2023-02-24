@@ -1,5 +1,5 @@
-﻿using MqttCommon.Events;
-using MqttCommon.Extensions;
+﻿using Mqtt.Backend.Common.Events;
+using Mqtt.Backend.Common.Extensions;
 using MQTTnet;
 using MQTTnet.Packets;
 using MQTTnet.Server;

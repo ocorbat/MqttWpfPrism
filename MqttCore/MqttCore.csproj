@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MqttCommon\MqttCommon.csproj" />
+    <ProjectReference Include="..\Mqtt.Backend.Common\Mqtt.Backend.Common.csproj" />
     <ProjectReference Include="..\MqttHelpers\MqttHelpers.csproj" />
   </ItemGroup>
 

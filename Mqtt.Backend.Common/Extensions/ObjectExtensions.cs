@@ -1,6 +1,6 @@
 ﻿using System.Text.Json;
 
-namespace MqttCommon.Extensions
+namespace Mqtt.Backend.Common.Extensions
 {
     public static class ObjectExtensions
     {

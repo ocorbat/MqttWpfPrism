@@ -1,4 +1,5 @@
-﻿using MqttServer.Backend.Core;
+﻿using Mqtt.Backend.Common.Events;
+using MqttServer.Backend.Core;
 using MqttServer.Core.Interfaces;
 using Prism.Mvvm;
 using System;
@@ -52,7 +53,7 @@ namespace MqttServer.Modules.ModuleMessage.ViewModels
             set => SetProperty(ref messagesView, value);
         }
 
-        private void MqttServerController_OutputMessage(object sender, MqttCommon.Events.OutputMessageEventArgs e)
+        private void MqttServerController_OutputMessage(object sender, OutputMessageEventArgs e)
         {
             messages.Add(new MessageItemViewModel() { Timestamp = DateTime.UtcNow, Message = e.Message });
         }

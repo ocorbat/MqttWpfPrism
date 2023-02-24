@@ -1,7 +1,7 @@
-﻿using MqttClient.Backend.Core.Settings;
-using MqttCommon;
-using MqttCommon.Events;
-using MqttCommon.Extensions;
+﻿using Mqtt.Backend.Common;
+using Mqtt.Backend.Common.Events;
+using Mqtt.Backend.Common.Extensions;
+using MqttClient.Backend.Core.Settings;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Formatter;
@@ -37,7 +37,7 @@ namespace MqttClient.Backend.Core
         {
             var mqttClientOptions = MqttFactory.CreateClientOptionsBuilder()
                 .WithClientId(ClientId.ToString())
-                .WithTcpServer(MqttCommon.Constants.Localhost, settings.PortNumber)
+                .WithTcpServer(Mqtt.Backend.Common.Constants.Localhost, settings.PortNumber)
                 .WithCleanSession(settings.IsCleanSession)
                 .WithSessionExpiryInterval(settings.SessionExpiryInterval)
                 .WithKeepAlivePeriod(settings.KeepAlivePeriod)

@@ -1,6 +1,6 @@
-﻿using MqttClient.Backend.Core;
+﻿using Mqtt.Backend.Common.Events;
+using MqttClient.Backend.Core;
 using MqttClient.Core.ViewModels;
-using MqttCommon.Events;
 using Prism.Mvvm;
 
 namespace MqttClient.Modules.ModuleMessage.ViewModels
