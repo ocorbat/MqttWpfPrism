@@ -1,5 +1,5 @@
-﻿using MQTTnet.Server;
-using System.Collections.Generic;
+﻿
+using Mqtt.Backend.Common;
 
 namespace MqttServer.Backend.Events
 {

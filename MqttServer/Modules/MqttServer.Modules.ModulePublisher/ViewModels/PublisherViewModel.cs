@@ -1,5 +1,6 @@
 ﻿using MqttCommon;
-using MQTTnet.Protocol;
+using MqttCore.Enums;
+using MqttCore.Extensions;
 using MqttServer.Backend.Core;
 using MqttServer.Backend.Core.Settings;
 using MqttServer.Core.Interfaces;
@@ -84,8 +85,8 @@ namespace MqttServer.Modules.ModulePublisher.ViewModels
                 Topic = CurrentTopic,
                 ContentType = MimeTypes.TextPlain,
                 IsRetainOn = IsRetainModeOn,
-                QoS = QualityOfServiceLevel,
-                PayloadFormatIndicator = MqttPayloadFormatIndicator.Unspecified
+                QoS = QualityOfServiceLevel.ToMqttQualityOfServiceLevel(),
+                PayloadFormatIndicator = MqttPayloadFormatIndicator.Unspecified.ToMqttPayloadFormatIndicator()
             };
 
             await MqttServerController.PublishAsync(SendMessageText, settings);

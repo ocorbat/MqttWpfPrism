@@ -1,4 +1,4 @@
-﻿using MQTTnet.Server;
+﻿using Mqtt.Backend.Common;
 using MqttServer.Backend.Core;
 using MqttServer.Backend.Services.Interfaces;
 using MqttServer.Core.Interfaces;
@@ -122,12 +122,12 @@ namespace MqttServer.Modules.ModuleClients.ViewModels
 
         private void MqttServerController_ClientDisconnected(object sender, Backend.Events.ClientDisconnectedEventArgs e)
         {
-            ConnectedClients = e.CurrentConnectedClients;
+            ConnectedClients = e.CurrentConnectedClients.ToList();
         }
 
         private void MqttServerController_ClientConnected(object sender, Backend.Events.ClientConnectedEventArgs e)
         {
-            ConnectedClients = e.CurrentConnectedClients;
+            ConnectedClients = e.CurrentConnectedClients.ToList();
         }
 
         private void MqttServerController_ServerStopped(object sender, EventArgs e)

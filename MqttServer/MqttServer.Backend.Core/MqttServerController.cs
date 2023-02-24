@@ -18,8 +18,8 @@ namespace MqttServer.Core
         public MqttFactory MqttFactory { get; } = new MqttFactory();
         public MQTTnet.Server.MqttServer MqttServer { get; private set; } = default!;
         public ObservableCollection<ClientSubscribedItem> ClientSubscribedItems { get; }
-        public IList<MqttClientStatus> ConnectedClients { get; private set; } = default!;
-        public IList<MqttSessionStatus> Sessions { get; private set; } = default!;
+        public IList<Mqtt.Backend.Common.MqttClientStatus> ConnectedClients { get; private set; } = default!;
+        public IList<Mqtt.Backend.Common.MqttSessionStatus> Sessions { get; private set; } = default!;
 
         private readonly string storePath;
 
@@ -48,20 +48,22 @@ namespace MqttServer.Core
 
         public event EventHandler<OutputMessageEventArgs> OutputMessage = default!;
 
-        public async Task<IList<MqttClientStatus>> RefreshConnectedClientsAsync()
+        public async Task<IList<Mqtt.Backend.Common.MqttClientStatus>> RefreshConnectedClientsAsync()
         {
             if (MqttServer != null)
             {
-                ConnectedClients = await MqttServer.GetClientsAsync();
+                var toto = await MqttServer.GetClientsAsync();
+                ConnectedClients = (toto.Select(item => new Mqtt.Backend.Common.MqttClientStatus(item))).ToList();
             }
             return ConnectedClients;
         }
 
-        public async Task<IList<MqttSessionStatus>> GetSessionsAsync()
+        public async Task<IList<Mqtt.Backend.Common.MqttSessionStatus>> GetSessionsAsync()
         {
             if (MqttServer != null)
             {
-                Sessions = await MqttServer.GetSessionsAsync();
+                var mqttSessionStatuses = await MqttServer.GetSessionsAsync();
+                Sessions = (mqttSessionStatuses.Select(item => new Mqtt.Backend.Common.MqttSessionStatus(item))).ToList();
             }
 
             return Sessions;
@@ -407,7 +409,8 @@ namespace MqttServer.Core
         {
             if (MqttServer != null)
             {
-                ConnectedClients = await MqttServer.GetClientsAsync();
+                var toto = await MqttServer.GetClientsAsync();
+                ConnectedClients = (toto.Select(item => new Mqtt.Backend.Common.MqttClientStatus(item))).ToList();
             }
 
             ClientConnected?.Invoke(this, new Backend.Events.ClientConnectedEventArgs(e.ClientId, ConnectedClients));
@@ -417,7 +420,8 @@ namespace MqttServer.Core
         {
             try
             {
-                ConnectedClients = await MqttServer.GetClientsAsync();
+                var toto = await MqttServer.GetClientsAsync();
+                ConnectedClients = (toto.Select(item => new Mqtt.Backend.Common.MqttClientStatus(item))).ToList();
             }
             catch (InvalidOperationException exception)
             {

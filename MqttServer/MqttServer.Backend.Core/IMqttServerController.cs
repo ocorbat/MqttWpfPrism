@@ -1,6 +1,5 @@
 ﻿using MqttCommon.Events;
 using MQTTnet;
-using MQTTnet.Server;
 using MqttServer.Backend.Core.Settings;
 
 namespace MqttServer.Backend.Core
@@ -9,14 +8,14 @@ namespace MqttServer.Backend.Core
     {
         MqttFactory MqttFactory { get; }
         MQTTnet.Server.MqttServer MqttServer { get; }
-        IList<MqttClientStatus>? ConnectedClients { get; }
+        IList<Mqtt.Backend.Common.MqttClientStatus>? ConnectedClients { get; }
 
         MQTTnet.Server.MqttServer? CreateServer(MqttServerCreateSettings settings);
 
 
-        Task<IList<MqttClientStatus>> RefreshConnectedClientsAsync();
+        Task<IList<Mqtt.Backend.Common.MqttClientStatus>> RefreshConnectedClientsAsync();
 
-        Task<IList<MqttSessionStatus>> GetSessionsAsync();
+        Task<IList<Mqtt.Backend.Common.MqttSessionStatus>> GetSessionsAsync();
 
         Task PublishAsync(string payload, MqttServerPublishSettings settings);
 
