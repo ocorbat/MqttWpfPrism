@@ -7,6 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:enums="clr-namespace:MqttCore.Enums;assembly=MqttCore"
     xmlns:converters="clr-namespace:MqttHelpers.Converters;assembly=MqttHelpers"
+    xmlns:markup="clr-namespace:MqttHelpers.MarkupExtensions;assembly=MqttHelpers"
     xmlns:views="clr-namespace:MqttServer.Core.Views;assembly=MqttServer.Core"
     xmlns:core="clr-namespace:MqttServer.Core;assembly=MqttServer.Core"
     xmlns:viewmodels="clr-namespace:MqttServer.Modules.ModulePublisher.ViewModels"
@@ -35,7 +36,7 @@
             Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="3"
-            Header="Publish Message">
+            Header="Publish">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
@@ -49,60 +50,134 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <DockPanel
+                <Grid
                     Grid.Row="0"
                     Grid.Column="0"
-                    Grid.ColumnSpan="2">
-                    <Label Content="Topic" />
-                    <TextBox VerticalContentAlignment="Center" Text="{Binding CurrentTopic, Mode=TwoWay}" />
-                </DockPanel>
+                    Grid.ColumnSpan="3">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="3*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Content="Topic" />
+                    <TextBox
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding CurrentTopic, Mode=TwoWay}" />
+                    <Button
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Grid.ColumnSpan="2"
+                        Command="{Binding DeleteCurrentTopicCommand, Mode=OneWay}"
+                        Content="Delete" />
+                    <Label
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Content="Payload" />
+                    <TextBox
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding SendMessageText, Mode=TwoWay}" />
+                    <ComboBox IsEnabled="False"
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        ItemsSource="{Binding Source={markup:EnumBindingSource {x:Type enums:ContentTypeEnum}}}"
+                        SelectedItem="{Binding CurrentContentType, Mode=TwoWay}" />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="3"
+                        Command="{Binding PublishCommand, Mode=OneWay}"
+                        Content="Publish" />
+                    <!--<Label
+                        Grid.Row="2"
+                        Grid.Column="0"
+                        Content="Response Topic" />
+                    <TextBox
+                        Grid.Row="2"
+                        Grid.Column="1"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding ResponseTopic, Mode=TwoWay}" />
+                    <Button
+                        Grid.Row="2"
+                        Grid.Column="2"
+                        Grid.ColumnSpan="2"
+                        Command="{Binding DeleteResponseTopicCommand, Mode=OneWay}"
+                        Content="Delete" />
+                    <Label
+                        Grid.Row="3"
+                        Grid.Column="0"
+                        Content="Correlation Data" />
+                    <TextBox
+                        Grid.Row="3"
+                        Grid.Column="1"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding CorrelationData, Mode=TwoWay}" />
+                    <Button
+                        Grid.Row="3"
+                        Grid.Column="2"
+                        Grid.ColumnSpan="2"
+                        Command="{Binding DeleteResponseTopicCommand, Mode=OneWay}"
+                        Content="Delete" />-->
+
+                </Grid>
                 <Button
-                    Grid.Row="0"
+                    Grid.Row="1"
                     Grid.Column="2"
                     Command="{Binding DeleteRetainedMessagesCommand}"
                     Content="Delete retained messages" />
-                <DockPanel
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Grid.ColumnSpan="3">
-                    <CheckBox
-                        Content="IsRetainMode"
-                        DockPanel.Dock="Right"
-                        IsChecked="{Binding IsRetainModeOn, Mode=TwoWay}" />
-                    <Button
-                        VerticalAlignment="Center"
-                        Command="{Binding PublishCommand}"
-                        Content="Publish"
-                        DockPanel.Dock="Right" />
-                    <TextBox
-                        MinWidth="150"
-                        VerticalAlignment="Center"
-                        DockPanel.Dock="Left"
-                        Text="{Binding SendMessageText, Mode=TwoWay}" />
-                </DockPanel>
                 <Expander
-                    Grid.Row="2"
+                    Grid.Row="3"
                     Grid.Column="0"
                     Grid.ColumnSpan="3"
                     ExpandDirection="Down"
                     Header="Options"
                     IsExpanded="{Binding IsExpanded, Mode=TwoWay}">
-                    <GroupBox Header="Quality Of Service Level">
-                        <StackPanel Orientation="Vertical">
-                            <RadioButton
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Orientation="Vertical">
+                            <CheckBox Content="IsRetainMode" IsChecked="{Binding IsRetainModeOn, Mode=TwoWay}" />
+                        </StackPanel>
+                        <GroupBox Header="Quality Of Service Level" Grid.Row="0"
+                            Grid.Column="1">
+                            <StackPanel Orientation="Vertical">
+                                <RadioButton
                                 Content="0: At Most Once"
                                 GroupName="MqttServer.Modules.ModulePublisher.Views.PublisherView.QualityOfServiceLevel"
                                 IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MqttQualityOfServiceLevel.AtMostOnce}}" />
-                            <RadioButton
+                                <RadioButton
                                 Content="1: At Least Once"
                                 GroupName="MqttServer.Modules.ModulePublisher.Views.PublisherView.QualityOfServiceLevel"
                                 IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MqttQualityOfServiceLevel.AtLeastOnce}}" />
-                            <RadioButton
+                                <RadioButton
                                 Content="2: Exactly Once"
                                 GroupName="MqttServer.Modules.ModulePublisher.Views.PublisherView.QualityOfServiceLevel"
                                 IsChecked="{Binding QualityOfServiceLevel, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MqttQualityOfServiceLevel.ExactlyOnce}}" />
-                        </StackPanel>
-                    </GroupBox>
+                            </StackPanel>
+                        </GroupBox>
+                    </Grid>
                 </Expander>
             </Grid>
 

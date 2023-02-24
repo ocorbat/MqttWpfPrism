@@ -17,15 +17,29 @@ namespace MqttServer.Modules.ModulePublisher.ViewModels
         private string currentTopic = "Topic1";
         private MqttQualityOfServiceLevel qualityOfServiceLevel = MqttQualityOfServiceLevel.AtLeastOnce;
         private bool isEnabled;
+        private ContentTypeEnum currentContentType = ContentTypeEnum.PlainText;
 
         public PublisherViewModel()
         {
             PublishCommand = new DelegateCommand(PublishCommandExecute, PublishCommandCanExecute);
             DeleteRetainedMessagesCommand = new DelegateCommand(DeleteRetainedMessagesCommandExecute, DeleteRetainedMessagesCommandCanExecute);
+            DeleteCurrentTopicCommand = new DelegateCommand(DeleteCurrentTopicCommandExecute, DeleteCurrentTopicCommandCanExecute);
         }
         public DelegateCommand PublishCommand { get; set; }
 
         public DelegateCommand DeleteRetainedMessagesCommand { get; set; }
+
+        public DelegateCommand DeleteCurrentTopicCommand { get; private set; }
+
+        private bool DeleteCurrentTopicCommandCanExecute()
+        {
+            return true;
+        }
+
+        private void DeleteCurrentTopicCommandExecute()
+        {
+            CurrentTopic = string.Empty;
+        }
 
         public IMqttServerController MqttServerController
         {
@@ -127,5 +141,7 @@ namespace MqttServer.Modules.ModulePublisher.ViewModels
         private bool isExpanded = false;
 
         public bool IsExpanded { get => isExpanded; set => SetProperty(ref isExpanded, value); }
+
+        public ContentTypeEnum CurrentContentType { get => currentContentType; set => SetProperty(ref currentContentType, value); }
     }
 }
