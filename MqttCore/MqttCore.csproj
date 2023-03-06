@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MQTTnet" Version="4.1.4.563" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Mqtt.Backend.Common\Mqtt.Backend.Common.csproj" />
     <ProjectReference Include="..\MqttHelpers\MqttHelpers.csproj" />
   </ItemGroup>

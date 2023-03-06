@@ -35,9 +35,11 @@ namespace MqttClient.Backend.Core
 
         public async Task ConnectAsync(MqttClientConnectSettings settings)
         {
+
             var mqttClientOptions = MqttFactory.CreateClientOptionsBuilder()
                 .WithClientId(ClientId.ToString())
                 .WithTcpServer(Mqtt.Backend.Common.Constants.Localhost, settings.PortNumber)
+                //.WithWebSocketServer($"{Mqtt.Backend.Common.Constants.Localhost}:5004")
                 .WithCleanSession(settings.IsCleanSession)
                 .WithSessionExpiryInterval(settings.SessionExpiryInterval)
                 .WithKeepAlivePeriod(settings.KeepAlivePeriod)
