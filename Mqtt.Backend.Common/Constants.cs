@@ -10,5 +10,7 @@
 
         public static int PortNumber = 1883;
         public static int Port5004 = 5004;
+
+        public static int PortWebSockets = 9001;
     }
 }

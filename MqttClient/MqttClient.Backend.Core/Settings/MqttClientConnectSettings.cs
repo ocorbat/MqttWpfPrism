@@ -8,6 +8,8 @@ namespace MqttClient.Backend.Core.Settings
 
         public int PortNumber { get; set; } = Mqtt.Backend.Common.Constants.PortNumber;
 
+        public int PortWebSocket { get; set; } = Mqtt.Backend.Common.Constants.PortWebSockets;
+
         public bool IsCleanSession { get; set; } = true;
 
         public MqttProtocolVersion ProtocolVersion { get; set; } = MqttProtocolVersion.V500;
@@ -23,6 +25,8 @@ namespace MqttClient.Backend.Core.Settings
         public bool RequestResponseInformation { get; set; } = true;
 
         public bool RequestProblemInformation { get; set; } = true;
+
+        public bool UseWebSockets { get; set; } = false;
     }
 }
 

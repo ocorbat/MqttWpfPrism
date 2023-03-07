@@ -21,8 +21,10 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
         private int keepAlivePeriod = 60;
         private bool isExpanded = false;
         private int portNumber = Constants.Port5004;
+        private int portWebSockets = Constants.PortWebSockets;
         private uint sessionExpiryInterval = 86400;
         private MqttProtocolVersion protocolVersion = MqttProtocolVersion.V500;
+        private bool useWebSockets = false;
 
         public ConnectViewModel()
         {
@@ -73,7 +75,9 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
                 KeepAlivePeriod = TimeSpan.FromSeconds(KeepAlivePeriod),
                 Username = Username,
                 Password = Password,
-                SessionExpiryInterval = SessionExpiryInterval
+                SessionExpiryInterval = SessionExpiryInterval,
+                UseWebSockets = UseWebSockets,
+                PortWebSocket = PortWebSockets
             };
 
             await MqttClientController.ConnectAsync(settings);
@@ -203,6 +207,12 @@ namespace MqttClient.Modules.ModuleConnect.ViewModels
 
 
         public uint SessionExpiryInterval { get => sessionExpiryInterval; set => SetProperty(ref sessionExpiryInterval, value); }
+
+        public bool UseWebSockets { get => useWebSockets; set => SetProperty(ref useWebSockets, value); }
+
+
+
+        public int PortWebSockets { get => portWebSockets; set => SetProperty(ref portWebSockets, value); }
 
 
     }

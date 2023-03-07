@@ -106,26 +106,7 @@
                             Orientation="Vertical">
                             <CheckBox Content="IsCleanSession" IsChecked="{Binding IsCleanSessionOn}" />
                         </StackPanel>
-                        <GroupBox
-                            Grid.Row="0"
-                            Grid.Column="1"
-                            Header="MQTT Protocol Version">
-                            <StackPanel Orientation="Vertical">
-                                <RadioButton
-                                    Content="V310"
-                                    GroupName="ProtocolVersion"
-                                    IsChecked="{Binding ProtocolVersion, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MqttProtocolVersion.V310}}" />
-                                <RadioButton
-                                    Content="V311"
-                                    GroupName="ProtocolVersion"
-                                    IsChecked="{Binding ProtocolVersion, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MqttProtocolVersion.V311}}" />
-                                <RadioButton
-                                    Content="V500"
-                                    GroupName="ProtocolVersion"
-                                    IsChecked="{Binding ProtocolVersion, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MqttProtocolVersion.V500}}" />
-                            </StackPanel>
-                        </GroupBox>
-                        <Grid Grid.Row="0" Grid.Column="2">
+                        <Grid Grid.Row="0" Grid.Column="1">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
@@ -160,6 +141,54 @@
                                 Grid.Column="1"
                                 Text="{Binding SessionExpiryInterval, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                         </Grid>
+                        <GroupBox
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Header="MQTT Protocol Version">
+                            <StackPanel Orientation="Vertical">
+                                <RadioButton
+                                    Content="V310"
+                                    GroupName="ProtocolVersion"
+                                    IsChecked="{Binding ProtocolVersion, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MqttProtocolVersion.V310}}" />
+                                <RadioButton
+                                    Content="V311"
+                                    GroupName="ProtocolVersion"
+                                    IsChecked="{Binding ProtocolVersion, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MqttProtocolVersion.V311}}" />
+                                <RadioButton
+                                    Content="V500"
+                                    GroupName="ProtocolVersion"
+                                    IsChecked="{Binding ProtocolVersion, Converter={StaticResource ComparisonConverter}, ConverterParameter={x:Static enums:MqttProtocolVersion.V500}}" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox
+                            Grid.Row="0"
+                            Grid.Column="3"
+                            Header="Mosquitto">
+                            <StackPanel Orientation="Vertical">
+                                <CheckBox
+                                    x:Name="CheckBoxUseWebSockets"
+                                    Content="Use WebSockets"
+                                    IsChecked="{Binding UseWebSockets}" />
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition />
+                                    </Grid.ColumnDefinitions>
+                                    <Label
+                                        Grid.Row="0"
+                                        Grid.Column="0"
+                                        Content="Port" />
+                                    <TextBox
+                                        Grid.Row="0"
+                                        Grid.Column="1"
+                                        IsEnabled="{Binding ElementName=CheckBoxUseWebSockets, Path=IsChecked}"
+                                        Text="{Binding PortWebSockets, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </Grid>
+                            </StackPanel>
+                        </GroupBox>
                     </Grid>
                 </Expander>
             </Grid>
