@@ -17,7 +17,7 @@ namespace MqttServer.Core
     {
         public MqttFactory MqttFactory { get; } = new MqttFactory();
         public MQTTnet.Server.MqttServer MqttServer { get; private set; } = default!;
-        public ObservableCollection<ClientSubscribedItem> ClientSubscribedItems { get; }
+        public ObservableCollection<ClientSubscriptionItem> ClientSubscriptionItems { get; }
         public IList<Mqtt.Backend.Common.MqttClientStatus> ConnectedClients { get; private set; } = default!;
         public IList<Mqtt.Backend.Common.MqttSessionStatus> Sessions { get; private set; } = default!;
 
@@ -29,11 +29,11 @@ namespace MqttServer.Core
         {
             storePath = Path.Combine(Directory.GetCurrentDirectory(), "RetainedMessages.json");
 
-            ClientSubscribedItems = new ObservableCollection<ClientSubscribedItem>();
-            ClientSubscribedItems.CollectionChanged += ClientSubscribedItems_CollectionChanged;
+            ClientSubscriptionItems = new ObservableCollection<ClientSubscriptionItem>();
+            ClientSubscriptionItems.CollectionChanged += ClientSubscriptionItems_CollectionChanged;
         }
 
-        private void ClientSubscribedItems_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void ClientSubscriptionItems_CollectionChanged(object? sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
 
         }
@@ -294,6 +294,11 @@ namespace MqttServer.Core
                 arg.SessionItems.Add("SomeData", true);
             }
 
+
+            var server = MqttServer;
+
+
+
             arg.CloseConnection = false;
             return Task.CompletedTask;
         }
@@ -332,7 +337,7 @@ namespace MqttServer.Core
             MqttTopicFilter toto = arg.TopicFilter;
             IDictionary sessionItems = arg.SessionItems;
 
-            ClientSubscribedItems.Add(new ClientSubscribedItem(arg.ClientId, arg.TopicFilter, arg.SessionItems));
+            ClientSubscriptionItems.Add(new ClientSubscriptionItem(arg.ClientId, arg.TopicFilter, arg.SessionItems));
             OnClientSubscribedTopic(new Backend.Events.ClientSubscribedTopicEventArgs(arg.ClientId, arg.TopicFilter.Topic));
 
             return Task.CompletedTask;

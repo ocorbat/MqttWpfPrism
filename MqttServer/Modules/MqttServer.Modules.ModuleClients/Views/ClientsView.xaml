@@ -34,7 +34,7 @@
                 <DataGrid
                     AutoGenerateColumns="true"
                     FrozenColumnCount="1"
-                    ItemsSource="{Binding ConnectedClients}" />
+                    ItemsSource="{Binding ClientConnections}" />
                 <Button Command="{Binding GetConnectedClientsCommand}" Content="Get Connected Clients" />
             </StackPanel>
         </GroupBox>
@@ -50,7 +50,7 @@
                 AutoGenerateColumns="true"
                 FrozenColumnCount="1"
                 HorizontalScrollBarVisibility="Auto"
-                ItemsSource="{Binding SubscribedClientsView}"
+                ItemsSource="{Binding ClientSubscriptionsView}"
                 VerticalScrollBarVisibility="Auto" />
         </GroupBox>
     </Grid>

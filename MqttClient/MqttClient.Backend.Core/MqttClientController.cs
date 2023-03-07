@@ -154,6 +154,7 @@ namespace MqttClient.Backend.Core
                        f.WithRetainAsPublished(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.RetainAsPublishedOn);
                        f.WithRetainHandling(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 ? settings.RetainHandling : MqttRetainHandling.SendAtSubscribe);
                    })
+               .WithSubscriptionIdentifier((uint)ClientId)
                .Build();
 
             try
@@ -164,6 +165,11 @@ namespace MqttClient.Backend.Core
                 {
                     response = await MqttClient.SubscribeAsync(mqttSubscribeOptions, timeoutToken.Token);
                 }
+
+                //if (response != null)
+                //{
+                //    var items = response.Items;
+                //}
 
                 Debug.WriteLine($"MQTT client {MqttClient.Options.ClientId} subscribed to topic '{settings.Topic}'.");
                 // The response contains additional data sent by the server after subscribing.

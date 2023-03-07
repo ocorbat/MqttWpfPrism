@@ -19,14 +19,14 @@ namespace MqttServer.Modules.ModuleClients.ViewModels
     public class ClientsViewModel : BindableBase, IMqttServerControllerViewModel, INavigationAware, IConfirmNavigationRequest
     {
         private IMqttServerController mqttServerController;
-        private IEnumerable<MqttClientStatus> connectedClients = new List<MqttClientStatus>();
-        private readonly ObservableCollection<ConnectedClientViewModel> subscribedClients;
-        private ICollectionView subscribedClientsView;
+        private IEnumerable<MqttClientStatus> clientConnections = new List<MqttClientStatus>();
+        private readonly ObservableCollection<ClientSubscriptionItemViewModel> clientSubscriptions;
+        private ICollectionView clientSubscriptionsView;
 
         public ClientsViewModel(IRegionManager regionManager, IMessageService messageService)
         {
-            subscribedClients = new ObservableCollection<ConnectedClientViewModel>();
-            SubscribedClientsView = CollectionViewSource.GetDefaultView(subscribedClients);
+            clientSubscriptions = new ObservableCollection<ClientSubscriptionItemViewModel>();
+            ClientSubscriptionsView = CollectionViewSource.GetDefaultView(clientSubscriptions);
             GetConnectedClientsCommand = new DelegateCommand(GetConnectedClientsCommandExecute, GetConnectedClientsCommandCanExecute);
         }
 
@@ -50,16 +50,16 @@ namespace MqttServer.Modules.ModuleClients.ViewModels
             }
         }
 
-        public IEnumerable<MqttClientStatus> ConnectedClients
+        public IEnumerable<MqttClientStatus> ClientConnections
         {
-            get => connectedClients;
-            set => SetProperty(ref connectedClients, value);
+            get => clientConnections;
+            set => SetProperty(ref clientConnections, value);
         }
 
-        public ICollectionView SubscribedClientsView
+        public ICollectionView ClientSubscriptionsView
         {
-            get => subscribedClientsView;
-            set => SetProperty(ref subscribedClientsView, value);
+            get => clientSubscriptionsView;
+            set => SetProperty(ref clientSubscriptionsView, value);
         }
 
         public void OnNavigatedTo(NavigationContext navigationContext)
@@ -89,12 +89,12 @@ namespace MqttServer.Modules.ModuleClients.ViewModels
 
         private async void GetConnectedClientsCommandExecute()
         {
-            ConnectedClients = await MqttServerController.RefreshConnectedClientsAsync();
+            ClientConnections = await MqttServerController.RefreshConnectedClientsAsync();
         }
 
         private async void MqttServerController_ClientSubscribedTopic(object sender, Backend.Events.ClientSubscribedTopicEventArgs e)
         {
-            var connectedClientViewModel = new ConnectedClientViewModel
+            var connectedClientViewModel = new ClientSubscriptionItemViewModel
             {
                 ClientId = e.ClientId,
                 Topic = e.Topic
@@ -102,32 +102,32 @@ namespace MqttServer.Modules.ModuleClients.ViewModels
 
             await Application.Current.Dispatcher.BeginInvoke(() =>
             {
-                subscribedClients.Add(connectedClientViewModel);
+                clientSubscriptions.Add(connectedClientViewModel);
             });
         }
 
         private void MqttServerController_ClientUnsubscribedTopic(object sender, Backend.Events.ClientUnsubscribedTopicEventArgs e)
         {
             var id = e.ClientId;
-            var toto = subscribedClients.Where(c => c.ClientId == id);
+            var toto = clientSubscriptions.Where(c => c.ClientId == id);
 
             foreach (var item in toto)
             {
                 Application.Current.Dispatcher.BeginInvoke(() =>
                 {
-                    subscribedClients.Remove(item);
+                    clientSubscriptions.Remove(item);
                 });
             }
         }
 
         private void MqttServerController_ClientDisconnected(object sender, Backend.Events.ClientDisconnectedEventArgs e)
         {
-            ConnectedClients = e.CurrentConnectedClients.ToList();
+            ClientConnections = e.CurrentConnectedClients.ToList();
         }
 
         private void MqttServerController_ClientConnected(object sender, Backend.Events.ClientConnectedEventArgs e)
         {
-            ConnectedClients = e.CurrentConnectedClients.ToList();
+            ClientConnections = e.CurrentConnectedClients.ToList();
         }
 
         private void MqttServerController_ServerStopped(object sender, EventArgs e)

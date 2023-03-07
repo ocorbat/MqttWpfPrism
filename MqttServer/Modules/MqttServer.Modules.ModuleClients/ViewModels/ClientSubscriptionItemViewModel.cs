@@ -2,9 +2,9 @@
 
 namespace MqttServer.Modules.ModuleClients.ViewModels
 {
-    internal class ConnectedClientViewModel : BindableBase
+    internal class ClientSubscriptionItemViewModel : BindableBase
     {
-        public ConnectedClientViewModel() { }
+        public ClientSubscriptionItemViewModel() { }
 
         private string clientId;
         public string ClientId

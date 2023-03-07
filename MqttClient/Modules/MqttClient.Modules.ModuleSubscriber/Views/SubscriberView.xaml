@@ -86,6 +86,9 @@
                         Content="Delete retained messages"
                         DockPanel.Dock="Right" />
                 </Grid>
+                <DataGrid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3">
+                    
+                </DataGrid>
                 <Expander
                     Grid.Row="2"
                     Grid.Column="0"

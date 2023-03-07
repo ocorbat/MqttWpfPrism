@@ -3,9 +3,9 @@ using System.Collections;
 
 namespace MqttServer.Backend.Core.Model
 {
-    public class ClientSubscribedItem
+    public class ClientSubscriptionItem
     {
-        public ClientSubscribedItem(string id, MqttTopicFilter topicFilter, IDictionary sessionItems)
+        public ClientSubscriptionItem(string id, MqttTopicFilter topicFilter, IDictionary sessionItems)
         {
             Id = id;
             TopicFilter = topicFilter;
