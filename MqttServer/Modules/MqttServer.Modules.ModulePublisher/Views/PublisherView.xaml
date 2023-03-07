@@ -93,7 +93,7 @@
                     <ComboBox IsEnabled="False"
                         Grid.Row="1"
                         Grid.Column="2"
-                        ItemsSource="{Binding Source={markup:EnumBindingSource {x:Type enums:ContentTypeEnum}}}"
+                        ItemsSource="{markup:EnumBindingSource enums:ContentTypeEnum}"
                         SelectedItem="{Binding CurrentContentType, Mode=TwoWay}" />
                     <Button
                         Grid.Row="1"
