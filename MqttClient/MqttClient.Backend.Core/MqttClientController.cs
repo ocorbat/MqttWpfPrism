@@ -15,6 +15,8 @@ namespace MqttClient.Backend.Core
         private int numberOfInstance;
         private IList<string> listReceivedData = new List<string>();
 
+        private bool UseMosquittoWebSocket = false;
+
         public IMqttClient MqttClient { get; private set; }
         public Guid ClientGuid { get; }
         public int ClientId { get; private set; }
@@ -35,11 +37,21 @@ namespace MqttClient.Backend.Core
 
         public async Task ConnectAsync(MqttClientConnectSettings settings)
         {
-
-            var mqttClientOptions = MqttFactory.CreateClientOptionsBuilder()
+            MqttClientOptions mqttClientOptions = UseMosquittoWebSocket
+                ? MqttFactory.CreateClientOptionsBuilder()
+                .WithClientId(ClientId.ToString())
+                .WithWebSocketServer($"{Mqtt.Backend.Common.Constants.Localhost}:9001")
+                .WithCleanSession(settings.IsCleanSession)
+                .WithSessionExpiryInterval(settings.SessionExpiryInterval)
+                .WithKeepAlivePeriod(settings.KeepAlivePeriod)
+                .WithProtocolVersion(settings.ProtocolVersion)
+                .WithCredentials(settings.Username, settings.Password)
+                .WithRequestResponseInformation(settings.ProtocolVersion == MqttProtocolVersion.V500 && settings.RequestResponseInformation)
+                .WithRequestProblemInformation(settings.ProtocolVersion == MqttProtocolVersion.V500 && settings.RequestResponseInformation)
+                .Build()
+                : MqttFactory.CreateClientOptionsBuilder()
                 .WithClientId(ClientId.ToString())
                 .WithTcpServer(Mqtt.Backend.Common.Constants.Localhost, settings.PortNumber)
-                //.WithWebSocketServer($"{Mqtt.Backend.Common.Constants.Localhost}:5004")
                 .WithCleanSession(settings.IsCleanSession)
                 .WithSessionExpiryInterval(settings.SessionExpiryInterval)
                 .WithKeepAlivePeriod(settings.KeepAlivePeriod)
