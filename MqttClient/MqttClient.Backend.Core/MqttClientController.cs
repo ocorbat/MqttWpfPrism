@@ -1,11 +1,13 @@
 ﻿using Mqtt.Backend.Common;
 using Mqtt.Backend.Common.Events;
 using Mqtt.Backend.Common.Extensions;
+using Mqtt.Backend.Common.Model;
 using MqttClient.Backend.Core.Settings;
 using MQTTnet;
 using MQTTnet.Client;
 using MQTTnet.Formatter;
 using MQTTnet.Protocol;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 
 namespace MqttClient.Backend.Core
@@ -20,10 +22,14 @@ namespace MqttClient.Backend.Core
         public int ClientId { get; private set; }
         public MqttFactory MqttFactory { get; } = new MqttFactory();
 
+        public ObservableCollection<ClientSubscription> ClientSubscriptions { get; }
+
         public MqttClientController()
         {
             ClientGuid = Guid.NewGuid();
             MqttClient = MqttFactory.CreateMqttClient();
+
+            ClientSubscriptions = new ObservableCollection<ClientSubscription>();
 
             MqttClient.ConnectingAsync += MqttClient_ConnectingAsync;
             MqttClient.ConnectedAsync += MqttClient_ConnectedAsync;
@@ -154,6 +160,15 @@ namespace MqttClient.Backend.Core
                        f.WithRetainAsPublished(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.RetainAsPublishedOn);
                        f.WithRetainHandling(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 ? settings.RetainHandling : MqttRetainHandling.SendAtSubscribe);
                    })
+               .WithTopicFilter(
+                   f =>
+                   {
+                       f.WithTopic($"{settings.Topic}/{ClientId}");
+                       f.WithQualityOfServiceLevel(settings.QoS);
+                       f.WithNoLocal(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.NoLocalOn);
+                       f.WithRetainAsPublished(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.RetainAsPublishedOn);
+                       f.WithRetainHandling(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 ? settings.RetainHandling : MqttRetainHandling.SendAtSubscribe);
+                   })
                .WithSubscriptionIdentifier((uint)ClientId)
                .Build();
 
@@ -166,10 +181,22 @@ namespace MqttClient.Backend.Core
                     response = await MqttClient.SubscribeAsync(mqttSubscribeOptions, timeoutToken.Token);
                 }
 
-                //if (response != null)
-                //{
-                //    var items = response.Items;
-                //}
+                if (response != null)
+                {
+                    foreach (var item in response.Items)
+                    {
+                        var resultCode = item.ResultCode;
+                        var topicFilter = item.TopicFilter;
+                        var existingSubscription = ClientSubscriptions.SingleOrDefault(s => s.TopicFilter.Topic == topicFilter.Topic);
+
+                        if (existingSubscription != null)
+                        {
+                            ClientSubscriptions.Remove(existingSubscription);
+                        }
+
+                        ClientSubscriptions.Add(new ClientSubscription(resultCode, topicFilter));
+                    }
+                }
 
                 Debug.WriteLine($"MQTT client {MqttClient.Options.ClientId} subscribed to topic '{settings.Topic}'.");
                 // The response contains additional data sent by the server after subscribing.
@@ -193,6 +220,7 @@ namespace MqttClient.Backend.Core
         {
             var mqttUnsubscribeOptions = MqttFactory.CreateUnsubscribeOptionsBuilder()
                 .WithTopicFilter(settings.Topic)
+                .WithTopicFilter($"{settings.Topic}/{ClientId}")
                 .Build();
 
             try
@@ -202,6 +230,22 @@ namespace MqttClient.Backend.Core
                 using (var timeoutToken = new CancellationTokenSource(TimeSpan.FromSeconds(Constants.ClientUnsubscriptionTimeout)))
                 {
                     response = await MqttClient.UnsubscribeAsync(mqttUnsubscribeOptions, timeoutToken.Token);
+                }
+
+                if (response != null)
+                {
+                    foreach (var item in response.Items)
+                    {
+                        var resultCode = item.ResultCode;
+                        if (resultCode == MqttClientUnsubscribeResultCode.Success)
+                        {
+                            var toto = ClientSubscriptions.SingleOrDefault(s => s.TopicFilter.Topic == item.TopicFilter);
+                            if (toto != null)
+                            {
+                                ClientSubscriptions.Remove(toto);
+                            }
+                        }
+                    }
                 }
 
                 Debug.WriteLine($"MQTT client {MqttClient.Options.ClientId} unsubscribed to topic '{settings.Topic}'.");
