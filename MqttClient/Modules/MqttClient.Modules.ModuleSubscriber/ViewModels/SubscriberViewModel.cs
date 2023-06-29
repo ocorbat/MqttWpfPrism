@@ -93,7 +93,6 @@ namespace MqttClient.Modules.ModuleSubscriber.ViewModels
                 RetainHandling = RetainHandling.ToMqttRetainHandling()
             };
 
-
             await MqttClientController.SubscribeAsync(settings);
             IsExpanded = false;
         }
