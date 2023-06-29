@@ -160,15 +160,24 @@ namespace MqttClient.Backend.Core
                        f.WithRetainAsPublished(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.RetainAsPublishedOn);
                        f.WithRetainHandling(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 ? settings.RetainHandling : MqttRetainHandling.SendAtSubscribe);
                    })
-               .WithTopicFilter(
-                   f =>
-                   {
-                       f.WithTopic($"{settings.Topic}/{ClientId}");
-                       f.WithQualityOfServiceLevel(settings.QoS);
-                       f.WithNoLocal(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.NoLocalOn);
-                       f.WithRetainAsPublished(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.RetainAsPublishedOn);
-                       f.WithRetainHandling(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 ? settings.RetainHandling : MqttRetainHandling.SendAtSubscribe);
-                   })
+               //.WithTopicFilter(
+               //    f =>
+               //    {
+               //        f.WithTopic($"{settings.Topic}/{ClientId}");
+               //        f.WithQualityOfServiceLevel(settings.QoS);
+               //        f.WithNoLocal(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.NoLocalOn);
+               //        f.WithRetainAsPublished(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.RetainAsPublishedOn);
+               //        f.WithRetainHandling(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 ? settings.RetainHandling : MqttRetainHandling.SendAtSubscribe);
+               //    })
+               //.WithTopicFilter(
+               //    f =>
+               //    {
+               //        f.WithTopic($"{"LastWillTopic"}");
+               //        f.WithQualityOfServiceLevel(settings.QoS);
+               //        f.WithNoLocal(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.NoLocalOn);
+               //        f.WithRetainAsPublished(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 && settings.RetainAsPublishedOn);
+               //        f.WithRetainHandling(MqttClient.Options.ProtocolVersion == MqttProtocolVersion.V500 ? settings.RetainHandling : MqttRetainHandling.SendAtSubscribe);
+               //    })
                .WithSubscriptionIdentifier((uint)ClientId)
                .Build();
 
